@@ -20,6 +20,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules",
+    ".serverless/**/*",
+    ".webpack/**/*",
+    "_warmup/**/*"
+  ],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

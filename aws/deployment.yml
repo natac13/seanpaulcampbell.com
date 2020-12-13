@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Deployment Resources for Static Website'
+
+Parameters:
+  WebsiteStack:
+    Type: String
+
+Resources:
+  DeployGroup:
+    Type: 'AWS::IAM::Group'
+    Properties:
+      GroupName: '${AWS::StackName}-deploy-group'
+
+  DeployPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: '${AWS::StackName}-deploy-policy'
+      Groups:
+        - !Ref DeployPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: id1
+            Effect: 'Allow'
+            Action:
+              - 's3:PutObject'
+              - 's3:GetObject'
+              - 's3:ListBucket'
+              - 's3:DeleteObject'
+              - 's3:GetBucketLocation'
+              - 's3:PutObjectAcl'
+              - 'cloudfront:CreateInvalidation'
+            Resource:
+              - {'Fn::ImportValue': !Sub '${WebsiteStack}-BucketArn'}
+              - !Sub
+                - '${Arn}/*'
+                - Arn: {'Fn::ImportValue': !Sub '${WebsiteStack}-BucketArn'}
+              - !Sub
+                - 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistId}'
+                - DistId: {'Fn::ImportValue': !Sub '${WebsiteStack}-DistributionId'}
+
+  DeployUser:
+    Type: 'AWS::IAM:User'
+    Properties:
+      UserName: '${AWS::StackName}-deploy-user'
+      Groups:
+        - !Ref DeployGroup
