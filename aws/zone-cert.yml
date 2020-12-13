@@ -19,17 +19,6 @@ Resources:
         Comment: !Sub "${Name} public hosted zone"
       Name: !Ref Name
 
-  Certificate:
-    Type: 'AWS::CertificateManager::Certificate'
-    Properties:
-      DomainName: !Sub '*.${Name}'
-      DomainValidationOptions:
-        - DomainName: !Sub '*.${Name}'
-          HostedZoneId: !Ref HostedZone
-      SubjectAlternativeNames:
-        - !Ref Name
-      ValidationMethod: DNS
-
 Outputs:
   StackName:
     Description: 'Stack name.'
@@ -44,8 +33,3 @@ Outputs:
     Value: !Ref HostedZone
     Export:
       Name: !Sub '${AWS::StackName}-HostedZoneId'
-  CertificateArn:
-    Description: 'The ARN of the Certificate'
-    Value: !Ref Certificate
-    Export:
-      Name: !Sub '${AWS::StackName}-CertificateArn'

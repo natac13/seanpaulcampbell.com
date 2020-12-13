@@ -9,8 +9,7 @@ Metadata:
       Parameters:
         - ParentZoneStack
         - ParentAlertStack
-        - ParentS3StackAccessLog
-        - ParentWAFStack
+        - ParentCertificateStack
     - Label:
         default: 'Lambda@Edge Parameters'
       Parameters:
@@ -28,21 +27,18 @@ Metadata:
         default: 'DNS Parameters'
       Parameters:
         - SubDomainNameWithDot
-        - RedirectSubDomainNameWithDot
-    - Label:
-        default: 'SSL/TLS Parameters'
-      Parameters:
-        - CertificateArn
 
 Parameters:
   ParentZoneStack:
     Type: String
   ParentAlertStack:
     Type: String
-    Default: ''
-  SubDomainNameWithDot:
+  ParentCertificateStack:
     Type: String
-    Default: 'www.'
+  SubDomainNameWithDot:
+    Description: 'Could be www.; leave blank for naked domain'
+    Type: String
+    Default: ''
   ViewerRequestLambdaEdgeFunctionVersionARN: # max 5s timeout
     Description: 'Optional version ARN of Lambda@Edge viewer request function (e.g., ViewerRequestLambdaEdgeFunctionVersionARN output of static-website/lambdaedge-index-document.yaml).'
     Type: String
@@ -69,10 +65,12 @@ Parameters:
     Type: String
     Default: '404'
     AllowedValues: ['200', '404']
-  CertificateArn:
-    Description: 'Certificate ARN'
-    Type: String
-    Default: ''
+
+Conditions:
+  HasViewerRequestLambdaEdgeFunctionVersionARN: !Not [!Equals [!Ref ViewerRequestLambdaEdgeFunctionVersionARN, '']]
+  HasOriginRequestLambdaEdgeFunctionVersionARN: !Not [!Equals [!Ref OriginRequestLambdaEdgeFunctionVersionARN, '']]
+  HasOriginResponseLambdaEdgeFunctionVersionARN: !Not [!Equals [!Ref OriginResponseLambdaEdgeFunctionVersionARN, '']]
+  HasViewerResponseLambdaEdgeFunctionVersionARN: !Not [!Equals [!Ref ViewerResponseLambdaEdgeFunctionVersionARN, '']]
 
 Resources:
   LogsBucket:
@@ -174,7 +172,7 @@ Resources:
         IPV6Enabled: true
         Logging:
           Bucket: !Ref LogsBucket
-          Prefix: ${AWS::StackName}
+          Prefix: !Sub '${AWS::StackName}'
         Origins:
           - DomainName: !GetAtt 'S3Bucket.RegionalDomainName'
             Id: s3origin
@@ -182,7 +180,7 @@ Resources:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}'
         PriceClass: 'PriceClass_100'
         ViewerCertificate:
-          AcmCertificateArn: !Ref CertificateArn
+          AcmCertificateArn: {'Fn::ImportValue': !Sub '${ParentCertificateStack}-CertificateArn'}
           MinimumProtocolVersion: 'TLSv1.1_2016'
           SslSupportMethod: 'sni-only'
         # WebACLId: !If

@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Catch all certificate for a given hosted zone.'
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+    - Label:
+        default: 'Parent Stacks'
+      Parameters:
+      - ParentZoneStack
+Parameters:
+  ParentZoneStack:
+    Type: String
+
+Resources:
+  Certificate:
+    Type: 'AWS::CertificateManager::Certificate'
+    Properties:
+      DomainName: !Sub
+        - '*.${HostedZoneName}'
+        - HostedZoneName: {'Fn::ImportValue': !Sub '${ParentZoneStack}-HostedZoneName'}
+      DomainValidationOptions:
+        - DomainName: !Sub
+            - '*.${HostedZoneName}'
+            - HostedZoneName: {'Fn::ImportValue': !Sub '${ParentZoneStack}-HostedZoneName'}
+          HostedZoneId: {'Fn::ImportValue': !Sub '${ParentZoneStack}-HostedZoneId'}
+      SubjectAlternativeNames:
+        - {'Fn::ImportValue': !Sub '${ParentZoneStack}-HostedZoneName'}
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: {'Fn::ImportValue': !Sub '${ParentZoneStack}-HostedZoneName'}
+
+Outputs:
+  StackName:
+    Description: 'Stack name.'
+    Value: !Sub '${AWS::StackName}'
+  CertificateArn:
+    Description: 'The ARN of the Certificate'
+    Value: !Ref Certificate
+    Export:
+      Name: !Sub '${AWS::StackName}-CertificateArn'

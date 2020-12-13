@@ -1,22 +1,29 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'Deployment Resources for Static Website'
 
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+    - Label:
+        default: 'Parent Stacks'
+      Parameters:
+      - ParentWebsiteStack
 Parameters:
-  WebsiteStack:
+  ParentWebsiteStack:
     Type: String
 
 Resources:
   DeployGroup:
     Type: 'AWS::IAM::Group'
     Properties:
-      GroupName: '${AWS::StackName}-deploy-group'
+      GroupName: !Sub '${AWS::StackName}-deploy-group'
 
   DeployPolicy:
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: '${AWS::StackName}-deploy-policy'
+      PolicyName: !Sub '${AWS::StackName}-deploy-policy'
       Groups:
-        - !Ref DeployPolicy
+        - !Ref DeployGroup
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -31,17 +38,17 @@ Resources:
               - 's3:PutObjectAcl'
               - 'cloudfront:CreateInvalidation'
             Resource:
-              - {'Fn::ImportValue': !Sub '${WebsiteStack}-BucketArn'}
+              - {'Fn::ImportValue': !Sub '${ParentWebsiteStack}-BucketArn'}
               - !Sub
                 - '${Arn}/*'
-                - Arn: {'Fn::ImportValue': !Sub '${WebsiteStack}-BucketArn'}
+                - Arn: {'Fn::ImportValue': !Sub '${ParentWebsiteStack}-BucketArn'}
               - !Sub
                 - 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistId}'
-                - DistId: {'Fn::ImportValue': !Sub '${WebsiteStack}-DistributionId'}
+                - DistId: {'Fn::ImportValue': !Sub '${ParentWebsiteStack}-DistributionId'}
 
   DeployUser:
-    Type: 'AWS::IAM:User'
+    Type: 'AWS::IAM::User'
     Properties:
-      UserName: '${AWS::StackName}-deploy-user'
+      UserName: !Sub '${AWS::StackName}-deploy-user'
       Groups:
         - !Ref DeployGroup
