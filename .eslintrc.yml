@@ -1,0 +1,39 @@
+env:
+  browser: true
+  es2021: true
+extends:
+  - 'plugin:react/recommended'
+  - 'plugin:jsx-a11y/recommended'
+  - 'plugin:react-hooks/recommended'
+  - standard
+  - 'plugin:jest-dom/recommended'
+  - 'plugin:testing-library/recommended'
+  - 'plugin:prettier/recommended'
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+  ecmaVersion: 12
+  sourceType: module
+plugins:
+  - react
+  - react-hooks
+  - jsx-a11y
+  - jest-dom
+  - testing-library
+  - '@typescript-eslint'
+rules: {
+    'space-before-function-paren': 0,
+    'no-console': 2,
+    'react/jsx-uses-react': 2,
+    'react/display-name': 'off',
+    'camelcase': 'off',
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'error',
+    '@typescript-eslint/no-unused-expressions': 'error',
+    '@typescript-eslint/ban-ts-comment': 'warn',
+    '@typescript-eslint/triple-slash-reference': 'off'
+}
+settings:
+  react:
+    version: 'detect'

@@ -8,10 +8,18 @@
     "@emotion/server": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@material-ui/core": "^5.0.0-alpha.18",
+    "@material-ui/icons": "^5.0.0-alpha.15",
     "clsx": "^1.1.1",
+    "date-fns": "^2.16.1",
+    "gray-matter": "^4.0.2",
+    "lodash": "^4.17.20",
     "next": "^10.0.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-markdown": "^5.0.3",
+    "remark": "^13.0.0",
+    "remark-gfm": "^1.0.0",
+    "remark-html": "^13.0.1",
     "serverless-pseudo-parameters": "^2.5.0",
     "source-map-support": "^0.5.19"
   },
@@ -19,18 +27,36 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "lint:fix": "yarn lint -- --fix",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "devDependencies": {
-    "@serverless/typescript": "^2.12.0",
     "@babel/core": "^7.12.10",
     "@emotion/babel-plugin": "^11.1.2",
     "@emotion/babel-preset-css-prop": "^11.0.0",
+    "@serverless/typescript": "^2.12.0",
     "@types/aws-lambda": "^8.10.64",
+    "@types/lodash": "^4.14.165",
     "@types/node": "^14.14.12",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/parser": "^4.9.1",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest-dom": "^3.6.3",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.2.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-testing-library": "^3.10.1",
     "fork-ts-checker-webpack-plugin": "^6.0.0",
+    "prettier": "^2.2.1",
     "serverless-iam-roles-per-function": "^3.0.2-223021",
     "serverless-webpack": "^5.2.0",
     "ts-loader": "^8.0.10",
@@ -38,5 +64,15 @@
     "typescript": "^4.1.2",
     "webpack": "^5.4.0",
     "webpack-node-externals": "^2.5.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "./**/*.{js,jsx,ts,tsx}": [
+      "yarn lint"
+    ]
   }
 }
