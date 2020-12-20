@@ -12,7 +12,6 @@ ogImage:
 
 Lorem ipsum dolor sit amet,
 
-<!-- truncate -->
 
 AFter turncateed comment
 
@@ -22,3 +21,12 @@ AFter turncateed comment
 - item one
 - item two
 - item three
+
+```js
+const candy = 10
+const people = 3
+
+const answer = candy - (candy & people)
+```
+
+![Test](/assets/blog/test.png)

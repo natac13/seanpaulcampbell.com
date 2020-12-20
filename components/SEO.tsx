@@ -19,11 +19,6 @@ const SEO: React.FC = () => {
       <title>{`${title}`}</title>
       <meta name="description" content={description} />
       <meta name="author" content={author} />
-      <meta charSet="utf-8" />
-      <meta
-        name="viewport"
-        content="minimum-scale=1, initial-scale=1, width=device-width"
-      />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
