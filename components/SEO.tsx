@@ -7,7 +7,7 @@ import startCase from 'lodash/startCase'
 const SEO: React.FC = () => {
   const { title: siteTitle, description, author } = config
   const router = useRouter()
-  const titleArray = router.pathname
+  const titleArray = router.asPath
     .split('/')
     .map((path) => startCase(path))
     .reverse()

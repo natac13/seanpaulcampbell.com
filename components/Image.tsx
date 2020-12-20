@@ -1,4 +1,5 @@
 import { experimentalStyled } from '@material-ui/core/styles'
+import NextImage from 'next/image'
 
 const Image = experimentalStyled('img')(
   ({ theme }) => `

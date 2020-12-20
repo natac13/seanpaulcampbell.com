@@ -3,10 +3,11 @@ import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import { getPostBySlug, getAllPosts } from '../../lib/posts'
 import BlogPost from '../../types/post'
-import Layout from '../../components/Layout'
+import BlogLayout from '../../components/BlogLayout'
 import Code from '../../components/Code'
 import Image from '../../components/Image'
 import ReactMarkdown from 'react-markdown'
+// @ts-ignore
 import rui from 'remark-unwrap-images'
 import gfm from 'remark-gfm'
 
@@ -22,14 +23,17 @@ const Post = ({ post, morePosts, preview }: Props) => {
     return <ErrorPage statusCode={404} />
   }
   return (
-    <Layout>
+    <BlogLayout>
       <ReactMarkdown
         plugins={[gfm, rui]}
-        renderers={{ code: Code, image: Image }}
+        renderers={{
+          code: Code,
+          image: Image,
+        }}
       >
         {post.content}
       </ReactMarkdown>
-    </Layout>
+    </BlogLayout>
   )
 }
 

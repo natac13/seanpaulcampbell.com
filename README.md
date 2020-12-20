@@ -1,5 +1,9 @@
 # seanpaulcampbell.com
 
+- [seanpaulcampbell.com](#seanpaulcampbellcom)
+  - [Structure](#structure)
+  - [License](#license)
+
 Website built for seanpaulcampbell.com
 
 Built with [next.js](https://nextjs.org)
@@ -54,3 +58,4 @@ Hosted on [AWS](https://aws.amazon.com)
 ├── tsconfig.json
 └── yarn.lock
 ```
+

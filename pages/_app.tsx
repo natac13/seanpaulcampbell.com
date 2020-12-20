@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import { ThemeProvider } from '@material-ui/core/styles'
+import { StylesProvider, ThemeProvider } from '@material-ui/core/styles'
 import { CacheProvider } from '@emotion/react'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import createCache from '@emotion/cache'
@@ -30,10 +30,12 @@ export default function MyApp(props: AppProps) {
         />
       </Head>
       <CacheProvider value={cache}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
+        <StylesProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </StylesProvider>
       </CacheProvider>
     </>
   )
