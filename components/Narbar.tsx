@@ -59,10 +59,6 @@ const navIconLinks: NavIconLinks = [
 ]
 
 const Navbar: React.FC<Props> = (props: Props) => {
-  const [open, setOpen] = useState(false)
-  const handleClose = useCallback(() => setOpen(false), [setOpen])
-  const handleOpen = useCallback(() => setOpen(true), [setOpen])
-
   return (
     <>
       <HideOnScroll>
@@ -74,6 +70,7 @@ const Navbar: React.FC<Props> = (props: Props) => {
                 color: 'primary.contrastText',
                 display: 'flex',
                 flex: '1 0',
+                maxWidth: '60%',
                 alignItems: 'center',
               }}
             >
@@ -90,20 +87,15 @@ const Navbar: React.FC<Props> = (props: Props) => {
             </Box>
             <Box id="navbar-right">
               <Hidden smUp>
-                <IconButton onClick={handleOpen}>
-                  <Menu />
-                  <VisuallyHidden>Open Menu</VisuallyHidden>
-                </IconButton>
-                <MobileNav
-                  navIconLinks={navIconLinks}
-                  navLinks={navLinks}
-                  open={open}
-                  handleClose={handleClose}
-                />
+                <MobileNav navIconLinks={navIconLinks} navLinks={navLinks} />
               </Hidden>
               <Hidden mdDown>
                 {navIconLinks.map((link) => (
-                  <IconButton key={link.text} href={link.url}>
+                  <IconButton
+                    key={link.text}
+                    onClick={link.onClick}
+                    href={link.url || ''}
+                  >
                     {link.icon}
                     <VisuallyHidden>{link.text}</VisuallyHidden>
                   </IconButton>

@@ -4,12 +4,7 @@ import ErrorPage from 'next/error'
 import { getPostBySlug, getAllPosts } from '../../lib/posts'
 import BlogPost from '../../types/post'
 import BlogLayout from '../../components/BlogLayout'
-import Code from '../../components/Code'
-import Image from '../../components/Image'
-import ReactMarkdown from 'react-markdown'
-// @ts-ignore
-import rui from 'remark-unwrap-images'
-import gfm from 'remark-gfm'
+import BlogBody from '../../components/BlogBody'
 
 type Props = {
   post: BlogPost
@@ -24,15 +19,7 @@ const Post = ({ post, morePosts, preview }: Props) => {
   }
   return (
     <BlogLayout>
-      <ReactMarkdown
-        plugins={[gfm, rui]}
-        renderers={{
-          code: Code,
-          image: Image,
-        }}
-      >
-        {post.content}
-      </ReactMarkdown>
+      <BlogBody content={post.content} />
     </BlogLayout>
   )
 }
