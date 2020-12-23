@@ -1,0 +1,218 @@
+---
+title: 'JavaScriptmas Scrimba Challenges 2020'
+excerpt: 'This is my experience solving the JavaScriptmas Scrimba Challenges, along with the solutions to all 24 challenges.'
+coverImage: '/assets/blog/javascriptmas-2020/cover.png'
+date: '2020-12-24T12:00:00.322Z'
+author:
+  name: Sean Campbell
+  picture: '/assets/sean-campbell.png'
+---
+
+## Intro
+
+The [JavaScriptmas][jsm] Challenges from [Scrimba][scrimba] was a nice reminder of a time when I was young. As I child I would always get those chocolate advent calendars, with the windows to open, revealing a Christmas style milk chocolate treat. A little small, so maybe, sometimes, another door, or 2, might have been opened early. Not sure if one ever made it till the 24th. Not to worry as there was usually plenty of other Christmas treats around. So **thank you** Scrimba for the challenges and bring the memory out of the attic.
+
+Before I get into the challenges, my personal favorites, and difficulties, I want to check off the requirement which is to post links to each and every [#JavaScriptmas][jsm] challenge.
+
+## Solutions
+
+I have a public Gist set up [here - https://gist.github.com/natac13/f18448a135d4ece97d1d639c9a43d890
+](https://gist.github.com/natac13/f18448a135d4ece97d1d639c9a43d890)
+
+```md
+1. https://scrimba.com/learn/adventcalendar/note-at-0-56-co03f435f8d078927fffd2b4d
+2. https://scrimba.com/learn/adventcalendar/note-at-0-58-co9d94fb892365289587ef18b
+3. https://scrimba.com/learn/adventcalendar/note-at-0-46-co7e34579a675353016e93e6d
+4. https://scrimba.com/learn/adventcalendar/note-at-0-05-co1ed46609e498c30d52660ab
+5. https://scrimba.com/learn/adventcalendar/note-at-0-04-co85b43f39904c31f23e9877f
+6. https://scrimba.com/learn/adventcalendar/note-at-0-00-co9904420891cc6c6dcad4135
+7. https://scrimba.com/learn/adventcalendar/note-at-0-00-co2814bcebde9d15a130c57e4
+8. https://scrimba.com/scrim/cob7a48999fd95b4a6bc54128
+9. https://scrimba.com/scrim/cod0a40318f07eefaedebd3a4
+10. https://scrimba.com/scrim/co4da45f9b1a1f4b180e1c363
+11. https://scrimba.com/scrim/co8c6416e96a2db675acd0932
+12. https://scrimba.com/scrim/co80a47f29ff4d39beb231422
+13. https://scrimba.com/scrim/co36e4037b1705738f621c2fe
+14. https://scrimba.com/scrim/cof184fdb9d1246b83aec09b9
+15. https://scrimba.com/scrim/co9ff4e788364d334b2a04f11
+16. https://scrimba.com/scrim/codeb45d0b3842f0e40b80283
+17. https://scrimba.com/scrim/coaa046a58f0fcfd028647a60
+18. https://scrimba.com/scrim/co63b4f0e84d182e9a1643989
+19. https://scrimba.com/scrim/coda5409e95fa8b74ad47f968
+20. https://scrimba.com/scrim/coc094718b061a41943ea9609
+21. https://scrimba.com/scrim/coee0443a9015d7f9ac7b8e6c
+22. https://scrimba.com/scrim/co7b04ad88abaa5a60f363efe
+23. https://scrimba.com/scrim/coced4c7e8785f28bc652ce1c
+24. TBA
+```
+
+## Challenges
+
+### [#1 - Candies][1]
+
+#### The Problem
+Given `children` (number) and `candy` (number) find out how many candies can be eaten in total if each child get equal amounts.
+
+#### Solution
+```js
+const getTotalEaten = (children: number, candy: number) => {
+  return Math.floor(candy / children) * children
+}
+// alternative solution that I like much better
+const getTotalEatenImproved = (children: number, candy: number) => {
+  return candy - (candy % children)
+}
+```
+
+The first solution was my initial thought and from looking at other solutions, seemed to be the common result.
+This also uses the *hint* which was given in the video of `Math.floor()`. Where I divided `candy` by `children` to find the number each child would eat; then multiple it by the number of children to find total eaten.
+
+The second solution was from another workers elf's [tweet.](https://twitter.com/HelenaDW/status/1333897484565884930)
+
+The use of `Math.floor()` is not needed with this method. Plus I find it much easier to reason about. Where we find the remaining number of candies after dividing `candy` by `children` and subtract that value from the total candies. This show the use of the [`%` modulo](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder) operator.
+
+### [#2 - Deposit Profit][2]
+
+#### Problem
+
+Given a `deposit`, `rate` and `threshold` find the year when your deposit with interest is over the threshold.
+
+#### Solution
+```ts
+const depositProfit(deposit: number, rate: number, threshold) => {
+  let amount = deposit
+  let year = 0
+
+  // while amount is lower than threshold
+  while (amount < threshold) {
+    // set amount equal to amount * the interest rate
+    amount = (amount * (1 + (rate / 100))).toFixed(2)
+    // increment the year
+    year += 1
+  }
+
+  // return the year amount is greater than threshold
+  return year
+}
+```
+
+### [#3 - Chunky Monkey][3]
+
+#### Problem
+
+Given an array of `values` and a `size`, split the array into a 2-d array of length `size`.
+
+#### Solution
+```js
+function chunkyMonkey(values, size) {
+    //  write code here.
+    let result = []
+    let id = 0
+
+    while (id < values.length) {
+        result.push(values.slice(id, id += size))
+    }
+
+    return result
+}
+```
+
+While `id` is less than the array length, `push()` a `slice` of the array onto the `results` array from `id` to `id` plus the desired `size`, while incrementing `id` by `size` for next go through while loop.
+
+
+### [#4 - Century from Year][4]
+
+#### Problem
+
+Given a `year` find the century.
+
+#### Solution
+```js
+function centuryFromYear(year: number) {
+  return Math.ceil(year / 100)
+}
+```
+
+While the *hint* provided suggested to use `Math.floor`, I found that I could accomplished the desired result by using `Math.ceil()`. From seeing some of the other answers that use `Math.floor()` and where much more complex, I think this was the wrong *hint* to give.
+
+### [#5 - Reverse a string][5]
+
+#### Problem
+
+Given a `string`, reverse it.
+
+#### Solution
+```js
+function reverseAString(str) {
+    //  write code here.
+    return str.split('').reverse().join('')
+}
+```
+
+Nice and simple. *Hint* was too revealing IMHO.
+
+### [#6 - Sort by Length][6]
+
+#### Problem
+
+Sort a given array of strings by their length.
+
+#### Solution
+```js
+const sortByLength = (strs: string[]) => strs.sort((a, b) => a.length - b.length)
+```
+
+Using a simply comparer function for `sort()` based of the length I got the desired result.
+
+### [#7 - Count Vowels and Consonants][7]
+
+#### Problem
+
+Given a string, return the sum total of vowels and consonants, if vowels equal 1 pts. and consonants equal 2 pts.
+
+#### Solution
+```js
+function countVowelConsonant(str: string) {
+  // write code here
+  const vowels = ['a', 'e', 'i', 'o', 'u']
+
+  return str.split('').reduce((acc, c) => {
+      if (vowels.includes(c)) {
+          return acc + 1
+      }
+      return acc + 2
+  }, 0)
+}
+```
+
+First I used a `vowels` array so that I can check if the current character is `included` in the array. Then I `split` the string into an array so I can `reduce` the list of characters down to a single value. When the current character `c` in included in the `vowels` array, add 1, if not add 2.
+
+
+
+[jsm]: https://scrimba.com/learn/adventcalendar
+[scrimba]: https://scrimba.com
+[1]: https://scrimba.com/learn/adventcalendar/note-at-0-56-co03f435f8d078927fffd2b4d
+[2]: https://scrimba.com/learn/adventcalendar/note-at-0-58-co9d94fb892365289587ef18b
+[3]: https://scrimba.com/learn/adventcalendar/note-at-0-46-co7e34579a675353016e93e6d
+[4]: https://scrimba.com/learn/adventcalendar/note-at-0-05-co1ed46609e498c30d52660ab
+[5]: https://scrimba.com/learn/adventcalendar/note-at-0-04-co85b43f39904c31f23e9877f
+[6]: https://scrimba.com/learn/adventcalendar/note-at-0-00-co9904420891cc6c6dcad4135
+[7]: https://scrimba.com/learn/adventcalendar/note-at-0-00-co2814bcebde9d15a130c57e4
+[8]: https://scrimba.com/scrim/cob7a48999fd95b4a6bc54128
+[9]: https://scrimba.com/scrim/cod0a40318f07eefaedebd3a4
+[10]: https://scrimba.com/scrim/co4da45f9b1a1f4b180e1c363
+[11]: https://scrimba.com/scrim/co8c6416e96a2db675acd0932
+[12]: https://scrimba.com/scrim/co80a47f29ff4d39beb231422
+[13]: https://scrimba.com/scrim/co36e4037b1705738f621c2fe
+[14]: https://scrimba.com/scrim/cof184fdb9d1246b83aec09b9
+[15]: https://scrimba.com/scrim/co9ff4e788364d334b2a04f11
+[16]: https://scrimba.com/scrim/codeb45d0b3842f0e40b80283
+[17]: https://scrimba.com/scrim/coaa046a58f0fcfd028647a60
+[18]: https://scrimba.com/scrim/co63b4f0e84d182e9a1643989
+[19]: https://scrimba.com/scrim/coda5409e95fa8b74ad47f968
+[20]: https://scrimba.com/scrim/coc094718b061a41943ea9609
+[21]: https://scrimba.com/scrim/coee0443a9015d7f9ac7b8e6c
+[22]: https://scrimba.com/scrim/co7b04ad88abaa5a60f363efe
+[23]: https://scrimba.com/scrim/coced4c7e8785f28bc652ce1c
+[24]: TBA
+

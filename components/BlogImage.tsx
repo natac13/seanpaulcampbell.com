@@ -1,15 +1,33 @@
-import { experimentalStyled } from '@material-ui/core/styles'
+import React from 'react'
+import Image from 'next/image'
+import Box from '@material-ui/core/Box'
 
-const Image = experimentalStyled('img')(
-  ({ theme }) => `
-   grid-column: 1 / -1;
-   width: 98%;
-   place-self: center center;
+interface Props {
+  src: string
+  alt: string
+}
 
-   ${theme.breakpoints.up('md')} {
-     width: 80%;
-   }
- `
-)
+const BlogImage: React.FC<Props> = (props: Props) => {
+  return (
+    <Box
+      component="div"
+      sx={{
+        gridColumn: '1 / -1',
+        width: '80%',
+        placeSelf: 'center center',
+        textAlign: 'center',
+        my: 2,
+      }}
+    >
+      <Image
+        src={props.src}
+        width={1200}
+        height={500}
+        alt={props.alt}
+        layout="intrinsic"
+      />
+    </Box>
+  )
+}
 
-export default Image
+export default BlogImage

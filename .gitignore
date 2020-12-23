@@ -22,3 +22,4 @@ yarn-error.log*
 serverless/.serverless
 serverless/.webpack
 create-stack.yml
+.vim/

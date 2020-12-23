@@ -1,4 +1,5 @@
 import fs from 'fs'
+import readingTime from 'reading-time'
 import { join } from 'path'
 import matter from 'gray-matter'
 
@@ -15,7 +16,7 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
   const { data, content } = matter(fileContents)
 
   type Items = {
-    [key: string]: string
+    [key: string]: string | number
   }
 
   const items: Items = {}
@@ -27,6 +28,9 @@ export function getPostBySlug(slug: string, fields: string[] = []) {
     }
     if (field === 'content') {
       items[field] = content
+      const readStats = readingTime(content)
+      items.readTime = readStats.text
+      items.wordCount = readStats.words
     }
 
     if (data[field]) {

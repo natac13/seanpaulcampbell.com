@@ -1,24 +1,24 @@
 import {
   AppBar,
   Box,
+  experimentalStyled,
   Fab,
+  Hidden,
+  IconButton,
+  Link as MuiLink,
   Toolbar,
   Typography,
-  Link as MuiLink,
-  experimentalStyled,
-  Theme,
-  IconButton,
-  Hidden,
 } from '@material-ui/core'
+import { GitHub, LinkedIn } from '@material-ui/icons'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import React, { useState, useCallback } from 'react'
-import HideOnScroll from './HideOnScroll'
-import { ScrollTop } from './ScrollTop'
 import Link from 'next/link'
-import { GitHub, LinkedIn, Menu } from '@material-ui/icons'
-import VisuallyHidden from './VisuallyHidden'
+import React from 'react'
+import useIsMobile from '../hooks/useIsMobile'
 import { NavIconLinks, NavLinks } from '../types/nav'
+import HideOnScroll from './HideOnScroll'
 import MobileNav from './MobileNav'
+import { ScrollTop } from './ScrollTop'
+import VisuallyHidden from './VisuallyHidden'
 
 interface Props {}
 
@@ -59,6 +59,8 @@ const navIconLinks: NavIconLinks = [
 ]
 
 const Navbar: React.FC<Props> = (props: Props) => {
+  const isMobile = useIsMobile()
+
   return (
     <>
       <HideOnScroll>
@@ -70,11 +72,10 @@ const Navbar: React.FC<Props> = (props: Props) => {
                 color: 'primary.contrastText',
                 display: 'flex',
                 flex: '1 0',
-                maxWidth: '60%',
                 alignItems: 'center',
               }}
             >
-              <Typography variant="h4" component="div">
+              <Typography variant={isMobile ? 'h5' : 'h4'} component="div">
                 Sean Paul Campbell
               </Typography>
               <Hidden mdDown>
@@ -109,6 +110,7 @@ const Navbar: React.FC<Props> = (props: Props) => {
       <ScrollTop>
         <Fab color="secondary" size="small" aria-label="scroll back to top">
           <KeyboardArrowUpIcon />
+          <VisuallyHidden>3Go to page top</VisuallyHidden>
         </Fab>
       </ScrollTop>
     </>
