@@ -7,19 +7,24 @@ import parseISO from 'date-fns/fp/parseISO'
 import Link from 'next/link'
 import { Link as MuiLink } from '@material-ui/core'
 import Layout from '../../components/Layout'
+import BlogPost from '../../types/post'
 
-export default function Home({ posts }) {
+interface Props {
+  posts: BlogPost[]
+}
+
+const Home: React.FC<Props> = ({ posts }: Props) => {
   return (
     <Layout>
       <div>
-        {posts.map(({ frontmatter: { title, description, date }, slug }) => (
+        {posts.map(({ title, excerpt, date, slug }) => (
           <article key={title}>
             <header>
               <h3>{title}</h3>
               <span>{date}</span>
             </header>
             <section>
-              <p>{description}</p>
+              <p>{excerpt}</p>
               <Link href={`/blog/${slug}`} passHref>
                 <MuiLink>View post</MuiLink>
               </Link>
@@ -30,6 +35,8 @@ export default function Home({ posts }) {
     </Layout>
   )
 }
+
+export default Home
 
 export async function getStaticProps() {
   const files = fs.readdirSync(postsDirectory)
@@ -42,17 +49,12 @@ export async function getStaticProps() {
     const { data } = matter(markdownWithMetadata)
 
     // Convert post date to format: Month day, Year
-    console.log(data)
-    const formattedDate = format('PP', parseISO(data.date))
-
-    const frontmatter = {
-      ...data,
-      date: formattedDate,
-    }
+    const formattedDate = format('PPP', parseISO(data.date))
 
     return {
+      ...data,
       slug: filename.replace('.md', ''),
-      frontmatter,
+      date: formattedDate,
     }
   })
 

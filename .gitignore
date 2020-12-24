@@ -23,3 +23,4 @@ serverless/.serverless
 serverless/.webpack
 create-stack.yml
 .vim/
+out/

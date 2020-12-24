@@ -34,8 +34,9 @@
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "yarn lint -- --fix",
-    "deploy": "rm -rf node_modules/.cache && next build && next export && touch out/.nojekyll && gh-pages -d out",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+    "type": "tsc",
+    "export": "next export",
+    "deploy": "rm -rf node_modules/.cache && touch out/.nojekyll && gh-pages -d out"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

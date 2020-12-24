@@ -7,16 +7,15 @@ import BlogLayout from '../../components/BlogLayout'
 import BlogBody from '../../components/BlogBody'
 import { Avatar, Box, Typography, Paper } from '@material-ui/core'
 import { DateFormatter } from '../../components/DateFormatter'
-import Image from 'next/image'
 import BlogImage from '../../components/BlogImage'
 
 type Props = {
   post: BlogPost
-  morePosts: BlogPost[]
+  morePosts?: BlogPost[]
   preview?: boolean
 }
 
-const Post = ({ post, morePosts, preview }: Props) => {
+const Post = ({ post }: Props) => {
   const router = useRouter()
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage statusCode={404} />
@@ -82,7 +81,7 @@ const Post = ({ post, morePosts, preview }: Props) => {
         </Box>
       </Paper>
 
-      <BlogBody content={post.content} />
+      <BlogBody content={post.content!} />
     </BlogLayout>
   )
 }
@@ -96,20 +95,14 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  const post = getPostBySlug(params.slug, [
-    'title',
-    'date',
-    'slug',
-    'author',
-    'content',
-    'coverImage',
-  ])
+  const detailed = true
+  const post = getPostBySlug(params.slug, detailed)
 
   return { props: { post } }
 }
 
 export async function getStaticPaths() {
-  const posts = getAllPosts(['slug'])
+  const posts = getAllPosts()
 
   return {
     paths: posts.map((posts) => {

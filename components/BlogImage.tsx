@@ -1,5 +1,5 @@
 import React from 'react'
-import Image from 'next/image'
+// import Image from 'next/image'
 import Box from '@material-ui/core/Box'
 
 interface Props {
@@ -19,13 +19,14 @@ const BlogImage: React.FC<Props> = (props: Props) => {
         my: 2,
       }}
     >
-      <Image
-        src={props.src}
-        width={1200}
-        height={500}
-        alt={props.alt}
-        layout="intrinsic"
-      />
+      <img src={props.src} alt={props.alt} width="100%" height="100%" />
+      {/* <Image */}
+      {/*   src={props.src} */}
+      {/*   width={1200} */}
+      {/*   height={500} */}
+      {/*   alt={props.alt} */}
+      {/*   layout="intrinsic" */}
+      {/* /> */}
     </Box>
   )
 }

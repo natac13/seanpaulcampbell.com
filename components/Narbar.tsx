@@ -58,7 +58,7 @@ const navIconLinks: NavIconLinks = [
   },
 ]
 
-const Navbar: React.FC<Props> = (props: Props) => {
+const Navbar: React.FC<Props> = () => {
   const isMobile = useIsMobile()
 
   return (
@@ -78,7 +78,7 @@ const Navbar: React.FC<Props> = (props: Props) => {
               <Typography variant={isMobile ? 'h5' : 'h4'} component="div">
                 Sean Paul Campbell
               </Typography>
-              <Hidden mdDown>
+              <Hidden implementation="css" mdDown>
                 {navLinks.map((link) => (
                   <Link key={link.text} href={link.url} passHref>
                     <StyledLink>{link.text}</StyledLink>
@@ -87,10 +87,10 @@ const Navbar: React.FC<Props> = (props: Props) => {
               </Hidden>
             </Box>
             <Box id="navbar-right">
-              <Hidden smUp>
+              <Hidden implementation="css" smUp>
                 <MobileNav navIconLinks={navIconLinks} navLinks={navLinks} />
               </Hidden>
-              <Hidden mdDown>
+              <Hidden implementation="css" mdDown>
                 {navIconLinks.map((link) => (
                   <IconButton
                     key={link.text}

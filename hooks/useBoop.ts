@@ -11,7 +11,7 @@ export interface UseBoopOptions {
   springConfig: SpringConfig
 }
 
-type ReturnedStyle = {} | AnimatedValue<Pick<'transform', CSSProperties>>
+type ReturnedStyle = {} | AnimatedValue<Pick<CSSProperties, 'transform'>>
 type UseBoopTrigger = () => void
 
 const useBoop = ({
@@ -51,7 +51,7 @@ const useBoop = ({
     return () => {
       window.clearTimeout(timeoutId)
     }
-  }, [isBooped])
+  }, [isBooped, timing])
 
   const trigger: UseBoopTrigger = useCallback(() => {
     setIsBooped(true)
