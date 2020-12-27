@@ -34,9 +34,6 @@ jobs:
       - name: Build website
         run: yarn build
 
-      - name: Export Static Nextjs site
-        run: yarn export
-
       - name: Pre deploy
         run: 'rm -rf node_modules/.cache && touch out/.nojekyll && touch out/CNAME && echo "www.seanpaulcampbell.com" > out/CNAME'
 
@@ -45,5 +42,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: out # The folder the action should deploy.
+          FOLDER: public # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
