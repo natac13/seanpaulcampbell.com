@@ -35,7 +35,7 @@ jobs:
         run: yarn build
 
       - name: Pre deploy
-        run: 'rm -rf node_modules/.cache && touch out/.nojekyll && touch out/CNAME && echo "www.seanpaulcampbell.com" > out/CNAME'
+        run: 'rm -rf node_modules/.cache && touch public/.nojekyll && touch public/CNAME && echo "www.seanpaulcampbell.com" > public/CNAME'
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
