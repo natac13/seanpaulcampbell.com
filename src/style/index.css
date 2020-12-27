@@ -1,0 +1,25 @@
+/**
+ * Add back the container background-color, border-radius, padding, margin
+ * and overflow that we removed from <pre>.
+ */
+.gatsby-highlight {
+  background-color: rgb(45, 45, 45);
+  border-radius: 0.3em;
+  margin: 0.5em 0;
+  padding: 1em;
+  overflow: auto;
+}
+
+.gatsby-highlight pre[class*='language-'] {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  overflow: initial;
+  float: left;
+  min-width: 100%;
+}
+
+.gatsby-highlight pre[class*='language-'].line-numbers {
+  padding-left: 3rem;
+  overflow: initial;
+}
