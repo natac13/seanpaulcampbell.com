@@ -7,9 +7,9 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core'
-import { GitHub, LinkedIn } from '@material-ui/icons'
+import { Brightness3, GitHub, LinkedIn, WbSunny } from '@material-ui/icons'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import React from 'react'
+import React, { useContext } from 'react'
 import useIsMobile from '../hooks/useIsMobile'
 import { NavIconLinks, NavLinks } from '../types/nav'
 import HideOnScroll from './HideOnScroll'
@@ -17,6 +17,10 @@ import MobileNav from './MobileNav'
 import { ScrollTop } from './ScrollTop'
 import VisuallyHidden from './VisuallyHidden'
 import { Link, IconButton } from 'gatsby-material-ui-components'
+import ThemeContext from '../themes/themeContext'
+import { useTheme } from '@emotion/react'
+import { useTransition, animated, config as rsConfig } from 'react-spring'
+import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
 
 interface Props {}
 
@@ -56,8 +60,22 @@ const navIconLinks: NavIconLinks = [
   },
 ]
 
+const AnimatedSun = animated(WbSunny)
+const AnimatedMoon = animated(Brightness3)
+
 const Navbar: React.FC<Props> = () => {
   const isMobile = useIsMobile()
+  const { darkMode, setDarkMode } = useContext(ThemeContext)
+  const theme = useTheme()
+  const prefersReduceMotion = usePrefersReducedMotion()
+
+  const darkIconTransition = useTransition(darkMode, null, {
+    from: { opacity: 0, position: 'absolute', transform: 'translateX(-20px)' },
+    enter: { opacity: 1, transform: 'translateX(0px)' },
+    leave: { opacity: 0, transform: 'translateX(20px)' },
+    config: rsConfig.stiff,
+    immediate: prefersReduceMotion,
+  })
 
   return (
     <>
@@ -88,17 +106,37 @@ const Navbar: React.FC<Props> = () => {
               <Hidden implementation="css" smUp>
                 <MobileNav navIconLinks={navIconLinks} navLinks={navLinks} />
               </Hidden>
-              <Hidden implementation="css" mdDown>
-                {navIconLinks.map((link) => (
+              <Hidden implementation="css" smDown>
+                <>
                   <IconButton
-                    key={link.text}
-                    onClick={link.onClick}
-                    to={link.url || ''}
+                    css={(theme) => ({
+                      transform: `translateX(-${theme.spacing(2)})`,
+                    })}
+                    aria-label="change color mode"
+                    onClick={() => setDarkMode?.(!darkMode)}
                   >
-                    {link.icon}
-                    <VisuallyHidden>{link.text}</VisuallyHidden>
+                    {darkIconTransition.map(({ item, key, props }) =>
+                      item ? (
+                        <AnimatedMoon style={props} />
+                      ) : (
+                        <AnimatedSun style={props} />
+                      )
+                    )}
+                    <VisuallyHidden>{`Change to ${
+                      darkMode ? 'light' : 'dark'
+                    } mode`}</VisuallyHidden>
                   </IconButton>
-                ))}
+                  {navIconLinks.map((link) => (
+                    <IconButton
+                      key={link.text}
+                      onClick={link.onClick}
+                      to={link.url || ''}
+                    >
+                      {link.icon}
+                      <VisuallyHidden>{link.text}</VisuallyHidden>
+                    </IconButton>
+                  ))}
+                </>
               </Hidden>
             </Box>
           </Toolbar>
