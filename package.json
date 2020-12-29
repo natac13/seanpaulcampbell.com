@@ -55,6 +55,7 @@
     "@graphql-codegen/cli": "^1.19.0",
     "@graphql-codegen/typescript": "^1.17.11",
     "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@types/mdx-js__react": "^1.5.3",
     "@types/ramda": "^0.27.34",
     "@types/react-helmet": "^6.1.0",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
@@ -94,6 +95,7 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "type": "tsc",
+    "gen": "graphql-codegen --config .graphqlrc.yml",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   }
 }

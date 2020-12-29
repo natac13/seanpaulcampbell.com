@@ -5,8 +5,9 @@ const blogDir = path.join(homeDir, 'content', 'blog')
 const assetsDir = path.join(homeDir, 'content', 'assets')
 
 module.exports = {
+  flags: { PRESERVE_WEBPACK_CACHE: true },
   siteMetadata: {
-    title: `Gatsby Starter Blog`,
+    title: `Sean Campbell's Blog & Photo Gallery`,
     author: {
       name: `Sean Paul Campbell`,
       summary: `Full Stack Developer, Licensed Electrician.`,
@@ -18,7 +19,7 @@ module.exports = {
       twitter: `https://twitter.com/natac131`,
       github: `https://github.com/natac13`,
       linkedIn: `https://www.linkedin.com/in/seancampbellnatac/`,
-      youtube: `https://www.youtube.com/channel/UCngtXcTVb2jH9CjpIOm3xOA`,
+      youTube: `https://www.youtube.com/channel/UCngtXcTVb2jH9CjpIOm3xOA`,
     },
   },
   plugins: [
