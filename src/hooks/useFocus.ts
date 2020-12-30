@@ -1,9 +1,9 @@
 import { useRef } from 'react'
 
 const useFocus = () => {
-  const htmlElRef = useRef(null)
+  const htmlElRef = useRef<HTMLElement | null>(null)
   const setFocus = () => {
-    htmlElRef.current && htmlElRef.current.focus()
+    htmlElRef?.current?.focus()
   }
 
   return [htmlElRef, setFocus]
