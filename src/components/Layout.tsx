@@ -1,7 +1,7 @@
 import React from 'react'
 import SEO from './SEO'
 import Footer from './Footer'
-import Navbar from './Narbar'
+import Navbar from './Navbar'
 import { experimentalStyled as styled } from '@material-ui/core'
 
 interface Props {

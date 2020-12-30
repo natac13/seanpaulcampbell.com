@@ -7,9 +7,9 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core'
-import { Brightness3, GitHub, LinkedIn, WbSunny } from '@material-ui/icons'
+import { GitHub, LinkedIn } from '@material-ui/icons'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import React, { useContext } from 'react'
+import React from 'react'
 import useIsMobile from '../hooks/useIsMobile'
 import { NavIconLinks, NavLinks } from '../types/nav'
 import HideOnScroll from './HideOnScroll'
@@ -17,18 +17,17 @@ import MobileNav from './MobileNav'
 import { ScrollTop } from './ScrollTop'
 import VisuallyHidden from './VisuallyHidden'
 import { Link, IconButton } from 'gatsby-material-ui-components'
-import ThemeContext from '../themes/themeContext'
-import { useTheme } from '@emotion/react'
-import { useTransition, animated, config as rsConfig } from 'react-spring'
-import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion'
+import DarkModeButton from './DarkModeButton'
 
 interface Props {}
 
 const StyledLink = experimentalStyled(Link)(
-  ({ theme }) => `
-color: ${theme.palette.primary.contrastText};
-font-size: ${theme.typography.h5.fontSize};
-margin-left: ${theme.spacing(3)};
+  ({ theme }) =>
+    `
+  color: ${theme.palette.primary.contrastText};
+  font-size: ${theme.typography.h6.fontSize};
+  font-weight: 600;
+  text-transform: uppercase;
 `
 )
 
@@ -60,22 +59,8 @@ const navIconLinks: NavIconLinks = [
   },
 ]
 
-const AnimatedSun = animated(WbSunny)
-const AnimatedMoon = animated(Brightness3)
-
 const Navbar: React.FC<Props> = () => {
   const isMobile = useIsMobile()
-  const { darkMode, setDarkMode } = useContext(ThemeContext)
-  const theme = useTheme()
-  const prefersReduceMotion = usePrefersReducedMotion()
-
-  const darkIconTransition = useTransition(darkMode, null, {
-    from: { opacity: 0, position: 'absolute', transform: 'translateX(-20px)' },
-    enter: { opacity: 1, transform: 'translateX(0px)' },
-    leave: { opacity: 0, transform: 'translateX(20px)' },
-    config: rsConfig.stiff,
-    immediate: prefersReduceMotion,
-  })
 
   return (
     <>
@@ -89,54 +74,70 @@ const Navbar: React.FC<Props> = () => {
                 display: 'flex',
                 flex: '1 0',
                 alignItems: 'center',
+                gap: (theme) => theme.spacing(3),
               }}
             >
               <Typography variant={isMobile ? 'h5' : 'h4'} component="div">
                 Sean Paul Campbell
               </Typography>
-              <Hidden implementation="css" mdDown>
+            </Box>
+
+            <Hidden
+              css={{
+                flex: '2 0',
+              }}
+              id="navbar-middle"
+              implementation="css"
+              mdDown
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  width: '100%',
+                  justifyContent: 'space-between',
+                }}
+              >
                 {navLinks.map((link) => (
-                  <StyledLink key={link.text} to={link.url}>
+                  <StyledLink
+                    activeStyle={{ textDecoration: 'underline' }}
+                    partiallyActive
+                    key={link.text}
+                    to={link.url}
+                    underline="none"
+                  >
                     {link.text}
                   </StyledLink>
                 ))}
-              </Hidden>
-            </Box>
-            <Box id="navbar-right">
+              </Box>
+            </Hidden>
+
+            <Box
+              id="navbar-right"
+              sx={{
+                flex: '1 0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+            >
               <Hidden implementation="css" smUp>
                 <MobileNav navIconLinks={navIconLinks} navLinks={navLinks} />
               </Hidden>
               <Hidden implementation="css" smDown>
-                <>
+                <DarkModeButton />
+                {navIconLinks.map((link) => (
                   <IconButton
+                    key={link.text}
+                    onClick={link.onClick}
+                    to={link.url || ''}
                     css={(theme) => ({
-                      transform: `translateX(-${theme.spacing(2)})`,
+                      color: theme.palette.primary.contrastText,
                     })}
-                    aria-label="change color mode"
-                    onClick={() => setDarkMode?.(!darkMode)}
                   >
-                    {darkIconTransition.map(({ item, key, props }) =>
-                      item ? (
-                        <AnimatedMoon style={props} />
-                      ) : (
-                        <AnimatedSun style={props} />
-                      )
-                    )}
-                    <VisuallyHidden>{`Change to ${
-                      darkMode ? 'light' : 'dark'
-                    } mode`}</VisuallyHidden>
+                    {link.icon}
+                    <VisuallyHidden>{link.text}</VisuallyHidden>
                   </IconButton>
-                  {navIconLinks.map((link) => (
-                    <IconButton
-                      key={link.text}
-                      onClick={link.onClick}
-                      to={link.url || ''}
-                    >
-                      {link.icon}
-                      <VisuallyHidden>{link.text}</VisuallyHidden>
-                    </IconButton>
-                  ))}
-                </>
+                ))}
               </Hidden>
             </Box>
           </Toolbar>

@@ -9,6 +9,8 @@ import { NavIconLinks, NavLinks } from '../types/nav'
 import AnimatedBox from './AnimatedBox'
 import VisuallyHidden from './VisuallyHidden'
 import { Link, IconButton } from 'gatsby-material-ui-components'
+import useSiteMetadata from '../hooks/useSiteMetadata'
+import DarkModeButton from './DarkModeButton'
 
 const Transition = React.forwardRef(
   (
@@ -23,6 +25,7 @@ interface Props {
 }
 
 const MobileNav: React.FC<Props> = (props: Props) => {
+  const { site } = useSiteMetadata()
   const prefersReduceMotion = usePrefersReducedMotion()
   const { navLinks, navIconLinks } = props
   const [open, setOpen] = useState(false)
@@ -37,7 +40,7 @@ const MobileNav: React.FC<Props> = (props: Props) => {
       transform: 'translateY(-60px) scale(0.6)',
     },
     config: rsConfig.stiff,
-    reset: !prefersReduceMotion,
+    reset: open,
     immediate: prefersReduceMotion,
   })
 
@@ -49,7 +52,7 @@ const MobileNav: React.FC<Props> = (props: Props) => {
       transform: `translateX(-60px) rotate(60deg)`,
     },
     config: rsConfig.stiff,
-    reset: !prefersReduceMotion,
+    reset: open,
     immediate: prefersReduceMotion,
   })
 
@@ -57,7 +60,12 @@ const MobileNav: React.FC<Props> = (props: Props) => {
     const navLink = navLinks[idx]
     return (
       <AnimatedBox key={navLink.text} style={props}>
-        <Link to={navLink.url} variant="h4" underline="none">
+        <Link
+          to={navLink.url}
+          onClick={handleClose}
+          variant="h4"
+          underline="none"
+        >
           {navLink.text}
         </Link>
       </AnimatedBox>
@@ -74,7 +82,7 @@ const MobileNav: React.FC<Props> = (props: Props) => {
           display: 'inline-block',
         }}
       >
-        <IconButton href={iconLink.url || ''} onClick={iconLink.onClick}>
+        <IconButton to={iconLink.url || ''} onClick={iconLink.onClick}>
           {iconLink.icon}
           <VisuallyHidden>{iconLink.text}</VisuallyHidden>
         </IconButton>
@@ -126,10 +134,15 @@ const MobileNav: React.FC<Props> = (props: Props) => {
           </Box>
           <Box
             sx={{
-              placeSelf: 'end start',
-              ml: 4,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: (theme) => theme.spacing(3),
+              mb: 2,
+              width: 'max-content',
+              placeItems: 'center',
             }}
           >
+            <DarkModeButton />
             {DisplayIconLinks}
           </Box>
         </Box>
@@ -143,7 +156,7 @@ const MobileNav: React.FC<Props> = (props: Props) => {
           }}
         >
           <Typography variant="h6" component="p" color="inherit">
-            Sean Paul Campbell
+            {site?.siteMetadata?.author?.name}
           </Typography>
         </Box>
       </Dialog>
