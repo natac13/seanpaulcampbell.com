@@ -1,6 +1,7 @@
 // custom typefaces
 import 'typeface-merriweather'
 import 'typeface-roboto'
+import 'typeface-playfair-display'
 
 // Highlighting for code blocks
 import 'prismjs/themes/prism-tomorrow.css'

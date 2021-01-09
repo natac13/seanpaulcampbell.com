@@ -5,17 +5,18 @@ const blogDir = path.join(homeDir, 'content', 'blog')
 const assetsDir = path.join(homeDir, 'content', 'assets')
 
 module.exports = {
-  flags: { PRESERVE_WEBPACK_CACHE: true },
+  flags: { PRESERVE_WEBPACK_CACHE: true, FAST_DEV: false },
   siteMetadata: {
     title: `Sean Campbell's Blog & Photo Gallery`,
     author: {
       name: `Sean Paul Campbell`,
-      summary: `Full Stack Developer, Licensed Electrician.`,
+      summary: `JavaScript Full Stack Developer`,
     },
     description: `My personal website, blog and photography gallery.`,
     siteUrl: `https://seanpaulcampbell.com`,
     siteRepo: `https://github.com/natac13/seanpaulcampbell.com`,
     social: {
+      email: 'sean.campbell13@gmail.com',
       twitter: `https://twitter.com/natac131`,
       github: `https://github.com/natac13`,
       linkedIn: `https://www.linkedin.com/in/seancampbellnatac/`,
@@ -93,6 +94,7 @@ module.exports = {
       },
     },
     `gatsby-transformer-sharp`,
+    `gatsby-plugin-image`,
     `gatsby-plugin-sharp`,
     {
       resolve: `gatsby-plugin-manifest`,
@@ -103,7 +105,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `content/assets/gatsby-icon.png`,
+        icon: `content/assets/me.png`,
       },
     },
     `gatsby-plugin-react-helmet`,
