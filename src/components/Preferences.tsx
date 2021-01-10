@@ -9,7 +9,7 @@ const Preferences: React.FC = () => {
     <Box
       id="preferences"
       sx={{
-        color: 'text.secondary',
+        color: 'secondary.main',
         py: 1,
         px: 6,
         display: 'flex',

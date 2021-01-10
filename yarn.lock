@@ -15841,15 +15841,10 @@ typeface-merriweather@^1.1.13:
   resolved "https://registry.yarnpkg.com/typeface-merriweather/-/typeface-merriweather-1.1.13.tgz#c6f0564bc0346174f4da8daf282d27bfa802f06f"
   integrity sha512-ho6xe/y/uHIKVXsFtK+dJfRCD5KZqJCMYTCcXfuCwQHQbeQ83a7hVkxfRMTEIjZOSXw5SevOjnwJuZ5QgWEHiw==
 
-typeface-montserrat@^1.1.13:
+typeface-open-sans@^1.1.13:
   version "1.1.13"
-  resolved "https://registry.yarnpkg.com/typeface-montserrat/-/typeface-montserrat-1.1.13.tgz#2a16729c174dd1a8c3fec05a851b7725412606cc"
-  integrity sha512-Pklkyj0e+K+6I/t0M6JBDBphpfJkF1k+3qd8qDnp9aVtCC7oGBQWTAcL6+5eArfGe7h73uPwyal73hEkf9YCUA==
-
-typeface-playfair-display@^1.1.13:
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/typeface-playfair-display/-/typeface-playfair-display-1.1.13.tgz#7f7cef9870622a6f6bd86971ea65c50b67dbf4ae"
-  integrity sha512-aOAo7NQDbdNEbBCku7i+54l5oeuttHEoa8/qJXDvPUfTIpz+PvpTDq+LeIhhh1H1RwhxurokEpIa+tYqIzZRSA==
+  resolved "https://registry.yarnpkg.com/typeface-open-sans/-/typeface-open-sans-1.1.13.tgz#32a09ebd7df59601e01ad81216f98ce641eeafd1"
+  integrity sha512-lVGVHvYl7UJDFB9vN8r7NHw3sVm7Rjeow6b9AeABc/J+2mDaCkmcdVtw3QZnsJW39P+xm5zeggIj9gLHYGn9Iw==
 
 typeface-roboto@^1.1.13:
   version "1.1.13"

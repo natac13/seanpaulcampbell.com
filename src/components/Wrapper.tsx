@@ -15,46 +15,38 @@ import {
   useFontSizeContext,
   useFontSizeState,
 } from '../context/fontSize'
+import {
+  FontFamily,
+  FontFamilyProvider,
+  sansSerifFontFamily,
+  serifFontFamily,
+  useFontFamilyState,
+} from '../context/fontFamily'
 import SnackbarProvider from './SnackbarProvider'
-import { TypographyOptions } from '@material-ui/core/styles/createTypography'
 import useDarkMode from 'use-dark-mode'
 
 interface Props {
   children: React.ReactNode
 }
 
-const headerCommon: TypographyOptions = {
-  fontFamily: `'Playfair Display', 'Times New Roman', serif`,
-}
-
 const Wrapper: React.FC<Props> = (props: Props) => {
   const darkMode = useDarkMode(false)
   const prefersDarkMode = darkMode.value
   const [fontSize, setFontSize] = useFontSizeState(16)
+  const [fontFamily, setFontFamily] = useFontFamilyState<FontFamily>(
+    'sans-serif'
+  )
 
   const theme = useMemo(() => {
     const accessibility: ThemeOptions = {
       palette: {
-        contrastThreshold: 4.6,
+        contrastThreshold: 3,
       },
       typography: {
         fontSize,
+        fontFamily:
+          fontFamily === 'serif' ? serifFontFamily : sansSerifFontFamily,
         h1: { fontWeight: 400 },
-        h2: {
-          ...headerCommon,
-        },
-        h3: {
-          ...headerCommon,
-        },
-        h4: {
-          ...headerCommon,
-        },
-        h5: {
-          ...headerCommon,
-        },
-        h6: {
-          ...headerCommon,
-        },
       },
     }
 
@@ -66,28 +58,32 @@ const Wrapper: React.FC<Props> = (props: Props) => {
     }
 
     return responsiveFontSizes(createMuiTheme(mergeThemeConfig))
-  }, [prefersDarkMode, fontSize])
+  }, [prefersDarkMode, fontSize, fontFamily])
 
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <ThemeProvider
-        value={{
-          darkMode: prefersDarkMode,
-          setDarkMode: darkMode.toggle,
-        }}
-      >
-        <FontSizeProvider
+      <SoundProvider>
+        <ThemeProvider
           value={{
-            fontSize,
-            setFontSize,
+            darkMode: prefersDarkMode,
+            setDarkMode: darkMode.toggle,
           }}
         >
-          <SoundProvider>
-            <SnackbarProvider theme={theme}>{props.children}</SnackbarProvider>
-          </SoundProvider>
-        </FontSizeProvider>
-      </ThemeProvider>
+          <FontSizeProvider
+            value={{
+              fontSize,
+              setFontSize,
+            }}
+          >
+            <FontFamilyProvider value={{ fontFamily, setFontFamily }}>
+              <SnackbarProvider theme={theme}>
+                {props.children}
+              </SnackbarProvider>
+            </FontFamilyProvider>
+          </FontSizeProvider>
+        </ThemeProvider>
+      </SoundProvider>
     </MuiThemeProvider>
   )
 }

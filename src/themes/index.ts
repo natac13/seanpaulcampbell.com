@@ -1,6 +1,5 @@
 import { ThemeOptions } from '@material-ui/core'
-import blueGrey from '@material-ui/core/colors/blueGrey'
-import cyan from '@material-ui/core/colors/cyan'
+import { amber, cyan } from '@material-ui/core/colors'
 
 export const lightPalette: ThemeOptions = {
   palette: {
@@ -12,7 +11,7 @@ export const lightPalette: ThemeOptions = {
       main: cyan[800],
     },
     secondary: {
-      main: blueGrey[600],
+      main: '#87701c',
     },
   },
 }
@@ -25,7 +24,7 @@ export const darkPalette: ThemeOptions = {
       contrastText: 'rgb(0,0,0,0.87)',
     },
     secondary: {
-      main: blueGrey[100],
+      main: amber.A200,
       contrastText: 'rgb(0,0,0,0.87)',
     },
   },
