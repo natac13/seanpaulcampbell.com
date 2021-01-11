@@ -25,6 +25,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     }
 
     type Social {
+      email: String
       twitter: String
       github: String
       youTube: String

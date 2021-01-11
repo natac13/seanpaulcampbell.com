@@ -16,11 +16,18 @@ const useSiteMetadata = (): SiteMetadataQuery => {
             summary
           }
           social {
+            email
             twitter
             github
             youTube
             linkedIn
           }
+        }
+      }
+      meAvatar: file(relativePath: { eq: "images/me.png" }) {
+        id
+        childImageSharp {
+          gatsbyImageData(layout: FIXED, width: 200, height: 200, quality: 80)
         }
       }
     }

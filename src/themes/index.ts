@@ -1,25 +1,19 @@
-import merge from 'lodash/merge'
-import { createMuiTheme, ThemeOptions } from '@material-ui/core'
-import blueGrey from '@material-ui/core/colors/blueGrey'
-import cyan from '@material-ui/core/colors/cyan'
-
-const base: ThemeOptions = {
-  palette: {
-    contrastThreshold: 4.5,
-  },
-  typography: {
-    fontSize: 16,
-  },
-}
+import { ThemeOptions } from '@material-ui/core'
+import { amber, cyan } from '@material-ui/core/colors'
 
 export const lightPalette: ThemeOptions = {
   palette: {
     mode: 'light',
+    text: {
+      secondary: `rgba(0, 0, 0, 0.55)`,
+    },
     primary: {
-      main: cyan[800],
+      // main: cyan[800],
+      main: '#007887',
     },
     secondary: {
-      main: blueGrey[600],
+      // main: '#87701c',
+      main: '#9b6800',
     },
   },
 }
@@ -28,15 +22,20 @@ export const darkPalette: ThemeOptions = {
   palette: {
     mode: 'dark',
     primary: {
-      main: cyan[400],
+      main: cyan.A400,
       contrastText: 'rgb(0,0,0,0.87)',
     },
     secondary: {
-      main: blueGrey[100],
+      main: amber.A700,
+      // main: '#fd9a05',
       contrastText: 'rgb(0,0,0,0.87)',
     },
   },
 }
 
-export const lightTheme = createMuiTheme(merge(lightPalette, base))
-export const darkTheme = createMuiTheme(merge(darkPalette, base))
+// export const lightTheme = responsiveFontSizes(
+//   createMuiTheme(merge(lightPalette, base))
+// )
+// export const darkTheme = responsiveFontSizes(
+//   createMuiTheme(merge(darkPalette, base))
+// )

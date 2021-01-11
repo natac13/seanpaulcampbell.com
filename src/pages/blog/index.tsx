@@ -11,11 +11,12 @@ import { graphql, PageProps } from 'gatsby'
 import React from 'react'
 import format from 'date-fns/fp/format'
 import parseISO from 'date-fns/fp/parseISO'
-import Layout from '../../components/Layout'
+import Layout from '../../components/BlogLayout'
 import { BlogIndexQuery } from '../../types/generated-gatsby'
 import Img from 'gatsby-image'
 import { Button } from 'gatsby-material-ui-components'
 import { ArrowRightAlt, KeyboardArrowRight } from '@material-ui/icons'
+import { IS_DEV } from '../../constants'
 
 type Props = PageProps & { data: BlogIndexQuery }
 
@@ -40,7 +41,10 @@ const BlogIndex: React.FC<Props> = (props: Props) => {
         <Typography>{post.excerpt}</Typography>
       </CardContent>
       <CardActions>
-        <Button endIcon={<ArrowRightAlt />} to={`blog/${post.slug}`}>
+        <Button
+          endIcon={<ArrowRightAlt />}
+          to={`${IS_DEV ? 'blog/' : ''}${post.slug}`}
+        >
           Read More
         </Button>
       </CardActions>
