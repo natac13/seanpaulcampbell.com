@@ -2,7 +2,7 @@ import { useState, useRef, useLayoutEffect, RefObject } from 'react'
 
 // https://css-tricks.com/making-sense-of-react-spring/
 
-export function useHeight({ on = true } = {}): [
+function useHeight({ on = true } = {}): [
   RefObject<HTMLDivElement>,
   number | string
 ] {
@@ -29,3 +29,5 @@ export function useHeight({ on = true } = {}): [
 
   return [ref, height]
 }
+
+export default useHeight

@@ -1,14 +1,9 @@
+import { Box, Hidden } from '@material-ui/core'
 import React from 'react'
-import SEO from './SEO'
-import Footer from './Footer'
-import Navbar from './Navbar'
-import {
-  AppBar,
-  Box,
-  experimentalStyled as styled,
-  Toolbar,
-} from '@material-ui/core'
 import Nav from '../components/Nav'
+import Aside from './Aside'
+import Footer from './Footer'
+import SEO from './SEO'
 
 interface Props {
   children?: React.ReactNode
@@ -16,20 +11,13 @@ interface Props {
 
 const Layout: React.FC<Props> = (props: Props) => {
   const { children } = props
-  const handleOpenMenu = () => {}
 
   return (
     <>
       <SEO />
       <Nav />
-      <Box
-        component="main"
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(10, 1fr)`,
-        }}
-      >
-        {children}
+      <Box>
+        <Box component="main">{children}</Box>
       </Box>
       <Footer />
     </>

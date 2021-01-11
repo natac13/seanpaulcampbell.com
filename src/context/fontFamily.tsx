@@ -1,7 +1,8 @@
 import React from 'react'
 import createPersistedState from 'use-persisted-state'
+import { FONT_FAMILY } from '../constants'
 
-const useFontFamilyState = createPersistedState('FONT_FAMILY')
+const useFontFamilyState = createPersistedState(FONT_FAMILY)
 
 type FontFamily = 'sans-serif' | 'serif'
 

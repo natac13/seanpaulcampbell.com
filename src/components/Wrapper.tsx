@@ -8,13 +8,9 @@ import {
 import CssBaseline from '@material-ui/core/CssBaseline'
 import React, { useMemo } from 'react'
 import { darkPalette, lightPalette } from '../themes'
-import { ThemeProvider, useThemeContext } from '../context/theme'
+import { ThemeProvider } from '../context/theme'
 import { SoundProvider } from '../context/sound'
-import {
-  FontSizeProvider,
-  useFontSizeContext,
-  useFontSizeState,
-} from '../context/fontSize'
+import { FontSizeProvider, useFontSizeState } from '../context/fontSize'
 import {
   FontFamily,
   FontFamilyProvider,
@@ -24,17 +20,18 @@ import {
 } from '../context/fontFamily'
 import SnackbarProvider from './SnackbarProvider'
 import useDarkMode from 'use-dark-mode'
+import { DARK_MODE, FONT_FAMILY_DEFAULT, FONT_SIZE_DEFAULT } from '../constants'
 
 interface Props {
   children: React.ReactNode
 }
 
 const Wrapper: React.FC<Props> = (props: Props) => {
-  const darkMode = useDarkMode(false)
+  const darkMode = useDarkMode(false, { storageKey: DARK_MODE })
   const prefersDarkMode = darkMode.value
-  const [fontSize, setFontSize] = useFontSizeState(16)
+  const [fontSize, setFontSize] = useFontSizeState(FONT_SIZE_DEFAULT)
   const [fontFamily, setFontFamily] = useFontFamilyState<FontFamily>(
-    'sans-serif'
+    FONT_FAMILY_DEFAULT
   )
 
   const theme = useMemo(() => {

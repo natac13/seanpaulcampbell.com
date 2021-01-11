@@ -1,7 +1,8 @@
 import React from 'react'
 import createPersistedState from 'use-persisted-state'
+import { FONT_SIZE } from '../constants'
 
-const useFontSizeState = createPersistedState('FONT_SIZE')
+const useFontSizeState = createPersistedState(FONT_SIZE)
 
 interface FontSizeContextInterface {
   setFontSize: React.Dispatch<React.SetStateAction<number>>

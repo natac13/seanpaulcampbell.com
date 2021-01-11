@@ -8,10 +8,12 @@ export const lightPalette: ThemeOptions = {
       secondary: `rgba(0, 0, 0, 0.55)`,
     },
     primary: {
-      main: cyan[800],
+      // main: cyan[800],
+      main: '#007887',
     },
     secondary: {
-      main: '#87701c',
+      // main: '#87701c',
+      main: '#9b6800',
     },
   },
 }
@@ -20,11 +22,12 @@ export const darkPalette: ThemeOptions = {
   palette: {
     mode: 'dark',
     primary: {
-      main: cyan[400],
+      main: cyan.A400,
       contrastText: 'rgb(0,0,0,0.87)',
     },
     secondary: {
-      main: amber.A200,
+      main: amber.A700,
+      // main: '#fd9a05',
       contrastText: 'rgb(0,0,0,0.87)',
     },
   },

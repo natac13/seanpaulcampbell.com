@@ -1,7 +1,8 @@
 import React from 'react'
 import createPersistedState from 'use-persisted-state'
+import { SOUND_ON, SOUND_ON_DEFAULT } from '../constants'
 
-const useSoundState = createPersistedState('SOUND_ON')
+const useSoundState = createPersistedState(SOUND_ON)
 
 interface Props {
   children: React.ReactNode
@@ -17,7 +18,7 @@ const SoundContext = React.createContext<SoundContextInterface | undefined>(
 )
 
 const SoundProvider: React.FC<Props> = ({ children }: Props) => {
-  const [soundOn, setSoundOn] = useSoundState(false)
+  const [soundOn, setSoundOn] = useSoundState(SOUND_ON_DEFAULT)
 
   return (
     <SoundContext.Provider
