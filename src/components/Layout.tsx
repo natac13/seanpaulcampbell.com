@@ -1,7 +1,6 @@
-import { Box, Hidden } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import React from 'react'
 import Nav from '../components/Nav'
-import Aside from './Aside'
 import Footer from './Footer'
 import SEO from './SEO'
 

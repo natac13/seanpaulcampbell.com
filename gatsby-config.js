@@ -5,7 +5,7 @@ const blogDir = path.join(homeDir, 'content', 'blog')
 const assetsDir = path.join(homeDir, 'content', 'assets')
 
 module.exports = {
-  flags: { PRESERVE_WEBPACK_CACHE: true, FAST_DEV: false },
+  flags: { PRESERVE_WEBPACK_CACHE: false, FAST_DEV: false },
   siteMetadata: {
     title: `Sean Campbell's Blog & Photo Gallery`,
     author: {
@@ -105,7 +105,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `content/assets/me.png`,
+        icon: `content/assets/images/me.png`,
       },
     },
     `gatsby-plugin-react-helmet`,

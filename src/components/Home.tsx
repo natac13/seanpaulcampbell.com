@@ -25,7 +25,6 @@ const Home: React.FC = () => {
       }
     }
   `)
-  console.log(data)
 
   return (
     <Box

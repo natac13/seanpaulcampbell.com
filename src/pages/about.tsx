@@ -11,7 +11,6 @@ interface Props extends PageProps {
 const About: React.FC<Props> = (props: Props) => {
   const { data } = props
 
-  console.log(props)
   return (
     <Layout>
       <Typography variant="h2">Work in Progress</Typography>

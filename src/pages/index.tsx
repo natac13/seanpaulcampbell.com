@@ -7,7 +7,6 @@ import Layout from '../components/Layout'
 const BlogIndex = (props) => {
   const { data } = props
 
-  console.log(props)
   return (
     <Layout>
       <Home />
