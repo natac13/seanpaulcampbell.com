@@ -27,7 +27,7 @@ const useSiteMetadata = (): SiteMetadataQuery => {
       meAvatar: file(relativePath: { eq: "images/me.png" }) {
         id
         childImageSharp {
-          gatsbyImageData(layout: FIXED, width: 200, height: 200, quality: 80)
+          gatsbyImageData(layout: FLUID, maxWidth: 400, quality: 80)
         }
       }
     }

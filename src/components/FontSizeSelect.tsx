@@ -3,34 +3,26 @@ import React, { useCallback, useRef, useState } from 'react'
 import VisuallyHidden from './VisuallyHidden'
 import { useFontSizeContext } from '../context/fontSize'
 import { TextFields } from '@material-ui/icons'
-import {
-  Box,
-  ButtonProps,
-  experimentalStyled,
-  Menu,
-  MenuItem,
-  Popover,
-  Typography,
-} from '@material-ui/core'
+import { Box, Popover, Typography } from '@material-ui/core'
 import { useFontFamilyContext } from '../context/fontFamily'
 import useEventListener from '@use-it/event-listener'
 import soundOpen from '../../content/sounds/open.wav'
 import soundClose from '../../content/sounds/close.wav'
 import { useSoundContext } from '../context/sound'
 import useSound from 'use-sound'
+import { VOLUME_DEFAULT } from '../constants'
 
-const StyledButton = experimentalStyled(Button)<
-  ButtonProps & { active: boolean }
->(({ theme, active }) => ({
-  // border: '3px',
-  // borderColor: active
-  //   ? theme.palette.primary.main
-  //   : theme.palette.text.secondary,
-  // borderStyle: 'dashed',
-  // borderRadius: '6px',
-}))
+const fontSizes = [
+  { id: 'Small', value: 12 },
+  { id: 'Default', value: 16 },
+  { id: 'Large', value: 20 },
+  { id: 'X-Large', value: 24 },
+]
 
-const fontSizes = [14, 16, 18, 20, 22, 24]
+const fontFamilies = [
+  { id: 'Classic', value: 'serif' },
+  { id: 'Default', value: 'sans-serif' },
+]
 
 const FontSizeSelect: React.FC = () => {
   const { setFontSize, fontSize } = useFontSizeContext()
@@ -41,7 +33,7 @@ const FontSizeSelect: React.FC = () => {
   const open = Boolean(anchorEl)
   const [playOpen] = useSound(soundOpen, { volume: 0.5, soundEnabled: soundOn })
   const [playClose] = useSound(soundClose, {
-    volume: 0.5,
+    volume: VOLUME_DEFAULT,
     soundEnabled: soundOn,
   })
 
@@ -109,18 +101,15 @@ const FontSizeSelect: React.FC = () => {
             p: 3,
           }}
         >
-          <Button
-            onClick={() => setFontFamily('serif')}
-            variant={fontFamily === 'serif' ? 'contained' : 'outlined'}
-          >
-            Serif
-          </Button>
-          <Button
-            onClick={() => setFontFamily('sans-serif')}
-            variant={fontFamily === 'sans-serif' ? 'contained' : 'outlined'}
-          >
-            Sans-Serif
-          </Button>
+          {fontFamilies.map((ff) => (
+            <Button
+              key={ff.id}
+              onClick={() => setFontFamily(ff.value)}
+              variant={ff.value === fontFamily ? 'contained' : 'outlined'}
+            >
+              {ff.id}
+            </Button>
+          ))}
         </Box>
         <Typography variant="h6" align="center">
           Font Size
@@ -136,15 +125,15 @@ const FontSizeSelect: React.FC = () => {
         >
           {fontSizes.map((fs, idx) => (
             <Button
-              key={idx}
-              variant={fs === fontSize ? 'contained' : 'outlined'}
+              key={fs.id}
+              variant={fs.value === fontSize ? 'contained' : 'outlined'}
               onClick={() => {
-                if (fs !== fontSize) {
-                  setFontSize(fs)
+                if (fs.value !== fontSize) {
+                  setFontSize(fs.value)
                 }
               }}
             >
-              {`${fs} px`}
+              {`${fs.id}`}
             </Button>
           ))}
         </Box>

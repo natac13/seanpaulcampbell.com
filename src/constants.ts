@@ -3,6 +3,8 @@ import { FontFamily } from './context/fontFamily'
 export const SITE_TITLE = `Sean Campbell's Blog & Photo Gallery`
 export const IS_DEV = process.env.NODE_ENV === 'development'
 
+export const VOLUME_DEFAULT = 0.5
+
 // localStorage keys
 export const SOUND_ON = 'SOUND_ON'
 export const DARK_MODE = 'DARK_MODE'

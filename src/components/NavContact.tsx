@@ -36,7 +36,7 @@ const NavContact: React.FC<Props> = ({ type }: Props) => {
       }}
     >
       <Divider />
-      <Typography variant="h6" color="textSecondary">
+      <Typography variant="subtitle1" color="textSecondary">
         Contact Me!
       </Typography>
       <Box sx={{ display: 'flex', gap: (theme) => theme.spacing(3) }}>
@@ -45,28 +45,44 @@ const NavContact: React.FC<Props> = ({ type }: Props) => {
           title={`Send email to ${site?.siteMetadata?.author?.name}`}
           target="_blank"
         >
-          <Email />
+          <Email
+            css={(theme) => ({
+              width: theme.spacing(3),
+            })}
+          />
         </StyledIconButton>
         <StyledIconButton
           href={site?.siteMetadata?.social?.linkedIn}
           title="LinkedIn Profile"
           target="_blank"
         >
-          <LinkedIn />
+          <LinkedIn
+            css={(theme) => ({
+              width: theme.spacing(3),
+            })}
+          />
         </StyledIconButton>
         <StyledIconButton
           href={site?.siteMetadata?.social?.github}
           title="github profile"
           target="_blank"
         >
-          <GitHub />
+          <GitHub
+            css={(theme) => ({
+              width: theme.spacing(3),
+            })}
+          />
         </StyledIconButton>
         <StyledIconButton
           href={site?.siteMetadata?.social?.twitter}
           title="twitter profile"
           target="_blank"
         >
-          <Twitter />
+          <Twitter
+            css={(theme) => ({
+              width: theme.spacing(3),
+            })}
+          />
         </StyledIconButton>
       </Box>
     </Box>

@@ -7,6 +7,7 @@ import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import NavContact from './NavContact'
 import { useIsMobile, usePrefersReducedMotion, useSiteMetadata } from '../hooks'
 import { FileNode } from 'gatsby-plugin-image/dist/src/components/hooks'
+import NavLinks from './NavLinks'
 
 interface Props {
   type: 'mobile' | 'desktop'
@@ -70,7 +71,14 @@ const Aside: React.FC<Props> = (props: Props) => {
           gap: (theme) => theme.spacing(2),
         }}
       >
-        <Link to="/" underline="none">
+        <Link
+          to="/"
+          underline="none"
+          css={{
+            width: '300px',
+            height: '300px',
+          }}
+        >
           <GatsbyImage
             css={(theme) => ({
               borderRadius: '50%',
@@ -108,7 +116,7 @@ const Aside: React.FC<Props> = (props: Props) => {
           </animated.div>
         </Box>
       </Box>
-      <Box id="main-nav" component="nav"></Box>
+      <NavLinks />
       <NavContact type="desktop" />
     </Box>
   )

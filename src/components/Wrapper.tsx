@@ -43,7 +43,8 @@ const Wrapper: React.FC<Props> = (props: Props) => {
         fontSize,
         fontFamily:
           fontFamily === 'serif' ? serifFontFamily : sansSerifFontFamily,
-        h1: { fontWeight: 400 },
+        h1: { fontWeight: 700 },
+        h2: { fontWeight: 700 },
       },
     }
 
