@@ -36,23 +36,35 @@ const recentPosts = await getRecentPosts(SITE.recentPostCount);
         {
           recentPosts.map((post) => (
             <article class="border border-border rounded-xl p-6 transition-all hover:shadow-md group flex flex-col h-full relative isolate dark:shadow-foreground/10">
+              <h3
+                class="text-xl font-semibold mb-3 hover:text-primary transition-colors group-hover:text-primary"
+                transition:name={`blog-title-${post.id}`}
+              >
+                {post.data.title}
+              </h3>
               <a href={`/blog/${post.id}`}>
                 <span class="absolute inset-0 z-10" />
               </a>
-              <h3 class="text-xl font-semibold mb-3 hover:text-primary transition-colors group-hover:text-primary">
-                {post.data.title}
-              </h3>
-              <p class="text-muted-foreground mb-4 flex-1">
+              <p
+                class="text-muted-foreground mb-4 flex-1"
+                transition:name={`blog-description-${post.id}`}
+              >
                 {post.data.description}
               </p>
               <div class="flex items-center gap-2 mt-auto">
-                <span class="text-sm text-muted-foreground">
+                <span
+                  class="text-sm text-muted-foreground"
+                  transition:name={`blog-publish-date-${post.id}`}
+                >
                   {formatDate(post.data.publishDate)}
                 </span>
                 {post.data.tags && post.data.tags.length > 0 && (
                   <>
                     <span class="text-muted-foreground">•</span>
-                    <span class="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">
+                    <span
+                      class="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full"
+                      transition:name={`blog-tags-${post.id}`}
+                    >
                       {post.data.tags[0]}
                     </span>
                   </>

@@ -59,11 +59,24 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
         Back to all posts
       </a>
 
-      <h1 class="text-4xl font-bold mb-4">{post.data.title}</h1>
-      <p class="text-xl text-muted-foreground mb-4">{post.data.description}</p>
+      <h1
+        class="text-4xl font-bold mb-4"
+        transition:name={`blog-title-${post.id}`}
+      >
+        {post.data.title}
+      </h1>
+      <p
+        class="text-xl text-muted-foreground mb-4"
+        transition:name={`blog-description-${post.id}`}
+      >
+        {post.data.description}
+      </p>
 
       <div class="flex flex-wrap items-center gap-4 mb-6">
-        <div class="flex flex-wrap gap-2">
+        <div
+          class="flex flex-wrap gap-2"
+          transition:name={`blog-tags-${post.id}`}
+        >
           {
             post.data.tags.map((tag) => (
               <a
@@ -76,7 +89,10 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
           }
         </div>
         <span class="text-muted-foreground">•</span>
-        <span class="text-muted-foreground">
+        <span
+          class="text-muted-foreground"
+          transition:name={`blog-publish-date-${post.id}`}
+        >
           {formatDate(post.data.publishDate)}
         </span>
         <span class="text-muted-foreground">•</span>

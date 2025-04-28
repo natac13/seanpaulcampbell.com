@@ -60,6 +60,9 @@ import Favicons from "./Favicons.astro";
 
     // Apply theme on page load
     applyTheme();
+
+    // Re-apply theme after view transitions swap to prevent flashing
+    document.addEventListener("astro:after-swap", applyTheme);
   </script>
 
   <Favicons />

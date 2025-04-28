@@ -26,10 +26,10 @@ const allTags = await getAllTags();
 
 // Set cache control headers for better performance
 // Cache the page for 10 minutes (600 seconds)
-Astro.response.headers.set(
-  'Cache-Control',
-  'public, max-age=600, s-maxage=600, stale-while-revalidate=60'
-);
+// Astro.response.headers.set(
+//   'Cache-Control',
+//   'public, max-age=600, s-maxage=600, stale-while-revalidate=60'
+// );
 ---
 
 <Layout title="Blog">
@@ -122,22 +122,37 @@ Astro.response.headers.set(
           {filteredPosts.map((post) => (
             <article class="border border-border rounded-xl p-6 transition-all hover:shadow-md group dark:shadow-foreground/10">
               <div class="relative isolate">
-                <h2 class="text-2xl font-semibold mb-2 hover:text-primary transition-colors group-hover:text-primary">
+                <h2
+                  class="text-2xl font-semibold mb-2 hover:text-primary transition-colors group-hover:text-primary"
+                  transition:name={`blog-title-${post.id}`}
+                >
                   {post.data.title}
                 </h2>
                 <a href={`/blog/${post.id}`}>
                   <span class="absolute inset-0 z-10" />
                 </a>
-                <p class="text-muted-foreground mb-4">{post.data.description}</p>
+                <p
+                  class="text-muted-foreground mb-4"
+                  transition:name={`blog-description-${post.id}`}
+                >
+                  {post.data.description}
+                </p>
                 <div class="flex flex-wrap items-center gap-3">
-                  <span class="text-sm text-muted-foreground">
+                  <span
+                    class="text-sm text-muted-foreground"
+                    transition:name={`blog-publish-date-${post.id}`}
+                  >
                     {formatDate(post.data.publishDate)}
                   </span>
                   <span class="text-muted-foreground">•</span>
-                  <div class="flex flex-wrap gap-2">
-                    {post.data.tags && post.data.tags.map((tagName) => (
-                      <Tag>{tagName}</Tag>
-                    ))}
+                  <div
+                    class="flex flex-wrap gap-2"
+                    transition:name={`blog-tags-${post.id}`}
+                  >
+                    {post.data.tags &&
+                      post.data.tags.map((tagName) => (
+                        <Tag>{tagName}</Tag>
+                      ))}
                   </div>
                 </div>
               </div>
