@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { cn, formatDate } from "../lib/utils";
+import TagComponent from "./Tag.astro"; // Use the existing Tag component for styling
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  activeTag?: string | null;
+}
+
+const { post, activeTag = null } = Astro.props;
+---
+
+<article
+  class="border border-border rounded-xl p-6 transition-all hover:shadow-md group dark:shadow-foreground/10"
+>
+  <div class="relative isolate">
+    <h2
+      class="text-2xl font-semibold mb-2 hover:text-primary transition-colors group-hover:text-primary"
+      transition:name={`blog-title-${post.id}`}
+    >
+      {post.data.title}
+    </h2>
+    <a href={`/blog/${post.id}`} class="absolute inset-0 z-10">
+      <span class="sr-only">Read more about {post.data.title}</span>
+    </a>
+    <p
+      class="text-muted-foreground mb-4"
+      transition:name={`blog-description-${post.id}`}
+    >
+      {post.data.description}
+    </p>
+    <div class="flex flex-wrap items-center gap-3">
+      <span
+        class="text-sm text-muted-foreground"
+        transition:name={`blog-publish-date-${post.id}`}
+      >
+        {formatDate(post.data.publishDate)}
+      </span>
+      <span class="text-muted-foreground">•</span>
+      <div
+        class="flex flex-wrap gap-2"
+        transition:name={`blog-tags-${post.id}`}
+      >
+        {
+          post.data.tags &&
+            post.data.tags.map((tagName) => (
+              <a
+                href={`/tags/${tagName}`}
+                class={cn()}
+                aria-current={tagName === activeTag ? "page" : undefined}
+              >
+                <TagComponent
+                  class={cn(
+                    tagName === activeTag &&
+                      "bg-primary text-primary-foreground"
+                  )}
+                >
+                  {tagName}
+                </TagComponent>
+              </a>
+            ))
+        }
+      </div>
+    </div>
+  </div>
+</article>

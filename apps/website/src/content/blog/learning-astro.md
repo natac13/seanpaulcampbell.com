@@ -5,8 +5,6 @@ publishDate: 2023-10-22
 tags: ["astro", "web development", "jamstack"]
 ---
 
-# Why I Chose Astro for My Blog
-
 After researching various frameworks for building my personal blog, I settled on Astro. Here's why I think it's the perfect choice for content-focused websites.
 
 ## The "Islands" Architecture

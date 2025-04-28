@@ -1,0 +1,142 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { GetStaticPathsOptions, Page } from "astro";
+import PostListItem from "../../components/PostListItem.astro";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../../components/ui/pagination";
+import { SITE } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+import { getAllPosts, getAllTags } from "../../lib/posts";
+import { cn } from "../../lib/utils";
+
+// SSG: Generate paginated paths
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getAllPosts(); // Fetch all posts once during build
+  return paginate(allPosts, { pageSize: SITE.postsPerPage });
+}
+
+// Get the current page's data from Astro.props provided by getStaticPaths
+const { page } = Astro.props as { page: Page<CollectionEntry<"blog">> };
+const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+
+function getPageUrl(page: number) {
+  return page === 1 ? "/blog" : `/blog/${page}`;
+}
+
+const currentPage = page.currentPage;
+const totalPages = page.lastPage;
+
+// Get all unique tags for the "Filter by tags" section (links to static tag pages)
+const allTags = await getAllTags();
+
+// Enable prerendering for SSG
+export const prerender = true;
+---
+
+<Layout title={`Blog - Page ${page.currentPage}`}>
+  {/* Revert to simpler centered layout */}
+  <div class="space-y-8 max-w-4xl mx-auto">
+    <!-- <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4">Blog</h1>
+      <p class="text-muted-foreground">All the latest news and articles.</p>
+    </header> -->
+
+    <div class="mb-8">
+      <h2 class="text-sm font-medium mb-2">Browse by Tag:</h2>
+      <div class="flex flex-wrap gap-2">
+        <a
+          href="/blog"
+          class={cn(
+            "text-sm px-3 py-1.5 rounded-full transition-colors",
+            page.currentPage === 1
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground"
+          )}
+          aria-current={page.currentPage === 1 ? "page" : undefined}
+        >
+          All Posts
+        </a>
+        {
+          allTags.map((tagItem) => (
+            <a
+              href={`/tags/${tagItem.tag}`}
+              class={cn(
+                "text-sm px-3 py-1.5 rounded-full transition-colors bg-muted text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground"
+              )}
+            >
+              {tagItem.tag} ({tagItem.count})
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Blog posts for the current page */}
+    <div class="space-y-10">
+      {
+        page.data.length > 0 ? (
+          <>
+            {page.data.map((post) => (
+              <PostListItem post={post} />
+            ))}
+          </>
+        ) : (
+          <div class="text-center py-12">
+            <p class="text-lg text-muted-foreground mb-4">No posts found.</p>
+          </div>
+        )
+      }
+    </div>
+
+    {/* Pagination */}
+    {
+      page.lastPage > 1 && (
+        <Pagination>
+          <PaginationContent className="flex-wrap">
+            <PaginationItem>
+              <PaginationPrevious
+                href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
+                aria-disabled={currentPage === 1}
+              />
+            </PaginationItem>
+
+            {pages.map((page) => (
+              <PaginationItem key={page}>
+                <PaginationLink
+                  href={getPageUrl(page)}
+                  isActive={page === currentPage}
+                >
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
+            {totalPages > 5 && (
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )}
+
+            <PaginationItem>
+              <PaginationNext
+                href={
+                  currentPage < totalPages
+                    ? getPageUrl(currentPage + 1)
+                    : undefined
+                }
+                aria-disabled={currentPage === totalPages}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )
+    }
+  </div>
+</Layout>

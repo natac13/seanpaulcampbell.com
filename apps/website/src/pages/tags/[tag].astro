@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import PostListItem from "../../components/PostListItem.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getAllTags, getPostsByTag } from "../../lib/posts";
+import { cn, formatDate } from "../../lib/utils";
+
+export const prerender = true;
+
+// Generate a static page for each tag
+export const getStaticPaths = (async () => {
+  const allTags = await getAllTags();
+
+  const paths = await Promise.all(
+    allTags.map(async (tagInfo) => {
+      const postsForTag = await getPostsByTag(tagInfo.tag);
+      return {
+        params: { tag: tagInfo.tag },
+        props: { posts: postsForTag },
+      };
+    })
+  );
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+// Get the tag and posts from Astro props/params
+const { tag } = Astro.params;
+const { posts } = Astro.props as { posts: CollectionEntry<"blog">[] };
+---
+
+<Layout title={`Posts tagged with "${tag}"`}>
+  <div class="space-y-8 max-w-4xl mx-auto">
+    <header class="mb-8">
+      <p class="mb-4">
+        <a href="/tags" class="text-primary hover:underline"
+          >&larr; Back to All Tags</a
+        >
+      </p>
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 class="text-3xl font-bold">Posts tagged with:</h1>
+        <span
+          class="bg-primary text-primary-foreground flex items-center gap-x-1 rounded-full px-4 py-1.5 text-2xl font-medium"
+        >
+          {tag}
+        </span>
+      </div>
+    </header>
+
+    {/* List of posts for this tag */}
+    <div class="space-y-10">
+      {
+        posts.length > 0 ? (
+          <>
+            {posts.map((post) => (
+              <PostListItem post={post} activeTag={tag} />
+            ))}
+          </>
+        ) : (
+          <div class="text-center py-12">
+            <p class="text-lg text-muted-foreground mb-4">
+              No posts found for this tag.
+            </p>
+          </div>
+        )
+      }
+    </div>
+    <!-- No pagination needed here as per request -->
+  </div>
+</Layout>

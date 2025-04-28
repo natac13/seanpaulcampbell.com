@@ -1,0 +1,39 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getAllTags } from "../../lib/posts";
+import { cn } from "../../lib/utils";
+
+export const prerender = true;
+
+const allTags = await getAllTags();
+// Sort tags alphabetically or by count, etc.
+allTags.sort((a, b) => a.tag.localeCompare(b.tag));
+---
+
+<Layout title="All Tags">
+  <div class="space-y-8 max-w-4xl mx-auto">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-4">Tags</h1>
+      <p class="text-muted-foreground">Browse posts by topic.</p>
+    </header>
+
+    <div class="flex flex-wrap gap-4">
+      {
+        allTags.map((tagInfo) => (
+          <a
+            href={`/tags/${tagInfo.tag}`}
+            class={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-full border border-border",
+              "bg-muted text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground transition-colors"
+            )}
+          >
+            <span class="font-medium">{tagInfo.tag}</span>
+            <span class="text-xs bg-card text-card-foreground rounded-full px-2 py-0.5">
+              {tagInfo.count}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Layout>

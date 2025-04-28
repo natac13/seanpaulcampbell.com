@@ -1,0 +1,161 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+# Concurrency group name ensures concurrent workflow runs wait for any in-progress job to finish
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: write
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 🚀 Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: 👾 Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "bun"
+
+      - name: 📱 Install dependencies
+        run: bun install
+
+      - name: 🧹 Run format check
+        run: bun run format:check
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 🚀 Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: 👾 Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "bun"
+
+      - name: 📱 Install dependencies
+        run: bun install
+
+      - name: 🔬 Run lint check
+        run: bun run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 🚀 Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: 👾 Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "bun"
+
+      - name: 📱 Install dependencies
+        run: bun install
+
+      - name: Setup SST
+        run: bun sst install
+
+      - name: 🔎 Run type check
+        run: bun run typecheck
+
+  deploy-development:
+    name: 🚀 Deploy Dev
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    env:
+      AWS_REGION: us-east-1
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configure AWS credentials for PRs
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
+          role-session-name: gravity-builder-repo-dev-deploy
+          role-duration-seconds: 1200 # 20 minutes
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🚀 Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: 👾 Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "bun"
+
+      - name: 📱 Install dependencies
+        run: bun install
+
+      - name: 🚀 Deploy to Staging / Development
+        run: bun sst deploy --stage dev
+
+  deploy-production:
+    name: 🚀 Deploy Prod
+    runs-on: ubuntu-latest
+    needs: [format, lint, typecheck]
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    env:
+      AWS_REGION: us-east-1
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configure AWS credentials for Production
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}
+          role-session-name: gravity-builder-repo-prod-deploy
+          role-duration-seconds: 1200 # 20 minutes
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 🚀 Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: 👾 Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "bun"
+
+      - name: 📱 Install dependencies
+        run: bun install
+
+      - name: 🚀 Deploy to Production
+        run: bun sst deploy --stage production
