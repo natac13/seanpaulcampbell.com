@@ -1,14 +1,14 @@
 ---
-import { buttonVariants } from "../components/ui/button";
-import { SITE } from "../constants";
-import Layout from "../layouts/Layout.astro";
-import { getRecentPosts } from "../lib/posts";
-import { formatDate } from "../lib/utils";
+import { buttonVariants } from '../components/ui/button'
+import { SITE } from '../constants'
+import Layout from '../layouts/Layout.astro'
+import { getRecentPosts } from '../lib/posts'
+import { formatDate } from '../lib/utils'
 
-export const prerender = true;
+export const prerender = true
 
 // Get recent blog posts
-const recentPosts = await getRecentPosts(SITE.recentPostCount);
+const recentPosts = await getRecentPosts(SITE.recentPostCount)
 ---
 
 <Layout>

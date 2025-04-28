@@ -1,13 +1,13 @@
 ---
-import { cn } from "../lib/utils";
+import { cn } from '../lib/utils'
 
 interface Props extends astroHTML.JSX.AnchorHTMLAttributes {
-  href: string;
-  external?: boolean;
-  underline?: boolean;
+  href: string
+  external?: boolean
+  underline?: boolean
 }
 
-const { href, external, class: className, underline, ...rest } = Astro.props;
+const { href, external, class: className, underline, ...rest } = Astro.props
 ---
 
 <a

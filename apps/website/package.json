@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "format": "biome format --write",
+    "format:check": "biome format --check",
+    "lint": "biome lint --write",
+    "lint:fix": "biome lint --write --fix",
     "preview": "astro preview",
     "astro": "astro",
     "ui-add": "bunx --bun shadcn@latest add"

@@ -1,33 +1,33 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import type { GetStaticPaths } from "astro";
-import PostListItem from "../../components/PostListItem.astro";
-import Layout from "../../layouts/Layout.astro";
-import { getAllTags, getPostsByTag } from "../../lib/posts";
-import { cn, formatDate } from "../../lib/utils";
+import type { CollectionEntry } from 'astro:content'
+import type { GetStaticPaths } from 'astro'
+import PostListItem from '../../components/PostListItem.astro'
+import Layout from '../../layouts/Layout.astro'
+import { getAllTags, getPostsByTag } from '../../lib/posts'
+import { cn, formatDate } from '../../lib/utils'
 
-export const prerender = true;
+export const prerender = true
 
 // Generate a static page for each tag
 export const getStaticPaths = (async () => {
-  const allTags = await getAllTags();
+  const allTags = await getAllTags()
 
   const paths = await Promise.all(
     allTags.map(async (tagInfo) => {
-      const postsForTag = await getPostsByTag(tagInfo.tag);
+      const postsForTag = await getPostsByTag(tagInfo.tag)
       return {
         params: { tag: tagInfo.tag },
         props: { posts: postsForTag },
-      };
-    })
-  );
+      }
+    }),
+  )
 
-  return paths;
-}) satisfies GetStaticPaths;
+  return paths
+}) satisfies GetStaticPaths
 
 // Get the tag and posts from Astro props/params
-const { tag } = Astro.params;
-const { posts } = Astro.props as { posts: CollectionEntry<"blog">[] };
+const { tag } = Astro.params
+const { posts } = Astro.props as { posts: CollectionEntry<'blog'>[] }
 ---
 
 <Layout title={`Posts tagged with "${tag}"`}>

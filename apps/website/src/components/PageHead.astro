@@ -1,21 +1,21 @@
 ---
-import { SITE } from "../constants";
+import { SITE } from '../constants'
 
 interface Props {
-  title?: string;
-  description?: string;
-  image?: string;
+  title?: string
+  description?: string
+  image?: string
 }
 
 const {
   title: titleProp,
   description = SITE.description,
-  image = "/images/default-social.jpg",
-} = Astro.props;
+  image = '/images/default-social.jpg',
+} = Astro.props
 
-const title = titleProp ? `${titleProp} | ${SITE.title}` : SITE.title;
-const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin);
-const imageUrl = new URL(image, siteUrl).toString();
+const title = titleProp ? `${titleProp} | ${SITE.title}` : SITE.title
+const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin)
+const imageUrl = new URL(image, siteUrl).toString()
 ---
 
 <title>{title}</title>

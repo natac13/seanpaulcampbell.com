@@ -1,14 +1,14 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { cn, formatDate } from "../lib/utils";
-import TagComponent from "./Tag.astro"; // Use the existing Tag component for styling
+import type { CollectionEntry } from 'astro:content'
+import { cn, formatDate } from '../lib/utils'
+import TagComponent from './Tag.astro' // Use the existing Tag component for styling
 
 interface Props {
-  post: CollectionEntry<"blog">;
-  activeTag?: string | null;
+  post: CollectionEntry<'blog'>
+  activeTag?: string | null
 }
 
-const { post, activeTag = null } = Astro.props;
+const { post, activeTag = null } = Astro.props
 ---
 
 <article

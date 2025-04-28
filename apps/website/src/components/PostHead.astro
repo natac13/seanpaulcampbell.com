@@ -1,23 +1,23 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { SITE } from "../constants";
+import type { CollectionEntry } from 'astro:content'
+import { SITE } from '../constants'
 
 interface Props {
-  post: CollectionEntry<"blog">;
+  post: CollectionEntry<'blog'>
 }
 
-const { post } = Astro.props;
+const { post } = Astro.props
 
-const title = post.data.title || SITE.title;
-const description = post.data.description || SITE.description;
-const defaultImage = "/images/default-social.jpg";
-const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin);
+const title = post.data.title || SITE.title
+const description = post.data.description || SITE.description
+const defaultImage = '/images/default-social.jpg'
+const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin)
 
 // Get image URL, defaulting to site default
-const imageUrl = new URL(defaultImage, siteUrl).toString();
+const imageUrl = new URL(defaultImage, siteUrl).toString()
 
 // Author info
-const author = SITE.author;
+const author = SITE.author
 ---
 
 <title>{`${title} | ${SITE.title}`}</title>

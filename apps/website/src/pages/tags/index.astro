@@ -1,13 +1,13 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import { getAllTags } from "../../lib/posts";
-import { cn } from "../../lib/utils";
+import Layout from '../../layouts/Layout.astro'
+import { getAllTags } from '../../lib/posts'
+import { cn } from '../../lib/utils'
 
-export const prerender = true;
+export const prerender = true
 
-const allTags = await getAllTags();
+const allTags = await getAllTags()
 // Sort tags alphabetically or by count, etc.
-allTags.sort((a, b) => a.tag.localeCompare(b.tag));
+allTags.sort((a, b) => a.tag.localeCompare(b.tag))
 ---
 
 <Layout title="All Tags">
