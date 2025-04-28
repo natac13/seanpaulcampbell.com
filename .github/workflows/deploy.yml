@@ -71,61 +71,61 @@ jobs:
       - name: 🔎 Run type check
         run: bun run typecheck:ws
 
-  deploy-development:
-    name: 🚀 Deploy Dev
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
-    env:
-      AWS_REGION: us-east-1
-    steps:
-      - name: ⬇️ Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+  # deploy-development:
+  #   name: 🚀 Deploy Dev
+  #   runs-on: ubuntu-latest
+  #   if: ${{ github.event_name == 'pull_request' }}
+  #   env:
+  #     AWS_REGION: us-east-1
+  #   steps:
+  #     - name: ⬇️ Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 1
 
-      - name: Configure AWS credentials for PRs
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_DEV }}
-          role-session-name: gravity-builder-repo-dev-deploy
-          role-duration-seconds: 1200 # 20 minutes
-          aws-region: ${{ env.AWS_REGION }}
+  #     - name: Configure AWS credentials for PRs
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  #         role-session-name: seanpaulcampbell-repo-dev-deploy
+  #         role-duration-seconds: 1200 # 20 minutes
+  #         aws-region: ${{ env.AWS_REGION }}
 
-      - name: 🚀 Setup Bun
-        uses: oven-sh/setup-bun@v2
+  #     - name: 🚀 Setup Bun
+  #       uses: oven-sh/setup-bun@v2
 
-      - name: 📱 Install dependencies
-        run: bun install
+  #     - name: 📱 Install dependencies
+  #       run: bun install
 
-      - name: 🚀 Deploy to Staging / Development
-        run: bun sst deploy --stage dev
+  #     - name: 🚀 Deploy to Staging / Development
+  #       run: bun sst deploy --stage dev
 
-  deploy-production:
-    name: 🚀 Deploy Prod
-    runs-on: ubuntu-latest
-    needs: [format, lint, typecheck]
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    env:
-      AWS_REGION: us-east-1
-    steps:
-      - name: ⬇️ Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+  # deploy-production:
+  #   name: 🚀 Deploy Prod
+  #   runs-on: ubuntu-latest
+  #   needs: [format, lint, typecheck]
+  #   if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+  #   env:
+  #     AWS_REGION: us-east-1
+  #   steps:
+  #     - name: ⬇️ Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 1
 
-      - name: Configure AWS credentials for Production
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_PROD }}
-          role-session-name: gravity-builder-repo-prod-deploy
-          role-duration-seconds: 1200 # 20 minutes
-          aws-region: ${{ env.AWS_REGION }}
+  #     - name: Configure AWS credentials for Production
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  #         role-session-name: seanpaulcampbell-repo-prod-deploy
+  #         role-duration-seconds: 1200 # 20 minutes
+  #         aws-region: ${{ env.AWS_REGION }}
 
-      - name: 🚀 Setup Bun
-        uses: oven-sh/setup-bun@v2
+  #     - name: 🚀 Setup Bun
+  #       uses: oven-sh/setup-bun@v2
 
-      - name: 📱 Install dependencies
-        run: bun install
+  #     - name: 📱 Install dependencies
+  #       run: bun install
 
-      - name: 🚀 Deploy to Production
-        run: bun sst deploy --stage production
+  #     - name: 🚀 Deploy to Production
+  #       run: bun sst deploy --stage production
