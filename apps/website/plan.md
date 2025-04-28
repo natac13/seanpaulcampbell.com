@@ -21,6 +21,16 @@
 - [ ] **Responsiveness Check:** Ensure the layout works reasonably well on different screen sizes.
 - [x] ~~**Performance:** Add cache control headers to the blog page to improve performance.~~ (Done)
 
-## Phase 3: Content Creation
+## Phase 3: Additional Features
+
+- [x] ~~**Favicon** Make a favicon from the avatar I have~~ (Done with script)
+- [ ] **RSS Feed** Add an RSS feed for the blog
+- [ ] **Analytics** Add Google Analytics to the site
+- [ ] **Sitemap** Add a sitemap to the site
+- [ ] **Contact Form** Add a contact form to the site
+- [ ] **SEO Optimizations** Add SEO optimizations to the site
+- [ ] **Performance Optimizations** Add performance optimizations to the site
+
+## Phase 4: Content Creation
 
 - [ ] **Write!** Focus on getting your ideas down.
