@@ -28,12 +28,6 @@ jobs:
       - name: 🚀 Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: 👾 Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "bun"
-
       - name: 📱 Install dependencies
         run: bun install
 
@@ -50,12 +44,6 @@ jobs:
 
       - name: 🚀 Setup Bun
         uses: oven-sh/setup-bun@v2
-
-      - name: 👾 Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "bun"
 
       - name: 📱 Install dependencies
         run: bun install
@@ -74,12 +62,6 @@ jobs:
       - name: 🚀 Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: 👾 Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "bun"
-
       - name: 📱 Install dependencies
         run: bun install
 
@@ -87,7 +69,7 @@ jobs:
         run: bun sst install
 
       - name: 🔎 Run type check
-        run: bun run typecheck
+        run: bun run typecheck:ws
 
   deploy-development:
     name: 🚀 Deploy Dev
@@ -111,12 +93,6 @@ jobs:
 
       - name: 🚀 Setup Bun
         uses: oven-sh/setup-bun@v2
-
-      - name: 👾 Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "bun"
 
       - name: 📱 Install dependencies
         run: bun install
@@ -147,12 +123,6 @@ jobs:
 
       - name: 🚀 Setup Bun
         uses: oven-sh/setup-bun@v2
-
-      - name: 👾 Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "bun"
 
       - name: 📱 Install dependencies
         run: bun install
