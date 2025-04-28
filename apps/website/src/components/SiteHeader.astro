@@ -1,0 +1,29 @@
+---
+import { NAV_LINKS, SITE } from "../constants";
+import { ThemeToggle } from "./react/ThemeToggle";
+---
+
+<header class="py-6 border-b border-border">
+  <div class="flex justify-between items-center">
+    <a href="/" class="text-2xl font-bold hover:text-primary transition-colors">
+      {SITE.title}
+    </a>
+    <div class="flex items-center gap-4">
+      <nav class="flex gap-6">
+        {
+          NAV_LINKS.map((link) => (
+            <a
+              href={link.href}
+              class="font-medium hover:text-primary transition-colors"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+      <div class="ml-2">
+        <ThemeToggle client:load />
+      </div>
+    </div>
+  </div>
+</header>

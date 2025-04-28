@@ -1,0 +1,67 @@
+---
+import { buttonVariants } from "../components/ui/button";
+import { SITE } from "../constants";
+import Layout from "../layouts/Layout.astro";
+import { getRecentPosts } from "../lib/posts";
+import { formatDate } from "../lib/utils";
+
+export const prerender = true;
+
+// Get recent blog posts
+const recentPosts = await getRecentPosts(SITE.recentPostCount);
+---
+
+<Layout>
+  <div class="space-y-12 max-w-4xl mx-auto">
+    <!-- Hero section with welcome message -->
+    <header class="text-center py-12">
+      <h1 class="text-5xl font-bold mb-6">{SITE.title}</h1>
+      <p class="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+        {SITE.description}
+      </p>
+      <a href="/blog" class={buttonVariants({ variant: "default" })}>
+        Explore the Blog
+      </a>
+    </header>
+
+    <!-- Recent posts section -->
+    <section>
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl font-bold">Recent Posts</h2>
+        <a href="/blog" class="text-primary hover:underline">View all posts →</a
+        >
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-3">
+        {
+          recentPosts.map((post) => (
+            <article class="border border-border rounded-xl p-6 transition-all hover:shadow-md group flex flex-col h-full relative isolate dark:shadow-foreground/10">
+              <a href={`/blog/${post.id}`}>
+                <span class="absolute inset-0 z-10" />
+              </a>
+              <h3 class="text-xl font-semibold mb-3 hover:text-primary transition-colors group-hover:text-primary">
+                {post.data.title}
+              </h3>
+              <p class="text-muted-foreground mb-4 flex-1">
+                {post.data.description}
+              </p>
+              <div class="flex items-center gap-2 mt-auto">
+                <span class="text-sm text-muted-foreground">
+                  {formatDate(post.data.publishDate)}
+                </span>
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <>
+                    <span class="text-muted-foreground">•</span>
+                    <span class="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">
+                      {post.data.tags[0]}
+                    </span>
+                  </>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Layout>

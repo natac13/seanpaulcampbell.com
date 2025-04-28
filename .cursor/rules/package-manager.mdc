@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Package Manager
+
+This project uses **bun** as the package manager and JavaScript runtime.
+
+- The primary lockfile is `[bun.lock](mdc:bun.lock)`.
+- Project dependencies and workspaces are defined in `[package.json](mdc:package.json).`

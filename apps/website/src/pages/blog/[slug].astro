@@ -1,0 +1,278 @@
+---
+import { Image } from "astro:assets";
+import { render } from "astro:content";
+import {
+  ArrowLeftIcon,
+  FacebookIcon,
+  LinkedinIcon,
+  TwitterIcon,
+} from "lucide-react";
+import PostHead from "../../components/PostHead.astro";
+import { ICON_MAP } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+import { getAllPosts } from "../../lib/posts";
+import { calculateReadingTime, formatReadingTime } from "../../lib/readingTime";
+import { formatDate } from "../../lib/utils";
+
+export const prerender = true;
+
+// Generate static paths for all blog posts
+export async function getStaticPaths() {
+  const allPosts = await getAllPosts();
+  return allPosts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+// Get the post from the props
+const { post } = Astro.props;
+// Render the content
+const { Content } = await render(post);
+
+// Calculate reading time
+const rawContent = (await post.body) || "";
+const readingTime = calculateReadingTime(rawContent);
+const readingTimeText = formatReadingTime(readingTime);
+
+// Current page URL for sharing
+const currentUrl = Astro.url.toString();
+const encodedUrl = encodeURIComponent(currentUrl);
+const encodedTitle = encodeURIComponent(post.data.title);
+const encodedSummary = encodeURIComponent(post.data.description);
+
+// Social sharing URLs
+const twitterUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
+const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedSummary}`;
+---
+
+<Layout title={post.data.title}>
+  <PostHead post={post} slot="head" />
+  <article class="max-w-3xl mx-auto">
+    <div class="mb-8">
+      <a
+        href="/blog"
+        class="text-primary hover:underline flex items-center gap-1 mb-4"
+      >
+        <ArrowLeftIcon className="w-4 h-4" />
+        Back to all posts
+      </a>
+
+      <h1 class="text-4xl font-bold mb-4">{post.data.title}</h1>
+      <p class="text-xl text-muted-foreground mb-4">{post.data.description}</p>
+
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <div class="flex flex-wrap gap-2">
+          {
+            post.data.tags.map((tag) => (
+              <a
+                href={`/blog?tag=${tag}`}
+                class="text-sm bg-muted text-muted-foreground px-3 py-1 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                {tag}
+              </a>
+            ))
+          }
+        </div>
+        <span class="text-muted-foreground">•</span>
+        <span class="text-muted-foreground">
+          {formatDate(post.data.publishDate)}
+        </span>
+        <span class="text-muted-foreground">•</span>
+        <span class="text-muted-foreground">
+          {readingTimeText}
+        </span>
+      </div>
+
+      {
+        post.data.image && (
+          <div class="rounded-xl overflow-hidden mb-8 border border-border">
+            <Image
+              src={post.data.image.src}
+              alt={post.data.image.alt}
+              width={1200}
+              height={630}
+              class="w-full h-auto"
+            />
+          </div>
+        )
+      }
+    </div>
+
+    <div class="prose prose-lg max-w-none dark:prose-invert">
+      <Content />
+    </div>
+
+    <div class="mt-16 pt-8 border-t border-border">
+      <h2 class="text-2xl font-bold mb-4">Share this post</h2>
+      <div class="flex flex-wrap gap-4">
+        <a
+          href={twitterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-[#000000] text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2"
+          aria-label="Share on Twitter/X"
+        >
+          <TwitterIcon className="size-4" />
+          Twitter/X
+        </a>
+        <a
+          href={facebookUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-[#1877F2] text-white px-4 py-2 rounded-lg hover:bg-[#0d6efd] transition-colors flex items-center gap-2"
+          aria-label="Share on Facebook"
+        >
+          <FacebookIcon className="size-4" />
+          Facebook
+        </a>
+        <a
+          href={linkedinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-[#0077B5] text-white px-4 py-2 rounded-lg hover:bg-[#0069a1] transition-colors flex items-center gap-2"
+          aria-label="Share on LinkedIn"
+        >
+          <LinkedinIcon className="size-4" />
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  /* Blog post content styling */
+  .prose {
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-lead: var(--muted-foreground);
+    --tw-prose-links: var(--primary);
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-counters: var(--muted-foreground);
+    --tw-prose-bullets: var(--muted);
+    --tw-prose-hr: var(--border);
+    --tw-prose-quotes: var(--foreground);
+    --tw-prose-quote-borders: var(--border);
+    --tw-prose-captions: var(--muted-foreground);
+    --tw-prose-code: var(--foreground);
+    --tw-prose-pre-code: var(--muted);
+    --tw-prose-pre-bg: var(--card);
+    --tw-prose-th-borders: var(--border);
+    --tw-prose-td-borders: var(--border);
+  }
+
+  .dark .prose {
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-lead: var(--muted-foreground);
+    --tw-prose-links: var(--primary);
+    --tw-prose-bold: var(--foreground);
+    --tw-prose-counters: var(--muted-foreground);
+    --tw-prose-bullets: var(--muted);
+    --tw-prose-hr: var(--border);
+    --tw-prose-quotes: var(--foreground);
+    --tw-prose-quote-borders: var(--border);
+    --tw-prose-captions: var(--muted-foreground);
+    --tw-prose-code: var(--foreground);
+    --tw-prose-pre-code: var(--foreground);
+    --tw-prose-pre-bg: var(--card);
+    --tw-prose-th-borders: var(--border);
+    --tw-prose-td-borders: var(--border);
+  }
+
+  .prose :global(h1),
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4),
+  .prose :global(h5),
+  .prose :global(h6) {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .prose :global(h1) {
+    font-size: 2.25em;
+  }
+
+  .prose :global(h2) {
+    font-size: 1.875em;
+  }
+
+  .prose :global(h3) {
+    font-size: 1.5em;
+  }
+
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-bottom: 1.25em;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.625em;
+  }
+
+  .prose :global(ul) {
+    list-style-type: disc;
+  }
+
+  .prose :global(ol) {
+    list-style-type: decimal;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 0.5em;
+  }
+
+  .prose :global(a) {
+    color: var(--tw-prose-links);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose :global(a:hover) {
+    text-decoration-thickness: 2px;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 4px solid var(--tw-prose-quote-borders);
+    padding-left: 1em;
+    font-style: italic;
+    margin: 1.5em 0;
+  }
+
+  .prose :global(code) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875em;
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25em;
+  }
+
+  .prose :global(pre) {
+    overflow-x: auto;
+    padding: 1.25em;
+    border-radius: 0.5em;
+    background-color: var(--tw-prose-pre-bg);
+    margin: 1.5em 0;
+  }
+
+  .prose :global(pre code) {
+    background-color: transparent;
+    padding: 0;
+    font-size: 0.875em;
+    color: var(--tw-prose-pre-code);
+  }
+
+  .prose :global(img) {
+    border-radius: 0.5em;
+    margin: 1.5em 0;
+  }
+</style>

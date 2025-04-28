@@ -1,0 +1,16 @@
+# sst
+.sst
+
+node_modules
+.DS_Store
+
+build/
+dist/
+server-build/
+.env
+.env*
+!.env.example
+.cache
+
+.turbo
+playwright-report/

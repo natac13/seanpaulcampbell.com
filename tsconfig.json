@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/node20/tsconfig.json",
+  "exclude": ["packages/", "apps/"],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "checkJs": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  }
+}

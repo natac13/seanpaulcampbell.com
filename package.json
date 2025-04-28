@@ -1,0 +1,32 @@
+{
+  "name": "seanpaulcampbell",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "aws:sso": "aws sso login --sso-session=personal-session",
+    "dev": "sst dev",
+    "format": "biome format --write .",
+    "format:check": "biome format --error-on-warnings .",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write .",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/resources/stripe-webhook",
+    "test:run": "bun --filter=* test:run",
+    "typecheck": "tsc",
+    "typecheck:ws": "bun --filter=* typecheck"
+  },
+  "workspaces": ["packages/*", "apps/*"],
+  "dependencies": {
+    "sst": "3.13.14"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@tsconfig/node20": "^20.1.5",
+    "@types/aws-lambda": "8.10.149",
+    "@types/bun": "latest",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

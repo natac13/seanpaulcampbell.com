@@ -1,0 +1,25 @@
+---
+import { cn } from "../lib/utils";
+
+interface Props extends astroHTML.JSX.AnchorHTMLAttributes {
+  href: string;
+  external?: boolean;
+  underline?: boolean;
+}
+
+const { href, external, class: className, underline, ...rest } = Astro.props;
+---
+
+<a
+  {...rest}
+  href={href}
+  target={external ? "_blank" : "_self"}
+  class={cn(
+    "inline-block transition-colors duration-300 ease-in-out",
+    underline &&
+      "underline decoration-muted-foreground underline-offset-[3px] hover:decoration-foreground",
+    className
+  )}
+>
+  <slot />
+</a>

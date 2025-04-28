@@ -1,0 +1,40 @@
+---
+import { SITE } from "../constants";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title: titleProp,
+  description = SITE.description,
+  image = "/images/default-social.jpg",
+} = Astro.props;
+
+const title = titleProp ? `${titleProp} | ${SITE.title}` : SITE.title;
+const siteUrl = Astro.site || new URL(Astro.url.pathname, Astro.url.origin);
+const imageUrl = new URL(image, siteUrl).toString();
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={siteUrl} />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content={SITE.locale} />
+<meta property="og:site_name" content={SITE.title} />
+<meta property="og:url" content={Astro.url} />
+
+<!-- Twitter -->
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={title} />
+<meta name="twitter:card" content="summary_large_image" />

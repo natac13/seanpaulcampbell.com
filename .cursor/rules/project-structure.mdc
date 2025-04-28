@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Structure
+
+This is a monorepo managed with bun workspaces.
+
+- The main web application is an Astro blog located in `[apps/website](mdc:apps/website)`.
+  - The main entry page is `[apps/website/src/pages/index.astro](mdc:apps/website/src/pages/index.astro)`.
+  - React components can be found in `[apps/website/src/components/react](mdc:apps/website/src/components/react)`.
+- Infrastructure is defined using SST (Serverless Stack Toolkit).
+  - The main configuration file is `[sst.config.ts](mdc:sst.config.ts)`.
+  - Infrastructure modules are located in the `[infra](mdc:infra)` directory.
+- Shared packages (if any) would reside in the `[packages](mdc:packages)` directory.

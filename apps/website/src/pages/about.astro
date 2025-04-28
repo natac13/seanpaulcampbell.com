@@ -1,0 +1,127 @@
+---
+import { Image } from "astro:assets";
+import avatarImage from "../assets/images/avatar.jpg";
+import { ICON_MAP, SOCIAL_LINKS } from "../constants";
+import Layout from "../layouts/Layout.astro";
+
+export const prerender = true;
+
+// Function to get color class based on label
+function getSocialLinkClass(label: string): string {
+  switch (label.toLowerCase()) {
+    case "github":
+      return "bg-neutral-800 hover:bg-neutral-700 text-white";
+    case "x":
+    case "twitter":
+      return "bg-black hover:bg-neutral-800 text-white"; // Simple black for X
+    // Add other cases if needed
+    case "linkedin":
+      return "bg-blue-600 hover:bg-blue-700 text-white";
+    default:
+      return "bg-secondary hover:bg-secondary/80 text-secondary-foreground";
+  }
+}
+---
+
+<Layout title="About">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold mb-8 text-center sm:text-left">About Me</h1>
+
+    <div
+      class="flex flex-col md:flex-row gap-8 md:gap-12 mb-12 items-center md:items-start"
+    >
+      <div class="flex-shrink-0 text-center">
+        <Image
+          src={avatarImage}
+          alt="Profile Avatar"
+          class="rounded-full w-40 h-40 md:w-48 md:h-48 border-4 border-border shadow-lg mx-auto"
+          width={192}
+          height={192}
+        />
+      </div>
+
+      <div class="text-center md:text-left">
+        <h2 class="text-2xl font-semibold mb-4">Hi, I'm Sean</h2>
+        <p class="text-muted-foreground mb-4">
+          Welcome to my corner of the internet! I'm a coding enthusiast
+          documenting my journey through the world of programming and web
+          development. This blog is where I share what I'm learning, the
+          projects I'm working on, and my thoughts on technology.
+        </p>
+        <p class="text-muted-foreground">
+          When I'm not coding, you might find me reading, running, or thinking
+          about more code.
+        </p>
+      </div>
+    </div>
+
+    <div class="space-y-12">
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">Connect With Me</h2>
+        <p class="text-muted-foreground mb-6">
+          I'm always interested in connecting with fellow developers, learners,
+          and tech enthusiasts. Feel free to reach out through any of these
+          channels:
+        </p>
+        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+          {
+            SOCIAL_LINKS.map((link) => {
+              const Icon = ICON_MAP[link.label];
+              return (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={`flex items-center gap-2 px-4 py-2 rounded-lg transition-opacity ${getSocialLinkClass(link.label)}`}
+                  aria-label={`Follow on ${link.label}`}
+                >
+                  <span class="sr-only">{link.label}</span>
+                  <Icon className="size-4" />
+                </a>
+              );
+            })
+          }
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">Skills & Interests</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div
+            class="bg-card text-card-foreground p-4 rounded-lg shadow-sm border border-border"
+          >
+            <h3 class="font-medium mb-2">Frontend</h3>
+            <p class="text-muted-foreground text-sm">
+              React, React Router (Remix), Astro, TailwindCSS, Typescript
+            </p>
+          </div>
+          <div
+            class="bg-card text-card-foreground p-4 rounded-lg shadow-sm border border-border"
+          >
+            <h3 class="font-medium mb-2">Backend</h3>
+            <p class="text-muted-foreground text-sm">
+              Node.js, Golang, AWS Serverless (DynamoDB, Lambda, EventBridge,
+              S3, etc.)
+            </p>
+          </div>
+          <div
+            class="bg-card text-card-foreground p-4 rounded-lg shadow-sm border border-border"
+          >
+            <h3 class="font-medium mb-2">Infrastructure</h3>
+            <p class="text-muted-foreground text-sm">AWS, SST</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">Goals</h2>
+        <ul class="list-disc list-inside space-y-2 text-muted-foreground">
+          <li>Share useful content about software development.</li>
+          <li>Build interesting side projects.</li>
+          <li>Contribute meaningfully to open-source.</li>
+          <li>Continuously learn and improve my skills.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,35 @@
+---
+import "@fontsource-variable/crimson-pro";
+import "@fontsource/im-fell-english-sc";
+import "../styles/global.css";
+import Head from "../components/Head.astro";
+import PageHead from "../components/PageHead.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { SITE } from "../constants";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE.locale} class="scroll-smooth">
+  <Head>
+    <slot name="head">
+      <PageHead title={title} description={description} />
+    </slot>
+  </Head>
+  <body class="font-serif antialiased">
+    <div class="min-h-screen flex h-fit flex-col gap-y-6 container mx-auto">
+      <SiteHeader />
+      <main class="flex-grow">
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

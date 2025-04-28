@@ -1,0 +1,120 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "files": {
+    "ignore": [
+      "**/node_modules/**",
+      "**/.sst/**",
+      "**/sst-env.d.ts",
+      ".turbo/**",
+      "**/.cache/**",
+      "**/build/**",
+      "**/dist/**",
+      "**/public/build/**",
+      "**/playwright-report/**",
+      "**/server-build/**",
+      "**/.react-email/**",
+      ".vscode/**",
+      ".cursor/**"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      },
+      "style": {
+        "useImportType": "error"
+      },
+      "correctness": {
+        "noChildrenProp": "off",
+        "noUnusedVariables": "warn",
+        "noUnusedImports": {
+          "level": "warn",
+          "fix": "unsafe"
+        },
+        "noUnusedPrivateClassMembers": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "info"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "attributePosition": "auto"
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "overrides": [
+    {
+      "include": ["**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          },
+          "correctness": {
+            "noEmptyPattern": "off"
+          },
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": ["*.astro"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          },
+          "correctness": {
+            "noUnusedImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": [
+        "./packages/tsconfig/base.json",
+        "./packages/tsconfig/internal-package.json",
+        "**/.vscode/**/*.json",
+        "**/tsconfig*.json"
+      ],
+      "json": {
+        "parser": {
+          "allowComments": true,
+          "allowTrailingCommas": false
+        }
+      }
+    },
+    {
+      "include": ["./packages/email/**/*", "./packages/functions/**/*", "./packages/core/**/*"],
+      "javascript": {
+        "jsxRuntime": "reactClassic"
+      }
+    }
+  ]
+}
