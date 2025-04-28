@@ -68,6 +68,9 @@ jobs:
       - name: Setup SST
         run: bun sst install
 
+      - name: ⚙️ Sync Astro content types
+        run: bun --filter='@seanpaulcampbell/website' run astro sync
+
       - name: 🔎 Run type check
         run: bun run typecheck:ws
 
