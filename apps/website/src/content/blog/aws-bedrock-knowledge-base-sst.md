@@ -821,6 +821,8 @@ Using SST for this deployment gives you the benefits of Infrastructure as Code, 
 
 Hope this helps you get started with building your own Knowledge Base!
 
+Full code for this example can be found [here](https://github.com/natac13/seanpaulcampbell.com/tree/main/examples/aws-knowledge-base-sst).
+
 ## Resources
 
 - [SST Docs](https://sst.dev/docs/)
@@ -829,5 +831,3 @@ Hope this helps you get started with building your own Knowledge Base!
 - [AWS Bedrock Agent Runtime SDK](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/bedrock-agent-runtime/)
 - [AWS Create a service role for Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-permissions.html)
 - [AWS Using Aurora PostgreSQL as a Knowledge Base for Amazon Bedrock](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.VectorDB.html)
-
-Full code for this example can be found [here](https://github.com/natac13/seanpaulcampbell.com/tree/main/examples/aws-knowledge-base-sst).

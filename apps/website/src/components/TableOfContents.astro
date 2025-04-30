@@ -1,0 +1,67 @@
+---
+interface Props {
+  headings: Array<{
+    depth: number;
+    slug: string;
+    text: string;
+  }>;
+}
+
+const { headings } = Astro.props;
+
+// Filter headings to only include h2 and h3
+const filteredHeadings = headings.filter(
+  (heading) => heading.depth >= 2 && heading.depth <= 3
+);
+
+function getHeadingMargin(depth: number): string {
+  return depth === 3 ? "ml-4" : "";
+}
+---
+
+{
+  filteredHeadings.length > 0 && (
+    <details
+      open
+      class="group rounded-xl border p-4 xl:sticky xl:border-none xl:p-0"
+    >
+      <summary class="flex cursor-pointer items-center justify-between text-lg font-medium xl:hidden mb-2">
+        <span>Table of Contents</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="size-5 shrink-0 transition-transform group-open:rotate-180"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </summary>
+
+      <div class="xl:max-h-[calc(100vh-8rem)] overflow-y-auto">
+        <h2 class="text-lg font-medium mb-4 hidden xl:block">
+          Table of Contents
+        </h2>
+        <ul class="space-y-2 px-2 xl:px-0" id="table-of-contents">
+          {filteredHeadings.map((heading) => (
+            <li
+              class={`text-muted-foreground text-sm ${getHeadingMargin(heading.depth)}`}
+            >
+              <a
+                href={`#${heading.slug}`}
+                class="hover:text-foreground hover:underline decoration-transparent underline-offset-2 transition-colors"
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
+  )
+}

@@ -8,6 +8,7 @@ import {
   TwitterIcon,
 } from "lucide-react";
 import PostHead from "../../components/PostHead.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getAllPosts } from "../../lib/posts";
 import { calculateReadingTime, formatReadingTime } from "../../lib/readingTime";
@@ -27,7 +28,7 @@ export async function getStaticPaths() {
 // Get the post from the props
 const { post } = Astro.props;
 // Render the content
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 // Calculate reading time
 const rawContent = (await post.body) || "";
@@ -48,111 +49,153 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
 
 <Layout title={post.data.title}>
   <PostHead post={post} slot="head" />
-  <article class="max-w-3xl mx-auto">
-    <div class="mb-8">
-      <a
-        href="/blog"
-        class="text-primary hover:underline flex items-center gap-1 mb-4"
-      >
-        <ArrowLeftIcon className="w-4 h-4" />
-        Back to all posts
-      </a>
-
-      <h1
-        class="text-4xl font-bold mb-4"
-        transition:name={`blog-title-${post.id}`}
-      >
-        {post.data.title}
-      </h1>
-      <p
-        class="text-xl text-muted-foreground mb-4"
-        transition:name={`blog-description-${post.id}`}
-      >
-        {post.data.description}
-      </p>
-
-      <div class="flex flex-wrap items-center gap-4 mb-6">
-        <div
-          class="flex flex-wrap gap-2"
-          transition:name={`blog-tags-${post.id}`}
+  <div
+    class="container mx-auto px-4 relative grid grid-cols-1 xl:grid-cols-6 gap-2"
+  >
+    <!-- Main centered content -->
+    <div class="max-w-3xl mx-auto col-span-full xl:col-span-4 xl:col-start-2">
+      <div class="mb-8">
+        <a
+          href="/blog"
+          class="text-primary hover:underline flex items-center gap-1 mb-4"
         >
-          {
-            post.data.tags.map((tag) => (
-              <a
-                href={`/blog?tag=${tag}`}
-                class="text-sm bg-muted text-muted-foreground px-3 py-1 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                {tag}
-              </a>
-            ))
-          }
-        </div>
-        <span class="text-muted-foreground">•</span>
-        <span
-          class="text-muted-foreground"
-          transition:name={`blog-publish-date-${post.id}`}
-        >
-          {formatDate(post.data.publishDate)}
-        </span>
-        <span class="text-muted-foreground">•</span>
-        <span class="text-muted-foreground">
-          {readingTimeText}
-        </span>
-      </div>
+          <ArrowLeftIcon className="w-4 h-4" />
+          Back to all posts
+        </a>
 
-      {
-        post.data.image && (
-          <div class="rounded-xl overflow-hidden mb-8 border border-border">
-            <Image
-              src={post.data.image.src}
-              alt={post.data.image.alt}
-              width={1200}
-              height={630}
-              class="w-full h-auto"
-            />
+        <h1
+          class="text-3xl sm:text-4xl font-bold mb-4 break-words"
+          transition:name={`blog-title-${post.id}`}
+        >
+          {post.data.title}
+        </h1>
+        <p
+          class="text-lg sm:text-xl text-muted-foreground mb-4"
+          transition:name={`blog-description-${post.id}`}
+        >
+          {post.data.description}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <div
+            class="flex flex-wrap gap-2"
+            transition:name={`blog-tags-${post.id}`}
+          >
+            {
+              post.data.tags.map((tag) => (
+                <a
+                  href={`/blog?tag=${tag}`}
+                  class="text-sm bg-muted text-muted-foreground px-3 py-1 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  {tag}
+                </a>
+              ))
+            }
           </div>
-        )
-      }
-    </div>
+          <span class="text-muted-foreground">•</span>
+          <span
+            class="text-muted-foreground"
+            transition:name={`blog-publish-date-${post.id}`}
+          >
+            {formatDate(post.data.publishDate)}
+          </span>
+          <span class="text-muted-foreground">•</span>
+          <span class="text-muted-foreground">
+            {readingTimeText}
+          </span>
+        </div>
 
-    <div class="prose prose-lg max-w-none dark:prose-invert">
-      <Content />
-    </div>
+        {
+          post.data.image && (
+            <div class="rounded-xl overflow-hidden mb-8 border border-border">
+              <Image
+                src={post.data.image.src}
+                alt={post.data.image.alt}
+                width={1200}
+                height={630}
+                class="w-full h-auto"
+              />
+            </div>
+          )
+        }
+      </div>
+      <!-- ToC for mobile (top of content) -->
+      <div class="mb-8 xl:hidden">
+        <TableOfContents headings={headings} />
+      </div>
 
-    <div class="mt-16 pt-8 border-t border-border">
-      <h2 class="text-2xl font-bold mb-4">Share this post</h2>
-      <div class="flex flex-wrap gap-4">
-        <a
-          href={twitterUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="bg-[#000000] text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2"
-          aria-label="Share on Twitter/X"
+      <article>
+        <div
+          class="prose sm:prose-lg max-w-none dark:prose-invert [&_h2_a]:no-underline [&_h3_a]:no-underline [&_h4_a]:no-underline [&_h5_a]:no-underline [&_h6_a]:no-underline [&_h2_a]:hover:underline [&_h3_a]:hover:text-primary [&_h4_a]:hover:text-primary [&_h5_a]:hover:text-primary [&_h6_a]:hover:text-primary blog-content [&_h2_a]:hover:text-primary"
         >
-          <TwitterIcon className="size-4" />
-          Twitter/X
-        </a>
-        <a
-          href={facebookUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="bg-[#1877F2] text-white px-4 py-2 rounded-lg hover:bg-[#0d6efd] transition-colors flex items-center gap-2"
-          aria-label="Share on Facebook"
-        >
-          <FacebookIcon className="size-4" />
-          Facebook
-        </a>
-        <a
-          href={linkedinUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="bg-[#0077B5] text-white px-4 py-2 rounded-lg hover:bg-[#0069a1] transition-colors flex items-center gap-2"
-          aria-label="Share on LinkedIn"
-        >
-          <LinkedinIcon className="size-4" />
-          LinkedIn
-        </a>
+          <Content />
+        </div>
+      </article>
+
+      <div class="mt-16
+        pt-8
+        border-t
+        border-border">
+        <h2 class="text-2xl font-bold mb-4">Share this post</h2>
+        <div class="flex flex-wrap gap-4">
+          <a
+            href={twitterUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-[#000000] text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2"
+            aria-label="Share on Twitter/X"
+          >
+            <TwitterIcon className="size-4" />
+            Twitter/X
+          </a>
+          <a
+            href={facebookUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-[#1877F2] text-white px-4 py-2 rounded-lg hover:bg-[#0d6efd] transition-colors flex items-center gap-2"
+            aria-label="Share on Facebook"
+          >
+            <FacebookIcon className="size-4" />
+            Facebook
+          </a>
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-[#0077B5] text-white px-4 py-2 rounded-lg hover:bg-[#0069a1] transition-colors flex items-center gap-2"
+            aria-label="Share on LinkedIn"
+          >
+            <LinkedinIcon className="size-4" />
+            LinkedIn
+          </a>
+        </div>
       </div>
     </div>
-  </article>
+
+    <!-- ToC positioned absolutely on the right side for large screens -->
+    <div
+      class="hidden xl:block xl:sticky xl:top-24 xl:col-span-2 xl:col-start-6"
+    >
+      <TableOfContents headings={headings} />
+    </div>
+  </div>
 </Layout>
+
+<style is:global>
+  .blog-content pre {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Make headings responsive */
+  .blog-content h1,
+  .blog-content h2,
+  .blog-content h3,
+  .blog-content h4,
+  .blog-content h5,
+  .blog-content h6 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    scroll-margin-top: 100px;
+  }
+</style>
