@@ -5,7 +5,7 @@ publishDate: 2025-04-28
 tags: ["AWS", "SST", "Bedrock", "AI"]
 ---
 
-I recently needed to setup a 'Knownledge' base for an AI agent application. I wanted the ability to vectorize and store markdown, text, and even PDFs. This knowledge base would then be used by the AI agent to answer questions from our users.
+I recently needed to setup a 'Knowledge Base' for an AI agent application. I wanted the ability to vectorize and store markdown, text, and even PDFs. This knowledge base would then be used by the AI agent to answer questions from our users.
 
 My high level requirements were:
 
@@ -91,7 +91,7 @@ This sets up our application name and our AWS provider configuration.
 
 ### Networking with VPC
 
-First, let's create a [VPC](https://sst.dev/docs/component/aws/vpc) with a bastion host.
+First, let's create a [VPC](https://sst.dev/docs/component/aws/vpc) with a bastion host. We enable a bastion host (`bastion: true`) so we can connect to our RDS instance and set up the required database schema and tables.
 
 ```typescript
 const vpc = new sst.aws.Vpc("Vpc", {
@@ -99,8 +99,6 @@ const vpc = new sst.aws.Vpc("Vpc", {
   bastion: true, // so you can connect to RDS and setup the table
 });
 ```
-
-The VPC provides network isolation for our resources. We enable a bastion host (`bastion: true`) so we can connect to our RDS instance and set up the required database schema and tables.
 
 ### Vector Database with Aurora RDS
 
