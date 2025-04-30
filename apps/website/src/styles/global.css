@@ -77,8 +77,8 @@
 }
 
 @theme inline {
-  --font-serif: "Crimson Pro Variable", "system-ui", serif;
-  --font-title: "IM Fell English SC", "system-ui", serif;
+  --font-serif: "Lora Variable", "system-ui", serif;
+  --font-sans: "Inter Variable", "system-ui", sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

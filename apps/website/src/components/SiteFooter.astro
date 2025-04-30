@@ -1,28 +1,60 @@
 ---
-import { ICON_MAP, SITE, SOCIAL_LINKS } from '../constants'
+import { ICON_MAP, NAV_LINKS, SITE, SOCIAL_LINKS } from "../constants";
+// import SitemapIcon from "./icons/SitemapIcon.astro"; // Assuming you might create/use a sitemap icon
 ---
 
-<footer class="py-6 text-center text-sm text-gray-500 border-t border-gray-200">
-  <div class="flex justify-center gap-6 mb-4">
-    {
-      SOCIAL_LINKS.map((link) => {
-        const Icon = ICON_MAP[link.label];
-        return (
-          <a
-            href={link.href}
-            class="hover:text-primary transition-colors"
-            aria-label={link.label}
-            target="_blank"
-          >
-            <span class="sr-only">{link.label}</span>
-            <Icon class="size-4" />
-          </a>
-        );
-      })
-    }
+<footer
+  class="py-8 text-sm text-gray-500 border-t border-gray-200 dark:text-gray-400 dark:border-gray-800"
+>
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+      <!-- Social Links -->
+      <div class="flex justify-center md:justify-start gap-4">
+        {
+          SOCIAL_LINKS.map((link) => {
+            const Icon = ICON_MAP[link.label];
+            return (
+              <a
+                href={link.href}
+                class="text-gray-400 hover:text-primary dark:text-gray-500 dark:hover:text-primary-foreground transition-colors"
+                aria-label={link.label}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="sr-only">{link.label}</span>
+                {Icon && <Icon class="size-5" />}
+              </a>
+            );
+          })
+        }
+      </div>
+
+      <!-- Internal Nav Links -->
+      <nav
+        class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm"
+        aria-label="Footer navigation"
+      >
+        {
+          NAV_LINKS.map((link) => (
+            <a href={link.href} class="hover:text-primary  transition-colors">
+              {link.label}
+            </a>
+          ))
+        }
+        <a
+          href="/sitemap.xml"
+          class="hover:text-primary transition-colors"
+          aria-label="Sitemap"
+        >
+          Sitemap
+        </a>
+      </nav>
+    </div>
+
+    <!-- Copyright -->
+    <p class="mt-8 text-center text-xs">
+      © {new Date().getFullYear()}
+      {SITE.title}. All rights reserved.
+    </p>
   </div>
-  <p>
-    © {new Date().getFullYear()}
-    {SITE.title}. All rights reserved.
-  </p>
 </footer>

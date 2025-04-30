@@ -1,19 +1,19 @@
 ---
-import '@fontsource-variable/crimson-pro'
-import '@fontsource/im-fell-english-sc'
-import '../styles/global.css'
-import Head from '../components/Head.astro'
-import PageHead from '../components/PageHead.astro'
-import SiteFooter from '../components/SiteFooter.astro'
-import SiteHeader from '../components/SiteHeader.astro'
-import { SITE } from '../constants'
+import "@fontsource-variable/lora";
+import "@fontsource-variable/inter";
+import "../styles/global.css";
+import Head from "../components/Head.astro";
+import PageHead from "../components/PageHead.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { SITE } from "../constants";
 
 interface Props {
-  title?: string
-  description?: string
+  title?: string;
+  description?: string;
 }
 
-const { title, description } = Astro.props
+const { title, description } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,6 +21,13 @@ const { title, description } = Astro.props
   <Head>
     <slot name="head">
       <PageHead title={title} description={description} />
+      {/* RSS Feed Auto-discovery */}
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={SITE.title}
+        href={new URL("rss.xml", Astro.site)}
+      />
     </slot>
   </Head>
   <body class="font-serif antialiased">

@@ -19,6 +19,10 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  redirects: {
+    '/sitemap.xml': '/sitemap-index.xml',
+    '/rss': '/rss.xml',
+  },
   markdown: {
     shikiConfig: {
       themes: {
