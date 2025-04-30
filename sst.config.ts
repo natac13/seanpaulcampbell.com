@@ -9,7 +9,7 @@ export default $config({
       home: 'aws',
       providers: {
         aws: {
-          profile: 'natac',
+          profile: process.env.GITHUB_ACTIONS ? undefined : 'natac',
           region: 'us-east-2',
         },
       },
