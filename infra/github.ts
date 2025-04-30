@@ -4,14 +4,10 @@ const GH_ORG = 'natac13'
 const GH_REPO = 'seanpaulcampbell.com'
 
 if (isPermanentStage) {
-  const github = new aws.iam.OpenIdConnectProvider('Github', {
-    url: 'https://token.actions.githubusercontent.com',
-    clientIdLists: ['sts.amazonaws.com'],
-    thumbprintLists: [
-      '6938fd4d98bab03faadb97b34396831e3780aea1',
-      '1c58a3a8518e8759bf075b76b750d4f2df264fcd',
-    ], // see https://github.blog/changelog/2023-06-27-github-actions-update-on-oidc-integration-with-aws/
-  })
+  const github = aws.iam.OpenIdConnectProvider.get(
+    'Github',
+    $interpolate`arn:aws:iam::${aws.getCallerIdentityOutput().accountId}:oidc-provider/token.actions.githubusercontent.com`,
+  )
 
   const githubRole = new aws.iam.Role('GithubRole', {
     name: [$app.name, $app.stage, 'github'].join('-'),
