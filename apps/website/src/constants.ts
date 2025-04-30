@@ -2,7 +2,7 @@ import { GithubIcon, LinkedinIcon, MailIcon, RssIcon, TwitterIcon } from 'lucide
 import type { Site, SocialLink } from './types'
 
 export const SITE: Site = {
-  title: 'Sean Campbell',
+  title: `Sean Campbell's Blog`,
   description: 'My blog about coding, software development, and the technologies I like to use.',
   href: 'https://seanpaulcampbell.com',
   author: 'Sean Campbell',
@@ -13,16 +13,16 @@ export const SITE: Site = {
 
 export const NAV_LINKS: SocialLink[] = [
   {
-    href: '/',
-    label: 'Home',
-  },
-  {
     href: '/blog',
     label: 'Blog',
   },
   {
     href: '/about',
     label: 'About',
+  },
+  {
+    href: '/rss.xml',
+    label: 'RSS',
   },
 ]
 

@@ -1,6 +1,6 @@
 ---
-import '@fontsource-variable/crimson-pro'
-import '@fontsource/im-fell-english-sc'
+import '@fontsource-variable/lora'
+import '@fontsource-variable/inter'
 import '../styles/global.css'
 import Head from '../components/Head.astro'
 import PageHead from '../components/PageHead.astro'
@@ -21,12 +21,19 @@ const { title, description } = Astro.props
   <Head>
     <slot name="head">
       <PageHead title={title} description={description} />
+      {/* RSS Feed Auto-discovery */}
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={SITE.title}
+        href={new URL("rss.xml", Astro.site)}
+      />
     </slot>
   </Head>
   <body class="font-serif antialiased">
     <div class="min-h-screen flex h-fit flex-col gap-y-6 container mx-auto">
       <SiteHeader />
-      <main class="flex-grow">
+      <main class="flex-grow px-4 md:px-6 xl:px-8">
         <slot />
       </main>
       <SiteFooter />

@@ -1,0 +1,15 @@
+{
+  "name": "aws-knowledge-base-sst",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.149",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "sst": "3.13.20"
+  }
+}
