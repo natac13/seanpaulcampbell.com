@@ -1,51 +1,45 @@
 ---
-import { Image } from "astro:assets";
-import { render } from "astro:content";
-import {
-  ArrowLeftIcon,
-  ArrowUpIcon,
-  FacebookIcon,
-  LinkedinIcon,
-  TwitterIcon,
-} from "lucide-react";
-import PostHead from "../../components/PostHead.astro";
-import TableOfContents from "../../components/TableOfContents.astro";
-import Layout from "../../layouts/Layout.astro";
-import { getAllPosts } from "../../lib/posts";
-import { calculateReadingTime, formatReadingTime } from "../../lib/readingTime";
-import { formatDate } from "../../lib/utils";
+import { Image } from 'astro:assets'
+import { render } from 'astro:content'
+import { ArrowLeftIcon, ArrowUpIcon, FacebookIcon, LinkedinIcon, TwitterIcon } from 'lucide-react'
+import PostHead from '../../components/PostHead.astro'
+import TableOfContents from '../../components/TableOfContents.astro'
+import Layout from '../../layouts/Layout.astro'
+import { getAllPosts } from '../../lib/posts'
+import { calculateReadingTime, formatReadingTime } from '../../lib/readingTime'
+import { formatDate } from '../../lib/utils'
 
-export const prerender = true;
+export const prerender = true
 
 // Generate static paths for all blog posts
 export async function getStaticPaths() {
-  const allPosts = await getAllPosts();
+  const allPosts = await getAllPosts()
   return allPosts.map((post) => ({
     params: { slug: post.id },
     props: { post },
-  }));
+  }))
 }
 
 // Get the post from the props
-const { post } = Astro.props;
+const { post } = Astro.props
 // Render the content
-const { Content, headings } = await render(post);
+const { Content, headings } = await render(post)
 
 // Calculate reading time
-const rawContent = (await post.body) || "";
-const readingTime = calculateReadingTime(rawContent);
-const readingTimeText = formatReadingTime(readingTime);
+const rawContent = (await post.body) || ''
+const readingTime = calculateReadingTime(rawContent)
+const readingTimeText = formatReadingTime(readingTime)
 
 // Current page URL for sharing
-const currentUrl = Astro.url.toString();
-const encodedUrl = encodeURIComponent(currentUrl);
-const encodedTitle = encodeURIComponent(post.data.title);
-const encodedSummary = encodeURIComponent(post.data.description);
+const currentUrl = Astro.url.toString()
+const encodedUrl = encodeURIComponent(currentUrl)
+const encodedTitle = encodeURIComponent(post.data.title)
+const encodedSummary = encodeURIComponent(post.data.description)
 
 // Social sharing URLs
-const twitterUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
-const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedSummary}`;
+const twitterUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`
+const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
+const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedSummary}`
 ---
 
 <Layout title={post.data.title}>

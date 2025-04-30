@@ -55,6 +55,7 @@
     "attributePosition": "auto"
   },
   "javascript": {
+    "globals": ["Astro"],
     "formatter": {
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
@@ -92,7 +93,8 @@
             "useImportType": "off"
           },
           "correctness": {
-            "noUnusedImports": "off"
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
           }
         }
       }

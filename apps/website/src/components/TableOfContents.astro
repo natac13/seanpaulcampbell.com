@@ -1,23 +1,23 @@
 ---
-import { cn } from "@/lib/utils";
-import type { MarkdownHeading } from "astro";
-import { ChevronDownIcon } from "lucide-react";
-import { ScrollArea } from "../components/ui/scroll-area";
+import { cn } from '@/lib/utils'
+import type { MarkdownHeading } from 'astro'
+import { ChevronDownIcon } from 'lucide-react'
+import { ScrollArea } from '../components/ui/scroll-area'
 
 type Props = {
-  headings: MarkdownHeading[];
-};
+  headings: MarkdownHeading[]
+}
 
-const { headings } = Astro.props;
+const { headings } = Astro.props
 
 function getHeadingMargin(depth: number): string {
   const margins: Record<number, string> = {
-    3: "ml-4",
-    4: "ml-8",
-    5: "ml-12",
-    6: "ml-16",
-  };
-  return margins[depth] || "";
+    3: 'ml-4',
+    4: 'ml-8',
+    5: 'ml-12',
+    6: 'ml-16',
+  }
+  return margins[depth] || ''
 }
 ---
 
