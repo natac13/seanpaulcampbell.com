@@ -1,25 +1,25 @@
 ---
-import { Image } from 'astro:assets'
-import { fade } from 'astro:transitions'
-import avatarImage from '../assets/images/avatar.jpg'
-import { ICON_MAP, SOCIAL_LINKS } from '../constants'
-import Layout from '../layouts/Layout.astro'
+import { Image } from "astro:assets";
+import { fade } from "astro:transitions";
+import avatarImage from "../assets/images/avatar.jpg";
+import { ICON_MAP, SOCIAL_LINKS } from "../constants";
+import Layout from "../layouts/Layout.astro";
 
-export const prerender = true
+export const prerender = true;
 
 // Function to get color class based on label
 function getSocialLinkClass(label: string): string {
   switch (label.toLowerCase()) {
-    case 'github':
-      return 'bg-neutral-800 hover:bg-neutral-700 text-white'
-    case 'x':
-    case 'twitter':
-      return 'bg-black hover:bg-neutral-800 text-white' // Simple black for X
+    case "github":
+      return "bg-neutral-800 hover:bg-neutral-700 text-white";
+    case "x":
+    case "twitter":
+      return "bg-black hover:bg-neutral-800 text-white"; // Simple black for X
     // Add other cases if needed
-    case 'linkedin':
-      return 'bg-blue-600 hover:bg-blue-700 text-white'
+    case "linkedin":
+      return "bg-blue-600 hover:bg-blue-700 text-white";
     default:
-      return 'bg-secondary hover:bg-secondary/80 text-secondary-foreground'
+      return "bg-secondary hover:bg-secondary/80 text-secondary-foreground";
   }
 }
 ---
@@ -50,7 +50,7 @@ function getSocialLinkClass(label: string): string {
           projects I'm working on, and my thoughts on technology.
         </p>
         <p class="text-muted-foreground">
-          When I'm not coding, you might find me reading, running, or thinking
+          When I'm not coding, you will find me reading, running, or thinking
           about more code.
         </p>
       </div>
@@ -59,11 +59,6 @@ function getSocialLinkClass(label: string): string {
     <div class="space-y-12">
       <section>
         <h2 class="text-2xl font-semibold mb-4">Connect With Me</h2>
-        <p class="text-muted-foreground mb-6">
-          I'm always interested in connecting with fellow developers, learners,
-          and tech enthusiasts. Feel free to reach out through any of these
-          channels:
-        </p>
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           {
             SOCIAL_LINKS.map((link) => {
