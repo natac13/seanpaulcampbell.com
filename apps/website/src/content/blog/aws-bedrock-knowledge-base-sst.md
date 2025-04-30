@@ -269,7 +269,7 @@ This creates a bucket to store the source documents (PDFs, text files, etc.) tha
 
 ### IAM Role for Bedrock Access
 
-- See (Knowledge Base Service Role)[https://docs.aws.amazon.com/bedrock/latest/userguide/kb-permissions.html] for the IAM role needed for the Knowledge Base.
+- See [Knowledge Base Service Role](https://docs.aws.amazon.com/bedrock/latest/userguide/kb-permissions.html) for the IAM role needed for the Knowledge Base.
 
 ```typescript
 const accountId = aws.getCallerIdentityOutput({}).apply((identity) => {

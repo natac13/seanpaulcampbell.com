@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import { render } from "astro:content";
 import {
   ArrowLeftIcon,
+  ArrowUpIcon,
   FacebookIcon,
   LinkedinIcon,
   TwitterIcon,
@@ -52,8 +53,14 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
   <div
     class="container mx-auto px-4 relative grid grid-cols-1 xl:grid-cols-6 gap-2"
   >
+    <!-- ToC for desktop -->
+    <div class="hidden xl:block">
+      <TableOfContents headings={headings} />
+    </div>
     <!-- Main centered content -->
-    <div class="max-w-3xl mx-auto col-span-full xl:col-span-4 xl:col-start-2">
+    <div
+      class="col-span-full overflow-x-hidden xl:col-span-4 xl:col-start-2 w-full max-w-3xl mx-auto"
+    >
       <div class="mb-8">
         <a
           href="/blog"
@@ -124,12 +131,10 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
         <TableOfContents headings={headings} />
       </div>
 
-      <article>
-        <div
-          class="prose sm:prose-lg max-w-none dark:prose-invert [&_h2_a]:no-underline [&_h3_a]:no-underline [&_h4_a]:no-underline [&_h5_a]:no-underline [&_h6_a]:no-underline [&_h2_a]:hover:underline [&_h3_a]:hover:text-primary [&_h4_a]:hover:text-primary [&_h5_a]:hover:text-primary [&_h6_a]:hover:text-primary blog-content [&_h2_a]:hover:text-primary"
-        >
-          <Content />
-        </div>
+      <article
+        class="prose sm:prose-lg max-w-none dark:prose-invert [&_h2_a]:no-underline [&_h3_a]:no-underline [&_h4_a]:no-underline [&_h5_a]:no-underline [&_h6_a]:no-underline [&_h2_a]:hover:underline [&_h3_a]:hover:text-primary [&_h4_a]:hover:text-primary [&_h5_a]:hover:text-primary [&_h6_a]:hover:text-primary blog-content [&_h2_a]:hover:text-primary"
+      >
+        <Content />
       </article>
 
       <div class="mt-16
@@ -172,12 +177,26 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
       </div>
     </div>
 
-    <!-- ToC positioned absolutely on the right side for large screens -->
-    <div
-      class="hidden xl:block xl:sticky xl:top-24 xl:col-span-2 xl:col-start-6"
+    <!-- Scroll to top button should only be visible when the user scrolls down -->
+    <script>
+      const scrollToTopButton = document.getElementById("scroll-to-top");
+      window.addEventListener("scroll", () => {
+        if (!scrollToTopButton) return;
+        if (window.scrollY > 100) {
+          scrollToTopButton.classList.remove("hidden");
+        } else {
+          scrollToTopButton.classList.add("hidden");
+        }
+      });
+    </script>
+
+    <button
+      id="scroll-to-top"
+      class="fixed hidden bottom-4 right-4 bg-primary/50 text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/70 transition-colors"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
     >
-      <TableOfContents headings={headings} />
-    </div>
+      <ArrowUpIcon className="size-4" />
+    </button>
   </div>
 </Layout>
 
@@ -185,6 +204,10 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
   .blog-content pre {
     margin-left: 0 !important;
     margin-right: 0 !important;
+  }
+
+  .blog-content pre code {
+    overflow-x: auto;
   }
 
   /* Make headings responsive */
