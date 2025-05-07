@@ -5,14 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "AuthServer": {
-      "type": "sst.aws.Auth"
-      "url": string
-    }
-    "Web": {
-      "type": "sst.aws.React"
-      "url": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />

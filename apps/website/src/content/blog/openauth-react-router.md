@@ -1,11 +1,15 @@
 ---
 title: "OpenAuth with React Router"
 description: "A guide to using OpenAuth with React Router for Authentication"
-publishDate: 2025-05-07
+publishDate: 2025-05-07 12:00:00
 tags: ["OpenAuth", "React Router", "SST"]
 ---
 
 In this guide, we will walk through a possible implementation of OpenAuth with React Router, I wanted to write this guide as it took me a little bit to wrap my head around how to implement this, so I hope this guide helps you out! Please note that this is only the way I've implemented this, and there are many other ways to do this as well.
+
+The high level overview of this implementation is:
+
+We use OpenAuth as a way to _authenticate_ users. Once we know that the user is _who_ they claim to be, either with an emailed code or a social provider like GitHub, we can then take the identity (either the email or the social provider) and do _authorization_ based on that info in our database. This way we can check if we have a user with that identity and if not, send them through an onboarding flow to create the user, and possibly do billing.
 
 ## What We'll Cover
 
