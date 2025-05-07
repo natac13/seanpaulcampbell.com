@@ -24,7 +24,7 @@ export const links: Route.LinksFunction = () => [
   },
 ]
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader() {
   const ENV = getEnv()
 
   return { ENV }

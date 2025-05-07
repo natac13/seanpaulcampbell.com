@@ -22,7 +22,7 @@ export default $config({
       },
     })
 
-    const web = new sst.aws.React('Web', {
+    new sst.aws.React('Web', {
       environment: {
         VITE_AUTH_URL: auth.url,
         VITE_SITE_URL: 'http://localhost:5173',

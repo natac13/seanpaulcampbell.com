@@ -18,7 +18,7 @@ export default function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  loadContext: AppLoadContext,
+  _loadContext: AppLoadContext,
   // If you have middleware enabled:
   // loadContext: unstable_RouterContextProvider
 ) {
@@ -54,6 +54,7 @@ export default function handleRequest(
           reject(error)
         },
         onError(error: unknown) {
+          // biome-ignore lint/style/noParameterAssign: <explanation>
           responseStatusCode = 500
           // Log streaming rendering errors from inside the shell.  Don't log
           // errors encountered during initial shell rendering since they'll

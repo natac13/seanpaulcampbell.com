@@ -16,6 +16,8 @@
       "**/playwright-report/**",
       "**/server-build/**",
       "**/.react-email/**",
+      "**/.react-router/**",
+      "*/.react-router/**",
       ".vscode/**",
       ".cursor/**",
       "**/.astro/**"
