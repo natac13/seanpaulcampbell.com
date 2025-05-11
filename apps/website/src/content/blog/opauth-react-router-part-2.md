@@ -5,9 +5,9 @@ publishDate: 2025-05-09 14:00:00
 tags: ["OpenAuth", "React Router", "SST"]
 ---
 
-In our [previous journey](/blog/openauth-react-router), we set up an [OpenAuth]() server, and our [React Router]() web application's authentication and authorization. We used the `CodeUI` component which comes with OpenAuth to handle the authentication flow. There were promises made at the end of that guide to continue our journey, with a custom UI and a social provider.
+In our [previous journey](/blog/openauth-react-router), we set up an [OpenAuth](https://openauth.js.org/docs/) server, and our [React Router](https://reactrouter.com/en/main) web application's authentication and authorization. We used the `CodeUI` component which comes with OpenAuth to handle the authentication flow. There were promises made at the end of that guide to continue our journey, with a custom UI and a social provider.
 
-Our journey will take us into the depths of the [OpenAuth]() codebase. We will explore the `CodeUI` component, as well as the `CodeProvider` to find what we need to create a custom UI. Then we will set up a social provider to round out our authentication system. And to finish off, I will go over a few things that I have learned along the way.
+Our journey will take us into the depths of the [OpenAuth](https://github.com/toolbeam/openauth) codebase. We will explore the `CodeUI` component, as well as the `CodeProvider` to find what we need to create a custom UI. Then we will set up a social provider to round out our authentication system. And to finish off, I will go over a few things that I have learned along the way.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ Our journey will take us into the depths of the [OpenAuth]() codebase. We will e
 
 ## Custom UI
 
-The first stop on our journey is the `CodeUI` component. Thankfully, the [creators of OpenAuth]() have provided pre-built components for OpenAuth to function without any required UI. However, say we want to have a custom UI, or even just make the routes all on our web domain. We can do that by still using the `CodeProvider` but create our own UI.
+The first stop on our journey is the `CodeUI` component. Thankfully, the [creators of OpenAuth](https://sst.dev/) have provided pre-built components for OpenAuth to function without any required UI. However, say we want to have a custom UI, or even just make the routes all on our web domain. We can do that by still using the `CodeProvider` but create our own UI.
 
 So what does that look like? Let's take a look at the `CodeUI` component and see what we need to create a custom UI.
 
@@ -148,7 +148,7 @@ export type CodeProviderState =
     };
 ```
 
-From this we have learned that we need to handle the `start` and `code` states. And we do this by returning a `Response`. However, instead of the `Response` object, pointing to the OpenAuth server, we can return a `Response` object with a redirect to our own UI routes. Next stop is our `issuer.ts` file. The `start` state form has 2 inputs: `email` and `action`. The `code` state form has 3 inputs: `code`, `action`, and `email`. We also need to handle the ability to resend the code.
+From this we have learned that we need to handle the `start` and `code` states. And we do this by returning a `Response`. However, instead of the `Response` object, pointing to the OpenAuth server, we can return a `Response` object with a redirect to our own UI routes. Next stop is our `issuer.ts` file. For the `start` state (requesting a code), our form needs 2 inputs: `email` and `action='request'`. The `code` state, we have one form that needs 3 inputs: `code`, `action=verify`, and `email`. This verifies the code. We also need to handle the ability to resend the code. For that, we have another form with an `action=resend` and using the `claims` to populate input(s) (usually the email).
 
 ### Issuer Updates
 
@@ -849,7 +849,7 @@ interface GitHubUser {
 }
 ```
 
-First we add the `GithubProvider` to the `providers` object. Then we update the `success` function to handle the `github` provider. In the `success` function, we are getting the user's information from the GitHub API. We are also getting the user's email from the GitHub API. We are then returning the `OAuthAccount` subject. On line 88, we are checking if the email is verified before continuing. The `access` token on line 66 is the one GitHub provides to us, this is **ONLY** for the GitHub API. The interfaces for the [`GitHubEmail`](https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user) and [`GitHubUser`](https://docs.github.com/en/rest/users/users?apiVersion=2022-11-28#get-the-authenticated-user) are just to help us type the response from the GitHub API.
+First we add the `GithubProvider` to the `providers` object. Then we update the `success` function to handle the `github` provider. In the `success` function, we are getting the user's information from the GitHub API. We are also getting the user's email from the GitHub API. We are then returning the `OAuthAccount` subject. On line 88 of the above code, we are checking if the email is verified before continuing. The `access` token on line 66 is the one GitHub provides to us, this is **ONLY** for the GitHub API. The interfaces for the [`GitHubEmail`](https://docs.github.com/en/rest/users/emails?apiVersion=2022-11-28#list-email-addresses-for-the-authenticated-user) and [`GitHubUser`](https://docs.github.com/en/rest/users/users?apiVersion=2022-11-28#get-the-authenticated-user) are just to help us type the response from the GitHub API.
 
 ### GitHub
 
@@ -1202,6 +1202,10 @@ async function requireOnboardingData(request: Request) {
 }
 ```
 
+#### Require Onboarding Data Explanation
+
+Remember when we defined the `OAuthAccount` type in our subjects with fields like `name` and `imageUrl`? Now, in our onboarding loader and data handling, we'll leverage these richer details if the user authenticated via an OAuth provider like GitHub. We can prefill the form with the user's name and show them a preview of their profile picture.
+
 ### Handle Auth Callback
 
 ```typescript title="app/modules/auth/auth.server.ts" {25-32} collapse={4-15} startLineNumber=26
@@ -1371,6 +1375,10 @@ async function handleOAuthFlow({
 }
 ```
 
+#### Handle OAuth Flow Explanation
+
+This function is responsible for the core logic after a successful OAuth authentication. It checks if the user's OAuth account already exists, links it to an existing user if they're already logged in, logs them in if their account and user exist, or directs them to onboarding if it's a new user. This is similar to the [Epic Stack](https://github.com/epicweb-dev/epic-stack/blob/main/app/routes/_auth%2B/auth.%24provider.callback.ts) implementation.
+
 ### GitHub Provider Test
 
 Now we are ready to test the GitHub provider auth flow. Remember the full example is available [here](https://github.com/opauth/opauth-react-router-p2).
@@ -1483,9 +1491,38 @@ The highlighted lines show the links to the `/${provider}/authorize` route which
 
 You will notice that we have defined more icons than just the ones we are using. I just wanted to show this off as the only provider that are shown are based on what is configured in the `issuer` file, and received in the query params.
 
+### Update the Issuer to use the Select Route
+
+Next, we update our OpenAuth `issuer` to use the `select` route.
+
+```typescript title="./packages/functions/src/auth/issuer.ts" {4-8}  startLineNumber=9
+const app = issuer({
+  subjects: authSubjects,
+  allow: async () => true,
+  select: async (providers) => {
+    const redirectUrl = new URL(`${process.env.AUTH_FRONTEND_URL}/auth/select`);
+    redirectUrl.searchParams.set("providers", JSON.stringify(providers));
+    return Response.redirect(redirectUrl.toString(), 302);
+  },
+  providers: {
+    // ...
+  },
+});
+```
+
+Make sure your SST dev environment is running.
+
+```bash
+bun sst dev
+```
+
+With this change, we can now see the custom `select` route in action.
+
+![Select Route](../../assets/images/openauth-react-router/select-route.png)
+
 ## Turtles all the way down
 
-I have seen the question come up in the SST discord about how we know which URLs to use for the Oauth providers like GitHub. At this time of writing, this specific detail is missing from the OpenAuth doc site. However, it is available in the docs that never lie, the OpenAuth codebase.
+I have seen the question come up in the SST discord about how we know which URLs to use for the Oauth providers like GitHub. At this time of writing, this specific detail is missing from the OpenAuth doc website. However, OpenAuth does follow a common pattern for the callback endpoint, similar to the [Epic Stack](https://github.com/epicweb-dev/epic-stack/tree/main) doing `auth/<provider>/callback`. Also, it is available in the docs that _never lie_, the OpenAuth codebase.
 
 So back we go to the OpenAuth codebase to see how we can find the URLs for the providers. Our first stop is the GitHub provider file.
 
@@ -1613,14 +1650,30 @@ So we have come to the end of our journey. We have a working auth flow, and we k
 
 ### No Multi Logins at once
 
-One thing Dax always mentions about auth setups and flows, is the ability to have multiple accounts logged in at once. Unfortunately, the above flow will not allow this. To me that is perfectly ok. Plus because of how I handle the Oauth callback flow, it would be a bit of a conflict as I set the providers account to the currently logged in user.
+One thing I have seen mentioned about auth setups and flows, is the ability to have multiple accounts logged in at once.
 
-If you would like to see an example of how the multi login flow could work, you can take a look at the current `1.0` branch of the [OpenAuth repo](https://github.com/toolbeam/openauth/blob/1.0/packages/react/src/index.tsx).
+![Multi Login X Post](../../assets/images/openauth-react-router/multi-account-post.png)
+
+Unfortunately, the above flow will not allow this. It can handle the 1 account with access to 1 or more workspaces / organizations, just not the multiple accounts logged in at once. To me that is perfectly ok. Plus, because of how the Oauth callback flow is handled, it would be a bit of a conflict to set the providers account to the currently logged in user.
+
+If you would like to see an example of how the multi login flow could work, you can take a look at the current `1.0` branch of the [OpenAuth repo](https://github.com/toolbeam/openauth/blob/1.0/packages/react/src/index.tsx). The important part is where the `refresh` token is split and part of it (the email) is used to set the `id` of the account in local storage.
 
 ### Token Expiry and Refresh Tokens
 
-In the `getSessionData` function, we use the OpenAuth client's `verify` function. This will refresh the tokens if the access token is expired. This is great, **but** we must ensure that we return those headers in the `loaders` and or `actions` so that our session cookie is also refreshed. This though maybe solved easily once React Router stabilizes their middleware. Then is the middleware function will could ensure that the headers are set.
+In the `getSessionData` function, we use the OpenAuth client's `verify` function. This will refresh the tokens if the access token is expired. This is great, **but** we must ensure that we return those headers in the `loaders` and or `actions` so that our session cookie is also refreshed. This, I believe, will be solved easily once React Router stabilizes their middleware. In that case, the middleware function could ensure that the headers are set in the response.
+
+### Takes 2 Blog Posts to Explain
+
+This is likely a skill issue on my part.
 
 ## Conclusion
 
-If you made it this far, thank you! I hope you learned something new, or at least enjoyed the journey. Until next time.
+I hope you enjoyed the journey, and that this guide was helpful. I know this is a bit more work than the current Auth Saas offerings, but the power this unlocks is worth it. The OpenAuth server could be used at any point to protect your backend services. Meaning, your users could login to your website, then you can use their access token to authenticate for your GoLang Api, or it could be used as an AWS App Sync Events API Lambda authorizer. Since OpenAuth is following the OAuth 2.0 spec, it is fully compatible with any service that accepts OAuth JWTs.
+
+## Resources
+
+- [OpenAuth](https://openauth.js.org/docs/)
+- [OpenAuth Codebase](https://github.com/toolbeam/openauth)
+- [React Router](https://reactrouter.com/en/main)
+- [Epic Stack](https://github.com/epicweb-dev/epic-stack)
+- [Full Example](https://github.com/natac13/seanpaulcampbell.com/tree/main/examples/openauth-react-router-p2/)

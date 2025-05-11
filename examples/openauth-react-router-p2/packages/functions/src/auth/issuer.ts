@@ -9,6 +9,11 @@ import { authSubjects } from './subjects'
 const app = issuer({
   subjects: authSubjects,
   allow: async () => true,
+  select: async (providers) => {
+    const redirectUrl = new URL(`${process.env.AUTH_FRONTEND_URL}/auth/select`)
+    redirectUrl.searchParams.set('providers', JSON.stringify(providers))
+    return Response.redirect(redirectUrl.toString(), 302)
+  },
   providers: {
     email: CodeProvider({
       length: 6,

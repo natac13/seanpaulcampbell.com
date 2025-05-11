@@ -12,7 +12,7 @@ export default function AuthenticationSelect() {
   const providers = useProviders()
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <Card className="max-w-md">
+      <Card className="max-w-md w-full">
         <CardHeader>
           <CardTitle>Select Authentication</CardTitle>
           <CardDescription>
