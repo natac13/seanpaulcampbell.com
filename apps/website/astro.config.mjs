@@ -1,5 +1,7 @@
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 import react from '@astrojs/react'
+import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import tailwindcss from '@tailwindcss/vite'
 import aws from 'astro-sst'
 import { defineConfig } from 'astro/config'
@@ -26,6 +28,7 @@ export default defineConfig({
       defaultProps: {
         wrap: false,
       },
+      plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
     }),
   ],
   vite: {

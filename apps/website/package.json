@@ -14,6 +14,7 @@
     "@astrojs/react": "^4.2.4",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.3.0",
+    "@expressive-code/plugin-line-numbers": "^0.41.2",
     "@fontsource-variable/crimson-pro": "^5.2.5",
     "@fontsource-variable/inter": "^5.2.5",
     "@fontsource-variable/lora": "^5.2.5",
@@ -51,6 +52,7 @@
     "tw-animate-css": "^1.2.5"
   },
   "devDependencies": {
+    "@expressive-code/plugin-collapsible-sections": "^0.41.2",
     "@tailwindcss/typography": "^0.5.16",
     "@types/markdown-it": "^14.1.2",
     "@types/sanitize-html": "^2.15.0"
