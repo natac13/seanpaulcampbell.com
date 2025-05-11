@@ -12,7 +12,6 @@ export default [
     route('callback', './routes/auth/callback.ts'),
     route('email', './routes/auth/email.tsx'),
     route('code', './routes/auth/code.tsx'),
-    // route('verify', './routes/auth/verify.tsx'),
   ]),
 
   route('protected', 'routes/protected.tsx'),

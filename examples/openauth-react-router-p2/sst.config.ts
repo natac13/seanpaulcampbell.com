@@ -16,12 +16,19 @@ export default $config({
     }
   },
   async run() {
+    const secrets = {
+      GITHUB_CLIENT_ID: new sst.Secret('GITHUB_CLIENT_ID'),
+      GITHUB_CLIENT_SECRET: new sst.Secret('GITHUB_CLIENT_SECRET'),
+    }
+    const allSecrets = Object.values(secrets)
+
     const auth = new sst.aws.Auth('AuthServer', {
       issuer: {
         handler: './packages/functions/src/auth/issuer.handler',
         environment: {
           AUTH_FRONTEND_URL: 'http://localhost:5173',
         },
+        link: [...allSecrets],
       },
     })
 

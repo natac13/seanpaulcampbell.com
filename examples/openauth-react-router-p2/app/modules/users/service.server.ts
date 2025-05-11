@@ -1,3 +1,8 @@
+import {
+  type ProviderAccount,
+  providerAccountCreate,
+} from '../providers/provider-account.service.server'
+
 // In-memory storage for users
 const users = new Map<string, User>()
 
@@ -6,6 +11,7 @@ export interface User {
   email: string
   name: string
   imageUrl?: string
+  accounts?: ProviderAccount[]
 }
 
 export async function userByEmail(email: string): Promise<User | undefined> {
@@ -55,5 +61,15 @@ export async function signupWithProvider({
   providerAccountId: string
 }) {
   const user = await userCreate({ email, name, imageUrl })
-  return { user, provider: { name: providerName, id: providerAccountId } }
+  const providerAccount = await providerAccountCreate({
+    userId: user.id,
+    providerName,
+    providerAccountId,
+  })
+
+  // update user accounts
+  const accounts = user.accounts || []
+  accounts.push(providerAccount)
+  users.set(user.id, { ...user, accounts })
+  return { user, account: providerAccount }
 }

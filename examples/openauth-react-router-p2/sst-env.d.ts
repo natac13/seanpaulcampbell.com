@@ -3,7 +3,27 @@
 /* eslint-disable */
 /* deno-fmt-ignore-file */
 
-/// <reference path="../../sst-env.d.ts" />
+declare module "sst" {
+  export interface Resource {
+    "AuthServer": {
+      "type": "sst.aws.Auth"
+      "url": string
+    }
+    "GITHUB_CLIENT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "GITHUB_CLIENT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "Web": {
+      "type": "sst.aws.React"
+      "url": string
+    }
+  }
+}
+/// <reference path="sst-env.d.ts" />
 
 import "sst"
 export {}

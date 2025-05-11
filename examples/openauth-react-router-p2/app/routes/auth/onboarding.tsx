@@ -7,7 +7,12 @@ import { z } from 'zod'
 import { ErrorList, Field } from '../../components/ui/forms'
 import { StatusButton } from '../../components/ui/status-button'
 import { authSessionStorage } from '../../modules/auth/auth-session-storage.server'
-import { handleSignup, requireSessionData } from '../../modules/auth/auth.server'
+import {
+  authenticator,
+  handleSignup,
+  handleSignupWithProvider,
+  requireSessionData,
+} from '../../modules/auth/auth.server'
 import * as UserService from '../../modules/users/service.server'
 import { useIsPending } from '../../utils/misc'
 import type { Route } from './+types/onboarding'
@@ -15,11 +20,12 @@ import type { Route } from './+types/onboarding'
 export const OnboardingSchema = z.object({
   email: z.string().email(),
   name: z.string(),
+  imageUrl: z.string().optional(),
   redirectTo: z.string().optional(),
 })
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const { email } = await requireOnboardingData(request)
+  const { email, provider } = await requireOnboardingData(request)
   const authSession = await authSessionStorage.getSession(request.headers.get('cookie'))
 
   const formError = authSession.get('error')
@@ -32,6 +38,8 @@ export async function loader({ request }: Route.LoaderArgs) {
       status: hasError ? 'error' : undefined,
       initialValue: {
         email: email,
+        name: provider?.name,
+        imageUrl: provider?.imageUrl,
       },
       error: { '': hasError ? [formError] : [] },
     } as SubmissionResult,
@@ -74,6 +82,18 @@ export async function action({ request }: Route.ActionArgs) {
         }
       }).transform(async (data) => {
         if (intent !== null) return { ...data, headers: null }
+
+        if (onboardingData.provider) {
+          const { headers } = await handleSignupWithProvider({
+            email: data.email,
+            name: data.name,
+            imageUrl: data.imageUrl,
+            providerName: onboardingData.provider.provider,
+            providerAccountId: onboardingData.provider.providerAccountId,
+            tokens: onboardingData.tokens,
+          })
+          return { ...data, headers }
+        }
 
         const { headers } = await handleSignup({
           email: data.email,
@@ -137,6 +157,19 @@ export default function OnboardingProviderRoute() {
             <HoneypotInputs />
             {redirectTo ? (
               <input {...getInputProps(fields.redirectTo, { type: 'hidden' })} value={redirectTo} />
+            ) : null}
+            {fields.imageUrl.initialValue ? (
+              <div className="mb-4 flex w-full flex-col items-center justify-center gap-4">
+                <img
+                  src={fields.imageUrl.initialValue}
+                  alt="Profile"
+                  className="h-24 w-24 rounded-full bg-gray-200"
+                />
+                <p className="text-body-sm text-muted-foreground">
+                  You can change your photo later
+                </p>
+                <input {...getInputProps(fields.imageUrl, { type: 'hidden' })} />
+              </div>
             ) : null}
             <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-6">
               <div className="col-span-full md:col-span-full md:col-start-1">
@@ -202,6 +235,10 @@ async function requireOnboardingData(request: Request) {
   if (!sessionData.tokens) {
     throw new Error('No tokens found')
   }
+  const verified = await authenticator.verifyToken(sessionData.tokens.access)
+  if (verified.err) {
+    throw new Error('Invalid token')
+  }
   const result = z
     .object({
       email: z.string().email(),
@@ -210,14 +247,31 @@ async function requireOnboardingData(request: Request) {
         refresh: z.string(),
         expiresIn: z.number(),
       }),
+      provider: z
+        .object({
+          provider: z.string(),
+          providerAccountId: z.string(),
+          name: z.string().optional(),
+          imageUrl: z.string().optional(),
+        })
+        .optional(),
     })
     .safeParse({
-      email: sessionData.properties.email,
+      email: verified.subject.properties.email,
       tokens: sessionData.tokens,
+      provider:
+        verified.subject.properties.type === 'oauth'
+          ? {
+              provider: verified.subject.properties.provider,
+              providerAccountId: verified.subject.properties.id,
+              name: verified.subject.properties.name,
+              imageUrl: verified.subject.properties.imageUrl,
+            }
+          : undefined,
     })
   if (!result.success) {
     console.log('requireOnboardingData: result', result)
-    throw redirect('/')
+    throw await authenticator.authorize(request)
   }
   return result.data
 }

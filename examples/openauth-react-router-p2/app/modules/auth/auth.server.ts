@@ -6,6 +6,7 @@ import {
   authSubjects,
 } from '../../../packages/functions/src/auth/subjects'
 import { combineHeaders } from '../../utils/misc.server'
+import * as ProviderAccountService from '../providers/provider-account.service.server'
 import type { User } from '../users/service.server'
 import * as UserService from '../users/service.server'
 import {
@@ -42,6 +43,15 @@ export async function handleAuthCallback(request: Request) {
         tokens,
         verified: verified.subject.properties,
         exchangeHeaders,
+      })
+    }
+
+    if (verified.subject.properties.type === 'oauth') {
+      return handleOAuthFlow({
+        tokens,
+        verified: verified.subject.properties,
+        exchangeHeaders,
+        request,
       })
     }
 
@@ -237,4 +247,120 @@ export async function handleSignup({
     expires: getSessionDefaultExpiration(),
   })
   return { user, headers }
+}
+
+export async function handleSignupWithProvider({
+  name,
+  email,
+  imageUrl,
+  providerName,
+  providerAccountId,
+  tokens,
+}: {
+  name: string
+  email: string
+  imageUrl?: string
+  providerName: string
+  providerAccountId: string
+  tokens: Tokens
+}) {
+  const { user, account } = await UserService.signupWithProvider({
+    name,
+    email,
+    imageUrl,
+    providerName,
+    providerAccountId,
+  })
+  // session
+  const headers = await sessionController.setSessionData({
+    tokens,
+    expires: getSessionDefaultExpiration(),
+  })
+  return { user, headers, account }
+}
+
+async function handleOAuthFlow({
+  request,
+  tokens,
+  verified,
+  exchangeHeaders,
+}: {
+  request: Request
+  tokens: Tokens
+  verified: OAuthAccount
+  exchangeHeaders: Headers
+}): Promise<{ user: User; headers: Headers }> {
+  const existingAccount = await ProviderAccountService.providerAccountById({
+    providerAccountId: verified.id,
+    providerName: verified.provider,
+  })
+
+  const sessionData = await getSessionWithUser(request)
+  const sessionUser = sessionData?.user
+
+  // guard for existing account
+  if (existingAccount && sessionUser) {
+    if (existingAccount.userId === sessionUser.id) {
+      // `/protected` could be replaced with an account management page
+      throw redirect('/protected', { headers: exchangeHeaders })
+    }
+    // account exists but is linked to another user
+    throw await redirect('/protected', { headers: exchangeHeaders })
+  }
+
+  // handle account linking when user is logged in
+  if (sessionUser) {
+    await ProviderAccountService.providerAccountCreate({
+      userId: sessionUser.id,
+      providerName: verified.provider,
+      providerAccountId: verified.id,
+    })
+
+    throw redirect('/protected', { headers: exchangeHeaders })
+  }
+
+  // handle login when there is an existing account
+  if (existingAccount) {
+    const user = await UserService.userById(existingAccount.userId)
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    const headers = await sessionController.setSessionData({
+      tokens: tokens,
+      expires: getSessionDefaultExpiration(),
+    })
+
+    return {
+      user,
+      headers: combineHeaders(headers, exchangeHeaders),
+    }
+  }
+
+  // check for existing user to login when there is no existing account but user exists with matching email
+  const existingUser = await UserService.userByEmail(verified.email)
+  if (existingUser) {
+    await ProviderAccountService.providerAccountCreate({
+      userId: existingUser.id,
+      providerName: verified.provider,
+      providerAccountId: verified.id,
+    })
+    const headers = await sessionController.setSessionData({
+      tokens: tokens,
+      expires: getSessionDefaultExpiration(),
+    })
+    return {
+      user: existingUser,
+      headers: combineHeaders(headers, exchangeHeaders),
+    }
+  }
+
+  // handle signup when there is no existing account and user
+  const headers = await sessionController.setSessionData({
+    tokens: tokens,
+    expires: getSessionDefaultExpiration(),
+  })
+  throw redirect('/onboarding', {
+    headers: combineHeaders(headers, exchangeHeaders),
+  })
 }

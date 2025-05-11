@@ -1,7 +1,9 @@
 import { issuer } from '@openauthjs/openauth'
 import { UnknownStateError } from '@openauthjs/openauth/error'
 import { CodeProvider } from '@openauthjs/openauth/provider/code'
+import { GithubProvider } from '@openauthjs/openauth/provider/github'
 import { handle } from 'hono/aws-lambda'
+import { Resource } from 'sst'
 import { authSubjects } from './subjects'
 
 const app = issuer({
@@ -40,6 +42,11 @@ const app = issuer({
         throw new UnknownStateError()
       },
     }),
+    github: GithubProvider({
+      clientID: Resource.GITHUB_CLIENT_ID.value,
+      clientSecret: Resource.GITHUB_CLIENT_SECRET.value,
+      scopes: ['read:user', 'user:email'],
+    }),
   },
   success: async (ctx, value) => {
     console.log('Success', JSON.stringify(value))
@@ -52,8 +59,63 @@ const app = issuer({
       return ctx.subject('account', { type: 'email', email }, { subject: email })
     }
 
+    if (value.provider === 'github') {
+      console.log('github')
+      const access = value.tokenset.access
+      const userResponse = await fetch('https://api.github.com/user', {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          Accept: 'application/vnd.github.v3+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      })
+      const user = (await userResponse.json()) as GitHubUser
+      if (!user) {
+        throw new Error('No user found')
+      }
+
+      const emailResponse = await fetch('https://api.github.com/user/emails', {
+        headers: {
+          Authorization: `Bearer ${access}`,
+          Accept: 'application/vnd.github.v3+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      })
+      const emails = (await emailResponse.json()) as GitHubEmail[]
+      const primary = emails.find((email) => email.primary)
+      if (!primary?.verified) {
+        throw new Error('Email not verified')
+      }
+
+      return ctx.subject(
+        'account',
+        {
+          type: 'oauth',
+          id: typeof user.id === 'number' ? user.id.toString() : user.id,
+          email: primary.email,
+          name: user.name,
+          imageUrl: user.avatar_url,
+          provider: 'github',
+        },
+        { subject: primary.email },
+      )
+    }
+
     throw new Error('Invalid provider')
   },
 })
 
 export const handler = handle(app)
+
+interface GitHubEmail {
+  email: string
+  primary: boolean
+  verified: boolean
+  visibility: string | null
+}
+interface GitHubUser {
+  login: string
+  id: string | number
+  name: string | undefined
+  avatar_url: string | undefined
+}

@@ -1,12 +1,10 @@
-import {
-  AppleIcon,
-  FacebookIcon,
-  GithubIcon,
-  type LucideIcon,
-  TwitchIcon,
-  XIcon,
-} from 'lucide-react'
+import { MailIcon } from 'lucide-react'
 import { useSearchParams } from 'react-router'
+import { FacebookIcon } from '../../components/icons/facebook'
+import { GithubIcon } from '../../components/icons/github'
+import { GoogleIcon } from '../../components/icons/google'
+import { TwitchIcon } from '../../components/icons/twitch'
+import { TwitterIcon } from '../../components/icons/twitter'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card'
 
@@ -60,22 +58,18 @@ function parseProviders(providers: string) {
 }
 const DISPLAY: Record<string, string> = {
   twitch: 'Twitch',
-  // google: 'Google',
+  google: 'Google',
   github: 'GitHub',
-  apple: 'Apple',
   x: 'X',
   facebook: 'Facebook',
-  // microsoft: 'Microsoft',
-  slack: 'Slack',
   code: 'Email',
-}
+} as const
 
-const ProviderIcons: Record<string, LucideIcon> = {
+const ProviderIcons: Record<string, React.ComponentType<React.ComponentProps<'svg'>>> = {
   twitch: TwitchIcon,
-  // google: GoogleIcon,
+  google: GoogleIcon,
   github: GithubIcon,
-  apple: AppleIcon,
-  x: XIcon,
+  x: TwitterIcon,
   facebook: FacebookIcon,
-  // microsoft: MicrosoftIcon,
-}
+  code: MailIcon,
+} as const
