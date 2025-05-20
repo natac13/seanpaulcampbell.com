@@ -20,7 +20,8 @@
       "*/.react-router/**",
       ".vscode/**",
       ".cursor/**",
-      "**/.astro/**"
+      "**/.astro/**",
+      "**/examples/**"
     ]
   },
   "linter": {
