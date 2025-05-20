@@ -13,6 +13,12 @@ Today, we are going to walk through how to self-host Convex on AWS with SST. Thi
 - Basic familiarity with SST and Convex
 - An AWS account
 
+## Preamble
+
+I just want to point out that this is _not_ a definitive guide. This was me trying to get Convex Self-Hosted working on AWS with SST, with the components I am used to using. However, the current Convex Self-Hosted guide only provides explicit guides for Railway.com and Fly.io, and I believe that general `docker-compose.yml` setup is intended to be used on a long-lived server like EC2. I am not used to using EC2, so please take this guide with a grain of salt. I will be using ECS with Fargate as that is what the SST Service component gives me.
+
+I know using the Convex Cloud service is the **much** easier and recommended way to get started, and has more features, especially if you deploy to Vercel or Netlify. However, I have AWS credits and wanted to save on the monthly costs while building a project. This is a flaw of mine, but also allows me to learn things the hard way, even if it is not the best way.
+
 ## Project Setup
 
 Let's start by creating a new SST project. This will create a new SST project with a basic Vite React app:
@@ -64,7 +70,7 @@ export default $config({
 
 ## What does Convex need?
 
-Looking at the [Convex Self-Hosted](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md#running-the-database-on-postgres-or-mysql) guide, we can see a reference to a `docker-compose.yml` file. The Convex team has provided a great starting point to run Convex locally. It list a ton of environment variables that tell us what we can use. You can find the file [here](https://github.com/get-convex/convex-backend/blob/main/self-hosted/docker/docker-compose.yml).
+Looking at the [Convex Self-Hosted](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md#running-the-database-on-postgres-or-mysql) guide, we can see a reference to a `docker-compose.yml` file. The Convex team has provided a great starting point to run Convex locally. It lists a ton of environment variables which tells us what we can use. You can find the file [here](https://github.com/get-convex/convex-backend/blob/main/self-hosted/docker/docker-compose.yml).
 
 **TLDR:**
 
@@ -81,12 +87,12 @@ Looking at the [Convex Self-Hosted](https://github.com/get-convex/convex-backend
 So we will use the following AWS resources:
 
 - A VPC
-- A ECS Cluster
+- An ECS Cluster
 - A MySQL RDS instance
-- 4 S3 buckets
-- A ECS Service to run the Convex backend with load balancer to handle the WebSocket connections
-- A ECS Service to run the Convex dashboard with API Gateway
-- And the static react site that we will use to demo Convex working
+- 5 S3 buckets
+- An ECS Service to run the Convex backend with load balancer to handle the WebSocket connections
+- An ECS Service to run the Convex dashboard with API Gateway
+- A static React site that we will use to demo Convex working
 
 ## Back to SST
 
@@ -207,12 +213,6 @@ const dashboard = new sst.aws.Service("Dashboard", {
   cpu: "0.25 vCPU",
   memory: "0.5 GB",
 });
-
-const convexDev = new sst.x.DevCommand(
-  "ConvexDevServer",
-  { dev: { command: "bun run convex dev" } },
-  { dependsOn: [convex] }
-);
 ```
 
 Let's break down what we just did before we move on.
@@ -221,7 +221,7 @@ First, we created a `sst.aws.Service` for the Convex backend. We set the `image`
 
 We also set the `link` to include the database, and all 4 buckets. This will ensure that SST will add the necessary IAM permissions for the Convex service to access the buckets and database.
 
-We are not able to use the built-in `Resource` from SST to reference the resources, so we will set them as environment variables. You can see that with the bucket names. The `MYSQL_URL` is a bit more special. It is using the `$interpolate` function to interpolate the database username, password, and port into the URL. The url cannot contain the database name, and we use the `host.docker.internal` to connect to the local MySQL instance. More on that soon.
+We are not able to use the built-in `Resource` from SST to reference the resources, so we will set them as environment variables. You can see that with the bucket names. The `MYSQL_URL` is a bit more special. It is using the `$interpolate` function to interpolate the database username, password, and port into the URL. The URL cannot contain the database name, and we use the `host.docker.internal` to connect to the local MySQL instance locally.
 
 Lastly we set the `dev` property to start the Convex backend service locally. However, as we need access to the SST AWS resources we somehow have to start the docker container with the needed environment variables. To do this I came up with the following script:
 
@@ -371,11 +371,36 @@ spawnSync(
 
 Why the `process.on("exit", () => { ... })`? Well, sometimes the container is left running so this helps ensure we stop it.
 
+### Start Dev Environment?
+
+Yes, we can start the SST dev environment and have it start the Convex backend and dashboard services locally. Make sure the database is running with the `docker-compose.yml` file above.
+
+To login to the Convex dashboard though we first need to generate a key as per the [Convex Self-Hosted](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md#running-the-database-on-postgres-or-mysql) guide.
+
+```bash title="Generate a key"
+docker exec convex-backend ./generate_admin_key.sh
+```
+
+Use that key to login to the dashboard at `http://127.0.0.1:6791`.
+
+![SST Terminal](../../assets/images/convex-self-hosted/sst-terminal.png)
+
 ### Convex Dev
 
 Convex needs a way to run the `convex dev` command. We can use the `sst.x.DevCommand` to run the `convex dev` command.
 
+First update the `.env.local` file to include the following.
+
+```bash title=".env.local"
+CONVEX_SELF_HOSTED_URL='http://127.0.0.1:3210'
+CONVEX_SELF_HOSTED_ADMIN_KEY='<your admin key>'
+```
+
+Then add the following to the `async run()` function in the `sst.config.ts` file after the dashboard service.
+
 ```typescript title="sst.config.ts"
+// ... dashboard service above ...
+
 const convexDev = new sst.x.DevCommand(
   "ConvexDevServer",
   { dev: { command: "bun run convex dev" } },
@@ -385,23 +410,9 @@ const convexDev = new sst.x.DevCommand(
 
 This will start the `convex dev` command and keep it running until we stop the SST dev environment.
 
-## Start Dev Environment?
-
-Yes, we can start the SST dev environment and have it start the Convex backend and dashboard services locally. Make sure the database is running with the `docker-compose.yml` file above.
-
-To login to the Convex dashboard though we first need to generate a key as per the [Convex Self-Hosted](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md#running-the-database-on-postgres-or-mysql) guide.
-
-```bash title="Generate a key"
-docker exec convex-backend ./generater_admin_key.sh
-```
-
-Use that key to login to the dashboard at `http://127.0.0.1:6791`.
-
-![SST Terminal](../../assets/images/convex-self-hosted/sst-terminal.png)
-
 ## Static Site for Demo
 
-To see Convex is action let us use their [tutorial app code](https://github.com/get-convex/convex-tutorial). The code to bring over is the `src/App.tsx`, `src/index.css`, and `src/main.tsx` files.
+To see Convex in action let us use their [tutorial app code](https://github.com/get-convex/convex-tutorial). The code to bring over is the `src/App.tsx`, `src/index.css`, and `src/main.tsx` files.
 
 ### Add Faker
 
@@ -490,7 +501,7 @@ function getOrSetFakeName() {
 
 ### index.css
 
-Omitting the CSS in the blog post, but you can find it [here]().
+Omitting the CSS in the blog post, but you can find it [here](https://github.com/natac13/seanpaulcampbell.com/blob/main/examples/convex-self-hosted/src/index.css).
 
 ### main.tsx
 
@@ -525,8 +536,6 @@ const site = new sst.aws.StaticSite("Site", {
     url: "http://127.0.0.1:5173",
   },
   environment: {
-    VITE_CONVEX_CLOUD_ORIGIN: `http://127.0.0.1:3210`,
-    VITE_CONVEX_SITE_ORIGIN: `http://127.0.0.1:3211`,
     VITE_CONVEX_URL: `http://127.0.0.1:3210`,
   },
 });
@@ -538,7 +547,7 @@ After saving the file, SST will add it to the dev environment. And you will be a
 
 ## Convex Tutorial
 
-We can now follow the Convex tutorial. Ill give a quick version of the code here just incase it ever changes.
+We can now follow the Convex tutorial. I'll give a quick version of the code here just in case it ever changes.
 
 Then add in the following to the `convex/chat.ts` file.
 
@@ -666,3 +675,378 @@ For some reason the SST dev environment must be restarted to pick up the `.env.l
 ## Deployed to AWS
 
 Awesome! We now have a working Convex self-hosted instance running locally with SST using a MySQL database and S3 buckets. Next we will shift focus to deploying this all to AWS for real!
+
+### Truths
+
+It took some time to figure out how to get things deployed to AWS. And I have found some _things_ that are not the best DX. However, I did manage to get it working. I will share my findings after we work through the deployment.
+
+### Custom Domain
+
+From the Convex Self-Hosted Guide
+
+> Your Convex backend will be running on this server at port 3210, with HTTP actions exposed at port 3211, and the dashboard running on port 6791.
+> Set up routing to forward requests from your domain to these ports. For example:
+
+- `https://api.my-domain.com` forwards to `http://localhost:3210`
+- `https://my-domain.com` forwards to `http://localhost:3211`
+- `https://dashboard.my-domain.com` forwards to `http://localhost:6791`
+
+```bash
+# URL of the Convex API as accessed by the client/frontend.
+CONVEX_CLOUD_ORIGIN='https://api.my-domain.com'
+
+# URL of Convex HTTP actions as accessed by the client/frontend.
+CONVEX_SITE_ORIGIN='https://my-domain.com'
+
+# URL of the Convex API as accessed by the dashboard (browser).
+NEXT_PUBLIC_DEPLOYMENT_URL='https://api.my-domain.com'
+```
+
+I tried my best to make the above work with my custom domain. However, I kept running into routing issues. I think I just had the wrong configuration. Therefore, I ended up mirroring the ports that the Convex backend uses for the Load Balancer rules.
+
+```typescript title="sst.config.ts" {20-43,72-76}
+// showing the new convex service setup
+const convex = new sst.aws.Service("Convex", {
+  cluster,
+  image:
+    "ghcr.io/get-convex/convex-backend:5143fec81f146ca67495c12c6b7a15c5802c37e2",
+  cpu: "0.5 vCPU",
+  memory: "1 GB",
+  scaling: {
+    min: 1,
+    max: 1,
+  },
+  link: [
+    database,
+    exportsBucket,
+    snapshotImportsBucket,
+    modulesBucket,
+    filesBucket,
+    searchBucket,
+  ],
+  loadBalancer: {
+    domain: {
+      name: domain,
+      aliases: [`api.${domain}`],
+      dns: sst.aws.dns(),
+    },
+    health: {
+      "3210/http": {
+        path: "/version",
+        interval: "1 minute",
+        timeout: "10 seconds",
+      },
+      "3211/http": {
+        path: "/version",
+        interval: "1 minute",
+        timeout: "10 seconds",
+      },
+    },
+    rules: [
+      {
+        listen: "3210/https",
+        forward: "3210/http",
+      },
+      {
+        listen: "3211/https",
+        forward: "3211/http",
+      },
+    ],
+  },
+  environment: {
+    S3_STORAGE_EXPORTS_BUCKET: exportsBucket.name,
+    S3_STORAGE_SNAPSHOT_IMPORTS_BUCKET: snapshotImportsBucket.name,
+    S3_STORAGE_MODULES_BUCKET: modulesBucket.name,
+    S3_STORAGE_FILES_BUCKET: filesBucket.name,
+    S3_STORAGE_SEARCH_BUCKET: searchBucket.name,
+    REDACT_LOGS_TO_CLIENT: "true",
+    ...($dev
+      ? {
+          MYSQL_URL: $interpolate`mysql://${database.username}:${database.password}@host.docker.internal:${database.port}`,
+          CONVEX_CLOUD_ORIGIN: "http://127.0.0.1:3210",
+          CONVEX_SITE_ORIGIN: "http://127.0.0.1:3211",
+          DO_NOT_REQUIRE_SSL: "true",
+          DISABLE_BEACON: "true",
+        }
+      : {
+          MYSQL_URL: $interpolate`mysql://${database.username}:${database.password}@${database.host}:${database.port}`,
+          CONVEX_CLOUD_ORIGIN: $interpolate`https://${domain}:3210`,
+          CONVEX_SITE_ORIGIN: $interpolate`https://${domain}:3211`,
+        }),
+  },
+  dev: {
+    url: "http://127.0.0.1:3210",
+    command: "bun run scripts/docker-backend.ts",
+  },
+  transform: {
+    service: {
+      enableExecuteCommand: true,
+    },
+  },
+});
+```
+
+We also need to update the Dashboard service to use the new domain. We will use an API Gateway to handle the routing, as it is cheaper than a Load Balancer. Unfortunately, at this time SST does not have support to share the same Load Balancer between services. Maybe in the future.
+
+```typescript title="sst.config.ts" {6-8,15-17,22-33}
+const dashboard = new sst.aws.Service("Dashboard", {
+  cluster,
+  image:
+    "ghcr.io/get-convex/convex-dashboard:5143fec81f146ca67495c12c6b7a15c5802c37e2",
+  environment: {
+    NEXT_PUBLIC_DEPLOYMENT_URL: $dev
+      ? "http://127.0.0.1:3210"
+      : $interpolate`https://${domain}:3210`,
+  },
+  link: [convex],
+  dev: {
+    url: "http://127.0.0.1:6791",
+    command: "bun run scripts/docker-dashboard.ts",
+  },
+  serviceRegistry: {
+    port: 6791,
+  },
+  cpu: "0.25 vCPU",
+  memory: "0.5 GB",
+});
+
+if (!$dev) {
+  const api = new sst.aws.ApiGatewayV2("Api", {
+    vpc,
+    domain: {
+      name: `dashboard.${domain}`,
+      dns: sst.aws.dns(),
+    },
+  });
+  api.routePrivate("$default", dashboard.nodes.cloudmapService.arn);
+}
+```
+
+Then the static site will need to be updated to use the new domain.
+
+```typescript title="sst.config.ts" {6-9,11-13,15-18}
+const site = new sst.aws.StaticSite("Site", {
+  dev: {
+    command: "bun run dev",
+    url: "http://127.0.0.1:5173",
+  },
+  build: {
+    command: "bun run build",
+    output: "./dist",
+  },
+  environment: {
+    VITE_CONVEX_URL: $dev
+      ? "http://127.0.0.1:3210"
+      : $interpolate`https://${domain}:3210`,
+  },
+  domain: {
+    name: `static.${domain}`,
+    dns: sst.aws.dns(),
+  },
+});
+```
+
+### Before you deploy
+
+Before you deploy, let me tell you about what happened when I deployed at this stage. I learned that the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` are not injected into the service task, and therefore even though I set the `link` to include the buckets, Convex's backend assumed that because the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` were not set, it would default back to local storage. Therefore, I had to create a new IAM user and policy to match the permissions it needed, and create a new access key for it. We will use the same permissions as [SST sets for linking the buckets](https://github.com/sst/sst/blob/8fb10642f50178fde9ccd0c07cdee789bea5a026/platform/src/components/aws/bucket.ts#L1611-L1624).
+
+Also before we get any further, I also noticed that the connection to the database was not working. It was due to the fact SSL was required. For this blog post I did not want to get into figuring out how to download the CA certificate and add it to the docker container. Therefore, I just set the `DO_NOT_REQUIRE_SSL` environment variable to `true`. This is fine for local and this guide but you should likely download the CA certificate and add it to the docker container. I just figured as the connection was inside the VPC, it would be fine.
+
+Here is the final Convex service setup. With the IAM user and policy.
+
+```typescript title="sst.config.ts" {108-110}
+const convexUser = new aws.iam.User("ConvexUser");
+const convexUserPolicy = new aws.iam.UserPolicy("ConvexUserPolicy", {
+  user: convexUser.name,
+  policy: {
+    Version: "2012-10-17",
+    Statement: [
+      {
+        Sid: "ExportsBucketAccess",
+        Effect: "Allow",
+        Action: ["s3:*"],
+        Resource: [exportsBucket.arn, $interpolate`${exportsBucket.arn}/*`],
+      },
+      {
+        Sid: "SnapshotImportsBucketAccess",
+        Effect: "Allow",
+        Action: ["s3:*"],
+        Resource: [
+          snapshotImportsBucket.arn,
+          $interpolate`${snapshotImportsBucket.arn}/*`,
+        ],
+      },
+      {
+        Sid: "ModulesBucketAccess",
+        Effect: "Allow",
+        Action: ["s3:*"],
+        Resource: [modulesBucket.arn, $interpolate`${modulesBucket.arn}/*`],
+      },
+      {
+        Sid: "FilesBucketAccess",
+        Effect: "Allow",
+        Action: ["s3:*"],
+        Resource: [filesBucket.arn, $interpolate`${filesBucket.arn}/*`],
+      },
+      {
+        Sid: "SearchBucketAccess",
+        Effect: "Allow",
+        Action: ["s3:*"],
+        Resource: [searchBucket.arn, $interpolate`${searchBucket.arn}/*`],
+      },
+    ],
+  },
+});
+const convexUserAccessKey = new aws.iam.AccessKey("ConvexUserAccessKey", {
+  user: convexUser.name,
+});
+
+const convex = new sst.aws.Service("Convex", {
+  cluster,
+  image:
+    "ghcr.io/get-convex/convex-backend:5143fec81f146ca67495c12c6b7a15c5802c37e2",
+  cpu: "0.5 vCPU",
+  memory: "1 GB",
+  scaling: {
+    min: 1,
+    max: 1,
+  },
+  link: [
+    database,
+    exportsBucket,
+    snapshotImportsBucket,
+    modulesBucket,
+    filesBucket,
+    searchBucket,
+  ],
+  loadBalancer: {
+    domain: {
+      name: domain,
+      aliases: [`api.${domain}`],
+      dns: sst.aws.dns(),
+    },
+    health: {
+      "3210/http": {
+        path: "/version",
+        interval: "1 minute",
+        timeout: "10 seconds",
+      },
+      "3211/http": {
+        path: "/version",
+        interval: "1 minute",
+        timeout: "10 seconds",
+      },
+    },
+    rules: [
+      {
+        listen: "3210/https",
+        forward: "3210/http",
+      },
+      {
+        listen: "3211/https",
+        forward: "3211/http",
+      },
+    ],
+  },
+  environment: {
+    S3_STORAGE_EXPORTS_BUCKET: exportsBucket.name,
+    S3_STORAGE_SNAPSHOT_IMPORTS_BUCKET: snapshotImportsBucket.name,
+    S3_STORAGE_MODULES_BUCKET: modulesBucket.name,
+    S3_STORAGE_FILES_BUCKET: filesBucket.name,
+    S3_STORAGE_SEARCH_BUCKET: searchBucket.name,
+    REDACT_LOGS_TO_CLIENT: "true",
+    ...($dev
+      ? {
+          MYSQL_URL: $interpolate`mysql://${database.username}:${database.password}@host.docker.internal:${database.port}`,
+          CONVEX_CLOUD_ORIGIN: "http://127.0.0.1:3210",
+          CONVEX_SITE_ORIGIN: "http://127.0.0.1:3211",
+          DO_NOT_REQUIRE_SSL: "true",
+          DISABLE_BEACON: "true",
+        }
+      : {
+          MYSQL_URL: $interpolate`mysql://${database.username}:${database.password}@${database.host}:${database.port}`,
+          CONVEX_CLOUD_ORIGIN: $interpolate`https://${domain}:3210`,
+          CONVEX_SITE_ORIGIN: $interpolate`https://${domain}:3211`,
+          DO_NOT_REQUIRE_SSL: "true",
+          AWS_ACCESS_KEY_ID: convexUserAccessKey.id,
+          AWS_SECRET_ACCESS_KEY: convexUserAccessKey.secret,
+        }),
+  },
+  dev: {
+    url: "http://127.0.0.1:3210",
+    command: "bun run scripts/docker-backend.ts",
+  },
+  transform: {
+    service: {
+      enableExecuteCommand: true,
+    },
+  },
+});
+```
+
+### Deploying
+
+Now when we deploy, we should set everything running and connected. However, there is still the need to generate the Convex Admin API key which is required to login to the dashboard.
+
+To do this we can use the AWS CLI to `exec` a command in the Convex service. You will notice that I set the `transform.service.enableExecuteCommand` to `true` to enable this. However, I did find that SST already does this for your in the [service component](https://github.com/sst/sst/blob/8fb10642f50178fde9ccd0c07cdee789bea5a026/platform/src/components/aws/service.ts#L2217). I left the `transform` in the code to call it out.
+
+```bash title="ECS Exec template"
+aws ecs execute-command --cluster cluster-name \
+    --task task-id \
+    --container container-name \
+    --interactive \
+    --command "/bin/sh"
+```
+
+Therefore, we can go to the AWS console to find these values. Once you have the `cluster-name` `task-id` and `container-name` we can run the following command to generate the Convex Admin API key.
+
+```bash title="Generate Convex Admin API key"
+aws ecs execute-command --cluster convex-self-hosted-demo-234r3f \
+    --task 2123435524vfdg34325235 \
+    --container Convex \
+    --interactive \
+    --command "./generate_admin_key.sh" \
+    --profile someprofile
+```
+
+**NOTE:** In order to run the command you must have the AWS CLI _and_ the [Session Manager plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html) installed.
+
+Now you should be able to go to the dashboard route you set and use the admin API key to login.
+
+## Conclusion
+
+At this point, things should be working. 🤞. I know there were some rough edges for me, but we were able to get things working.
+
+**Be sure to run `sst remove` on any stages to clean up the resources. If left running, they will continue to cost you money!**
+
+### Final notes
+
+#### Generate Admin API key
+
+One thing I noticed was that anytime the Convex service restarts, I would need to generate a new admin API key to login to the dashboard. I think that if I was to add an EBS volume to the Convex service this might solve the issue. However, for this guide I left out the EBS volume. Therefore, be prepared anytime the Convex service restarts, you will need to generate a new admin API key to login to the dashboard. Sorry about that.
+
+#### Use EC2 Instead
+
+If I would have taken the route of using an EC2 instance directly, and just using the Convex `docker-compose.yml` file, I likely would have been "better" off. However, I wanted to see if I could get it working using the SST components I know and love.
+
+#### Horizontal Scaling
+
+At this time, Convex Self Hosted does not [support horizontal scaling](https://discord.com/channels/1019350475847499849/1216859935288201296/1370230545467834369) by default. It does seems though that it [maybe possible](https://discord.com/channels/1019350475847499849/1019350478817079338/1372691037629452389) in the future. I also say in the Discord that it is [likely not even needed for single projects](https://discord.com/channels/1019350475847499849/1353855626157101126/1353864958202478622). Convex Cloud does have horizontal scaling, but this is because they are supporting _multiple_ projects and customers!
+
+#### Database Name
+
+The database name must be `convex_self_hosted` for the Convex service to work.
+
+#### Previews and Different Environments
+
+As we are self-hosting, we don't have the luxury of using Preview environments. Therefore, please note that each stage you deploy to will have its own database. Convex does have `export` and `import` functionality, which you can use to manually move data between environments.
+
+#### Images hash versions
+
+The Convex images are using a hash for the version. These were current as of May 20, 2025. You should check the Convex Self-Hosted repo for the latest version.
+
+![Site Final](../../assets/images/convex-self-hosted/site-final.png)
+
+### Complete Code
+
+The code I used for this can be found [here](https://github.com/natac13/seanpaulcampbell.com/tree/main/examples/convex-self-hosted).

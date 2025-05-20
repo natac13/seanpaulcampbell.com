@@ -5,9 +5,14 @@
 
 declare module "sst" {
   export interface Resource {
+    "Api": {
+      "type": "sst.aws.ApiGatewayV2"
+      "url": string
+    }
     "Convex": {
       "service": string
       "type": "sst.aws.Service"
+      "url": string
     }
     "Dashboard": {
       "service": string

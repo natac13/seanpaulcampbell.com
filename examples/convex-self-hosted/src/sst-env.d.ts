@@ -3,8 +3,6 @@
 /* eslint-disable */
 /// <reference types="vite/client" />
 interface ImportMetaEnv {
-  readonly VITE_CONVEX_CLOUD_ORIGIN: string
-  readonly VITE_CONVEX_SITE_ORIGIN: string
   readonly VITE_CONVEX_URL: string
 }
 interface ImportMeta {
