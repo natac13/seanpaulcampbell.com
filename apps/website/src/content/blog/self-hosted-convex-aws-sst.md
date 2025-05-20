@@ -77,7 +77,7 @@ Looking at the [Convex Self-Hosted](https://github.com/get-convex/convex-backend
 - A way to run the Convex backend service
 - A way to run the Convex dashboard service
 - `MYSQL_URL` or `POSTGRES_URL` without the database name
-- 4 buckets:
+- 5 buckets:
   - `S3_STORAGE_EXPORTS_BUCKET`
   - `S3_STORAGE_SNAPSHOT_IMPORTS_BUCKET`
   - `S3_STORAGE_MODULES_BUCKET`

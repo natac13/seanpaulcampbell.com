@@ -5,54 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "Api": {
-      "type": "sst.aws.ApiGatewayV2"
-      "url": string
-    }
-    "Convex": {
-      "service": string
-      "type": "sst.aws.Service"
-      "url": string
-    }
-    "Dashboard": {
-      "service": string
-      "type": "sst.aws.Service"
-    }
-    "Database": {
-      "database": string
-      "host": string
-      "password": string
-      "port": number
-      "type": "sst.aws.Mysql"
-      "username": string
-    }
-    "ExportsBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "FilesBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "ModulesBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "SearchBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "Site": {
-      "type": "sst.aws.StaticSite"
-      "url": string
-    }
-    "SnapshotImportsBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "Vpc": {
-      "type": "sst.aws.Vpc"
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />
