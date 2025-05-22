@@ -987,19 +987,15 @@ I never like going through the manual process of setting up a server. I know it 
 
 ## Resources
 
-You can find the ECS version of this blog post [here](https://github.com/natac13/seanpaulcampbell.com/tree/main/examples/convex-self-hosted).
+You can find the ECS version of this blog post [here](./self-hosted-convex-aws-sst).
 
 And the full code example of this EC2 version [here](https://github.com/natac13/seanpaulcampbell.com/tree/main/examples/convex-self-hosted-ec2).
 
-[Certbot setup](https://certbot.eff.org/instructions)
-[Certbot DNS Route53 Plugin](https://certbot-dns-route53.readthedocs.io/en/stable/)
-
-[GitHub SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-
-[Docker Install](https://docs.docker.com/engine/install/ubuntu/)
-[Docker Post Install](https://docs.docker.com/engine/install/linux-postinstall/)
-
-[SST Pulumi EC2 Example](https://sst.dev/docs/examples/#ec2-with-pulumi)
-[Pulumi EC2](https://www.pulumi.com/registry/packages/aws/api-docs/ec2/instance/)
-
-[Convex Self-Hosted Guide](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md)
+- [Certbot setup](https://certbot.eff.org/instructions)
+- [Certbot DNS Route53 Plugin](https://certbot-dns-route53.readthedocs.io/en/stable/)
+- [GitHub SSH Key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+- [Docker Install](https://docs.docker.com/engine/install/ubuntu/)
+- [Docker Post Install](https://docs.docker.com/engine/install/linux-postinstall/)
+- [SST Pulumi EC2 Example](https://sst.dev/docs/examples/#ec2-with-pulumi)
+- [Pulumi EC2](https://www.pulumi.com/registry/packages/aws/api-docs/ec2/instance/)
+- [Convex Self-Hosted Guide](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md)
