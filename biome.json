@@ -20,8 +20,7 @@
       "*/.react-router/**",
       ".vscode/**",
       ".cursor/**",
-      "**/.astro/**",
-      "**/examples/**"
+      "**/.astro/**"
     ]
   },
   "linter": {
@@ -44,7 +43,7 @@
         "noUnusedPrivateClassMembers": "warn"
       },
       "security": {
-        "noDangerouslySetInnerHtml": "info"
+        "noDangerouslySetInnerHtml": "warn"
       }
     }
   },
@@ -120,6 +119,33 @@
       "include": ["./packages/email/**/*", "./packages/functions/**/*", "./packages/core/**/*"],
       "javascript": {
         "jsxRuntime": "reactClassic"
+      }
+    },
+    {
+      "include": ["./examples/**/*"],
+      "linter": {
+        "rules": {
+          "security": {
+            "noDangerouslySetInnerHtml": "info"
+          },
+          "a11y": {
+            "useButtonType": "info",
+            "noBlankTarget": "info",
+            "noAutofocus": "info"
+          },
+          "correctness": {
+            "noUnusedImports": "info",
+            "noUnusedVariables": "info",
+            "useExhaustiveDependencies": "info"
+          },
+          "suspicious": {
+            "noShorthandPropertyOverrides": "info",
+            "noExplicitAny": "info"
+          },
+          "style": {
+            "noNonNullAssertion": "info"
+          }
+        }
       }
     }
   ]
