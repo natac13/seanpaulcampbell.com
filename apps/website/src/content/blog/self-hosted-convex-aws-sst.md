@@ -7,7 +7,7 @@ tags: ["Convex", "AWS", "SST"]
 
 Today, we are going to walk through how to self-host Convex on AWS with SST. This guide will get a local Convex instance running as well as deployed to AWS via SST. We will be following the Convex [Self-Hosted](https://github.com/get-convex/convex-backend/blob/main/self-hosted/README.md#running-the-database-on-postgres-or-mysql) guide.
 
-**Edit:** I have since created another guide using EC2. You can find it [here](https://github.com/natac13/seanpaulcampbell.com/tree/main/examples/convex-self-hosted-ec2).
+**Edit:** I have since created another guide using EC2. You can find it [here](./self-hosted-convex-aws-sst-ec2).
 
 ## Prerequisites
 
