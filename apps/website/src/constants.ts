@@ -20,10 +20,10 @@ export const NAV_LINKS: SocialLink[] = [
     href: '/about',
     label: 'About',
   },
-  {
-    href: '/rss.xml',
-    label: 'RSS',
-  },
+  // {
+  //   href: '/rss.xml',
+  //   label: 'RSS',
+  // },
 ]
 
 export const SOCIAL_LINKS: SocialLink[] = [
