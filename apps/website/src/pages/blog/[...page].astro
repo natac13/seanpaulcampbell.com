@@ -16,50 +16,50 @@ import Layout from '../../layouts/Layout.astro'
 import { getAllPosts, getAllTags } from '../../lib/posts'
 import { cn } from '../../lib/utils'
 
-// SSG: Generate paginated paths
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const allPosts = await getAllPosts() // Fetch all posts once during build
+  const allPosts = await getAllPosts()
   return paginate(allPosts, { pageSize: SITE.postsPerPage })
 }
 
-// Get the current page's data from Astro.props provided by getStaticPaths
 const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> }
 const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1)
 
-function getPageUrl(page: number) {
+function getPageUrl(page: number): string {
   return page === 1 ? '/blog' : `/blog/${page}`
 }
 
 const currentPage = page.currentPage
 const totalPages = page.lastPage
-
-// Get all unique tags for the "Filter by tags" section (links to static tag pages)
 const allTags = await getAllTags()
 
-// Enable prerendering for SSG
 export const prerender = true
 ---
 
-<Layout title={`Blog - Page ${page.currentPage}`}>
-  {/* Revert to simpler centered layout */}
-  <div class="space-y-8 max-w-4xl mx-auto">
-    <!-- <header class="mb-8">
-      <h1 class="text-4xl font-bold mb-4">Blog</h1>
-      <p class="text-muted-foreground">All the latest news and articles.</p>
-    </header> -->
+<Layout title={`Blog${page.currentPage > 1 ? ` - Page ${page.currentPage}` : ''}`}>
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Writings</h1>
+      <p class="text-lg text-muted-foreground">
+        Technical tutorials, thoughts on development, and things I've learned along the way.
+      </p>
+    </header>
 
-    <div class="mb-8">
-      <h2 class="text-sm font-medium mb-2">Browse by Tag:</h2>
+    <!-- Tag filters -->
+    <div class="mb-10">
+      <h2 class="text-sm font-sans font-medium text-muted-foreground uppercase tracking-wider mb-3">
+        Browse by Topic
+      </h2>
       <div class="flex flex-wrap gap-2">
         <a
           href="/blog"
           class={cn(
-            "text-sm px-3 py-1.5 rounded-full transition-colors",
-            page.currentPage === 1
+            "text-sm font-sans px-3 py-1.5 rounded-full transition-colors",
+            !Astro.url.pathname.includes('/tags/')
               ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground"
           )}
-          aria-current={page.currentPage === 1 ? "page" : undefined}
+          aria-current={!Astro.url.pathname.includes('/tags/') ? "page" : undefined}
         >
           All Posts
         </a>
@@ -67,75 +67,74 @@ export const prerender = true
           allTags.map((tagItem) => (
             <a
               href={`/tags/${tagItem.tag}`}
-              class={cn(
-                "text-sm px-3 py-1.5 rounded-full transition-colors bg-muted text-muted-foreground hover:bg-primary/80 hover:text-primary-foreground"
-              )}
+              class="text-sm font-sans px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
             >
-              {tagItem.tag} ({tagItem.count})
+              {tagItem.tag}
+              <span class="ml-1 opacity-60">({tagItem.count})</span>
             </a>
           ))
         }
       </div>
     </div>
 
-    {/* Blog posts for the current page */}
-    <div class="space-y-10">
+    <!-- Blog posts -->
+    <div class="space-y-6">
       {
         page.data.length > 0 ? (
-          <>
-            {page.data.map((post) => (
-              <PostListItem post={post} />
-            ))}
-          </>
+          page.data.map((post) => (
+            <PostListItem post={post} />
+          ))
         ) : (
-          <div class="text-center py-12">
-            <p class="text-lg text-muted-foreground mb-4">No posts found.</p>
+          <div class="text-center py-16">
+            <p class="text-lg text-muted-foreground">No posts found.</p>
           </div>
         )
       }
     </div>
 
-    {/* Pagination */}
+    <!-- Pagination -->
     {
       page.lastPage > 1 && (
-        <Pagination>
-          <PaginationContent className="flex-wrap">
-            <PaginationItem>
-              <PaginationPrevious
-                href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
-                aria-disabled={currentPage === 1}
-              />
-            </PaginationItem>
-
-            {pages.map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink
-                  href={getPageUrl(page)}
-                  isActive={page === currentPage}
-                >
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-
-            {totalPages > 5 && (
+        <div class="mt-12">
+          <Pagination>
+            <PaginationContent className="flex-wrap">
               <PaginationItem>
-                <PaginationEllipsis />
+                <PaginationPrevious
+                  href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
+                  aria-disabled={currentPage === 1}
+                />
               </PaginationItem>
-            )}
 
-            <PaginationItem>
-              <PaginationNext
-                href={
-                  currentPage < totalPages
-                    ? getPageUrl(currentPage + 1)
-                    : undefined
-                }
-                aria-disabled={currentPage === totalPages}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              {pages.map((pageNum) => (
+                <PaginationItem key={pageNum}>
+                  <PaginationLink
+                    href={getPageUrl(pageNum)}
+                    isActive={pageNum === currentPage}
+                  >
+                    {pageNum}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+              {totalPages > 5 && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+
+              <PaginationItem>
+                <PaginationNext
+                  href={
+                    currentPage < totalPages
+                      ? getPageUrl(currentPage + 1)
+                      : undefined
+                  }
+                  aria-disabled={currentPage === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       )
     }
   </div>

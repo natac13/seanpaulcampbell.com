@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import { cn, formatDate } from '../lib/utils'
-import TagComponent from './Tag.astro' // Use the existing Tag component for styling
+import TagComponent from './Tag.astro'
 
 interface Props {
   post: CollectionEntry<'blog'>
@@ -12,11 +12,12 @@ const { post, activeTag = null } = Astro.props
 ---
 
 <article
-  class="border border-border rounded-xl p-6 transition-all hover:shadow-md group dark:shadow-foreground/10"
+  class="group library-card border border-border rounded-xl p-6 md:p-8 transition-all duration-300 hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5"
 >
   <div class="relative isolate">
+    <!-- Title -->
     <h2
-      class="text-2xl font-semibold mb-2 hover:text-primary transition-colors group-hover:text-primary"
+      class="text-xl md:text-2xl font-semibold mb-3 text-foreground group-hover:text-primary transition-colors"
       transition:name={`blog-title-${post.id}`}
     >
       {post.data.title}
@@ -24,44 +25,54 @@ const { post, activeTag = null } = Astro.props
     <a href={`/blog/${post.id}`} class="absolute inset-0 z-10">
       <span class="sr-only">Read more about {post.data.title}</span>
     </a>
+
+    <!-- Description -->
     <p
-      class="text-muted-foreground mb-4"
+      class="text-muted-foreground mb-4 line-clamp-2 leading-relaxed"
       transition:name={`blog-description-${post.id}`}
     >
       {post.data.description}
     </p>
+
+    <!-- Meta row -->
     <div class="flex flex-wrap items-center gap-3">
-      <span
-        class="text-sm text-muted-foreground"
+      <time
+        class="text-sm text-muted-foreground font-sans tabular-nums"
+        datetime={post.data.publishDate.toISOString()}
         transition:name={`blog-publish-date-${post.id}`}
       >
         {formatDate(post.data.publishDate)}
-      </span>
-      <span class="text-muted-foreground">•</span>
-      <div
-        class="flex flex-wrap gap-2"
-        transition:name={`blog-tags-${post.id}`}
-      >
-        {
-          post.data.tags &&
-            post.data.tags.map((tagName) => (
-              <a
-                href={`/tags/${tagName}`}
-                class={cn()}
-                aria-current={tagName === activeTag ? "page" : undefined}
-              >
-                <TagComponent
-                  class={cn(
-                    tagName === activeTag &&
-                      "bg-primary text-primary-foreground"
-                  )}
+      </time>
+
+      {post.data.tags && post.data.tags.length > 0 && (
+        <>
+          <span class="text-border">•</span>
+          <div
+            class="flex flex-wrap gap-2"
+            transition:name={`blog-tags-${post.id}`}
+          >
+            {
+              post.data.tags.map((tagName) => (
+                <a
+                  href={`/tags/${tagName}`}
+                  class="relative z-20"
+                  aria-current={tagName === activeTag ? "page" : undefined}
                 >
-                  {tagName}
-                </TagComponent>
-              </a>
-            ))
-        }
-      </div>
+                  <TagComponent
+                    class={cn(
+                      "transition-colors hover:bg-primary hover:text-primary-foreground",
+                      tagName === activeTag &&
+                        "bg-primary text-primary-foreground"
+                    )}
+                  >
+                    {tagName}
+                  </TagComponent>
+                </a>
+              ))
+            }
+          </div>
+        </>
+      )}
     </div>
   </div>
 </article>

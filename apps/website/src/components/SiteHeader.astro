@@ -3,25 +3,37 @@ import { NAV_LINKS, SITE } from '../constants'
 import { ThemeToggle } from './react/ThemeToggle'
 ---
 
-<header class="py-6 px-4 border-b border-border">
-  <div class="flex justify-between items-center">
-    <a href="/" class="text-2xl font-bold hover:text-primary transition-colors">
-      {SITE.title}
-    </a>
-    <div class="flex items-center gap-4">
-      <nav class="flex gap-6">
-        {
-          NAV_LINKS.map((link) => (
-            <a
-              href={link.href}
-              class="font-medium hover:text-primary transition-colors"
-            >
-              {link.label}
-            </a>
-          ))
-        }
-      </nav>
-      <div class="ml-2">
+<header class="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/50">
+  <div class="container mx-auto px-4 md:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16 md:h-18">
+      <!-- Logo/Site title -->
+      <a
+        href="/"
+        class="text-lg md:text-xl font-semibold hover:text-primary transition-colors tracking-tight"
+      >
+        <span class="hidden sm:inline">{SITE.title}</span>
+        <span class="sm:hidden">Sean Campbell</span>
+      </a>
+
+      <!-- Navigation -->
+      <div class="flex items-center gap-1 md:gap-2">
+        <nav class="flex items-center">
+          {
+            NAV_LINKS.map((link) => (
+              <a
+                href={link.href}
+                class="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors"
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+
+        <!-- Divider -->
+        <div class="w-px h-5 bg-border mx-1 md:mx-2"></div>
+
+        <!-- Theme toggle -->
         <ThemeToggle client:load />
       </div>
     </div>

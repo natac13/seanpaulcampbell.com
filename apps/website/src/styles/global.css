@@ -4,87 +4,200 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
-  --background: var(--color-neutral-50);
-  --foreground: var(--color-neutral-900);
-  --card: var(--color-white);
-  --card-foreground: var(--color-neutral-900);
-  --popover: var(--color-white);
-  --popover-foreground: var(--color-neutral-900);
-  --primary: var(--color-amber-500);
-  --primary-foreground: var(--color-black);
-  --secondary: var(--color-green-800);
-  --secondary-foreground: var(--color-amber-50);
-  --muted: var(--color-neutral-100);
-  /* --muted-foreground: oklch(0.53 0 0); */
-  --muted-foreground: var(--color-neutral-500);
-  --accent: var(--color-amber-50);
-  --accent-foreground: var(--color-amber-900);
-  --destructive: var(--color-red-700);
-  --destructive-foreground: var(--color-white);
-  --border: var(--color-neutral-200);
-  --input: var(--color-neutral-200);
-  --ring: var(--color-amber-500);
-  --chart-1: var(--color-amber-500);
-  --chart-2: var(--color-amber-600);
-  --chart-3: var(--color-amber-700);
-  --chart-4: var(--color-amber-800);
-  --chart-5: var(--color-amber-900);
-  --sidebar: var(--color-neutral-100);
-  --sidebar-foreground: var(--color-neutral-900);
-  --sidebar-primary: var(--color-amber-500);
-  --sidebar-primary-foreground: var(--color-black);
-  --sidebar-accent: var(--color-amber-50);
-  --sidebar-accent-foreground: var(--color-amber-900);
-  --sidebar-border: var(--color-neutral-200);
-  --sidebar-ring: var(--color-amber-500);
+/*
+  The Scholar's Study - A Library Aesthetic
 
-  --radius: 0.375rem;
+  Inspired by: Grand libraries, dark oak wood, hunter green,
+  leather-bound books, brass fixtures, forest windows
+*/
+
+/* Custom color definitions for the library palette */
+@theme {
+  /* Light mode: Warm parchment and forest */
+  --color-parchment-50: #FDFCF9;
+  --color-parchment-100: #FAF7F2;
+  --color-parchment-200: #F3EDE2;
+  --color-parchment-300: #E8DFD0;
+  --color-parchment-400: #D4C5B0;
+  --color-parchment-500: #B8A78E;
+  --color-parchment-600: #9A8A70;
+  --color-parchment-700: #7A6E5A;
+  --color-parchment-800: #5C5345;
+  --color-parchment-900: #3E382E;
+
+  /* Dark wood tones */
+  --color-walnut-50: #F5F3F0;
+  --color-walnut-100: #E8E3DC;
+  --color-walnut-200: #D0C7B8;
+  --color-walnut-300: #B5A891;
+  --color-walnut-400: #8A7A62;
+  --color-walnut-500: #5E5040;
+  --color-walnut-600: #443928;
+  --color-walnut-700: #332B1F;
+  --color-walnut-800: #252017;
+  --color-walnut-900: #1A1612;
+  --color-walnut-950: #100E0A;
+
+  /* Hunter green - the forest */
+  --color-forest-50: #F0F7F2;
+  --color-forest-100: #DCEBE1;
+  --color-forest-200: #BBD9C6;
+  --color-forest-300: #8DC0A0;
+  --color-forest-400: #5A9E74;
+  --color-forest-500: #3D7A52;
+  --color-forest-600: #2D5A3D;
+  --color-forest-700: #264A33;
+  --color-forest-800: #1F3B29;
+  --color-forest-900: #1A3022;
+
+  /* Brass/gold accents */
+  --color-brass-50: #FDF9EE;
+  --color-brass-100: #F9F0D4;
+  --color-brass-200: #F2DFA8;
+  --color-brass-300: #E9C872;
+  --color-brass-400: #D4A84B;
+  --color-brass-500: #C19A4B;
+  --color-brass-600: #A67C32;
+  --color-brass-700: #8A622A;
+  --color-brass-800: #724F28;
+  --color-brass-900: #614326;
+
+  /* Deep burgundy/oxblood */
+  --color-burgundy-50: #FDF5F6;
+  --color-burgundy-100: #FCE8EB;
+  --color-burgundy-200: #FAD4DB;
+  --color-burgundy-300: #F4ACB9;
+  --color-burgundy-400: #EB7A91;
+  --color-burgundy-500: #DC4B67;
+  --color-burgundy-600: #B83350;
+  --color-burgundy-700: #9E4B5A;
+  --color-burgundy-800: #722F37;
+  --color-burgundy-900: #5C262D;
 }
 
+:root {
+  /* Background: Warm parchment cream */
+  --background: var(--color-parchment-100);
+  --foreground: var(--color-walnut-800);
+
+  /* Cards: Soft ivory with warm undertones */
+  --card: var(--color-parchment-50);
+  --card-foreground: var(--color-walnut-800);
+
+  /* Popover */
+  --popover: var(--color-parchment-50);
+  --popover-foreground: var(--color-walnut-800);
+
+  /* Primary: Hunter green - like forest through the window */
+  --primary: var(--color-forest-600);
+  --primary-foreground: var(--color-parchment-50);
+
+  /* Secondary: Deep burgundy - leather chair, wine */
+  --secondary: var(--color-burgundy-800);
+  --secondary-foreground: var(--color-parchment-100);
+
+  /* Muted: Warm tan tones */
+  --muted: var(--color-parchment-200);
+  --muted-foreground: var(--color-walnut-600);
+
+  /* Accent: Brass/gold - like fixtures and frames */
+  --accent: var(--color-brass-100);
+  --accent-foreground: var(--color-walnut-800);
+
+  /* Destructive */
+  --destructive: var(--color-burgundy-700);
+  --destructive-foreground: var(--color-parchment-50);
+
+  /* Borders: Soft warm brown */
+  --border: var(--color-parchment-300);
+  --input: var(--color-parchment-300);
+
+  /* Ring: Brass gold for focus states */
+  --ring: var(--color-brass-500);
+
+  /* Chart colors using library palette */
+  --chart-1: var(--color-forest-600);
+  --chart-2: var(--color-burgundy-700);
+  --chart-3: var(--color-brass-500);
+  --chart-4: var(--color-forest-400);
+  --chart-5: var(--color-burgundy-500);
+
+  /* Sidebar */
+  --sidebar: var(--color-parchment-200);
+  --sidebar-foreground: var(--color-walnut-800);
+  --sidebar-primary: var(--color-forest-600);
+  --sidebar-primary-foreground: var(--color-parchment-50);
+  --sidebar-accent: var(--color-brass-200);
+  --sidebar-accent-foreground: var(--color-walnut-800);
+  --sidebar-border: var(--color-parchment-300);
+  --sidebar-ring: var(--color-brass-500);
+
+  --radius: 0.5rem;
+}
+
+/* Dark mode: Rich walnut study at night */
 .dark {
-  --background: var(--color-neutral-900);
-  --foreground: var(--color-neutral-100);
-  --card: var(--color-neutral-800);
-  --card-foreground: var(--color-neutral-100);
-  --popover: var(--color-neutral-800);
-  --popover-foreground: var(--color-neutral-100);
-  --primary: var(--color-amber-500);
-  --primary-foreground: var(--color-black);
-  --secondary: var(--color-green-800);
-  --secondary-foreground: var(--color-amber-100);
-  --muted: var(--color-neutral-800);
-  --muted-foreground: var(--color-neutral-400);
-  --accent: var(--color-amber-900);
-  --accent-foreground: var(--color-amber-100);
-  --destructive: var(--color-red-800);
-  --destructive-foreground: var(--color-white);
-  --border: var(--color-neutral-700);
-  --input: var(--color-neutral-700);
-  --ring: var(--color-amber-500);
-  --chart-1: var(--color-amber-400);
-  --chart-2: var(--color-amber-500);
-  --chart-3: var(--color-amber-600);
-  --chart-4: var(--color-amber-700);
-  --chart-5: var(--color-amber-800);
-  --sidebar: var(--color-neutral-950);
-  --sidebar-foreground: var(--color-neutral-100);
-  --sidebar-primary: var(--color-amber-500);
-  --sidebar-primary-foreground: var(--color-black);
-  --sidebar-accent: var(--color-amber-900);
-  --sidebar-accent-foreground: var(--color-amber-100);
-  --sidebar-border: var(--color-neutral-700);
-  --sidebar-ring: var(--color-amber-500);
+  --background: var(--color-walnut-900);
+  --foreground: var(--color-parchment-200);
+
+  --card: var(--color-walnut-800);
+  --card-foreground: var(--color-parchment-200);
+
+  --popover: var(--color-walnut-800);
+  --popover-foreground: var(--color-parchment-200);
+
+  /* Primary: Brighter forest green for dark mode */
+  --primary: var(--color-forest-500);
+  --primary-foreground: var(--color-walnut-900);
+
+  /* Secondary: Lighter burgundy */
+  --secondary: var(--color-burgundy-700);
+  --secondary-foreground: var(--color-parchment-100);
+
+  --muted: var(--color-walnut-700);
+  --muted-foreground: var(--color-parchment-400);
+
+  /* Accent: Warmer brass for dark mode */
+  --accent: var(--color-brass-400);
+  --accent-foreground: var(--color-walnut-900);
+
+  --destructive: var(--color-burgundy-600);
+  --destructive-foreground: var(--color-parchment-50);
+
+  --border: var(--color-walnut-700);
+  --input: var(--color-walnut-700);
+
+  --ring: var(--color-brass-400);
+
+  --chart-1: var(--color-forest-400);
+  --chart-2: var(--color-burgundy-500);
+  --chart-3: var(--color-brass-400);
+  --chart-4: var(--color-forest-300);
+  --chart-5: var(--color-burgundy-400);
+
+  --sidebar: var(--color-walnut-950);
+  --sidebar-foreground: var(--color-parchment-200);
+  --sidebar-primary: var(--color-forest-500);
+  --sidebar-primary-foreground: var(--color-walnut-900);
+  --sidebar-accent: var(--color-brass-400);
+  --sidebar-accent-foreground: var(--color-walnut-900);
+  --sidebar-border: var(--color-walnut-700);
+  --sidebar-ring: var(--color-brass-400);
 }
 
 @theme inline {
-  --font-serif: "Lora Variable", "system-ui", serif;
-  --font-sans: "Inter Variable", "system-ui", sans-serif;
+  /* Typography: Elegant serif for that scholarly feel */
+  --font-serif: "Lora Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-display: "Crimson Pro Variable", "Lora Variable", Georgia, serif;
 
+  /* Slightly larger radius for softer, more refined feel */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Theme color mappings */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -123,17 +236,28 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: var(--font-serif);
+  }
+
+  /* Refined selection colors */
+  ::selection {
+    background-color: var(--color-forest-200);
+    color: var(--color-walnut-900);
+  }
+
+  .dark ::selection {
+    background-color: var(--color-forest-700);
+    color: var(--color-parchment-100);
   }
 }
 
-/* Add smooth scrolling */
+/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Custom animations */
+/* Custom animations - subtle and refined */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -143,13 +267,9 @@ html {
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 1.2s ease-out forwards;
-}
-
 @keyframes slideUp {
   from {
-    transform: translateY(20px);
+    transform: translateY(16px);
     opacity: 0;
   }
   to {
@@ -158,34 +278,127 @@ html {
   }
 }
 
+@keyframes gentleGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px -10px var(--color-brass-400);
+  }
+  50% {
+    box-shadow: 0 0 30px -10px var(--color-brass-300);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
 .animate-slide-up {
-  animation: slideUp 0.8s ease-out forwards;
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-gentle-glow {
+  animation: gentleGlow 4s ease-in-out infinite;
 }
 
 /* Animation delays for staggered effects */
-.delay-100 {
-  animation-delay: 100ms;
-}
-.delay-200 {
-  animation-delay: 200ms;
-}
-.delay-300 {
-  animation-delay: 300ms;
-}
-.delay-400 {
-  animation-delay: 400ms;
-}
-.delay-500 {
-  animation-delay: 500ms;
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Decorative elements */
+.decorative-line {
+  @apply h-px bg-gradient-to-r from-transparent via-border to-transparent;
 }
 
-/* html.dark {
-  .shiki,
-  .shiki span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-    font-style: var(--shiki-dark-font-style) !important;
-    font-weight: var(--shiki-dark-font-weight) !important;
-    text-decoration: var(--shiki-dark-text-decoration) !important;
-  }
-} */
+.decorative-line-vertical {
+  @apply w-px bg-gradient-to-b from-transparent via-border to-transparent;
+}
+
+/* Library card style - for blog post cards */
+.library-card {
+  @apply relative overflow-hidden;
+  background: linear-gradient(
+    135deg,
+    var(--card) 0%,
+    color-mix(in oklch, var(--card), var(--color-brass-50) 5%) 100%
+  );
+}
+
+.dark .library-card {
+  background: linear-gradient(
+    135deg,
+    var(--card) 0%,
+    color-mix(in oklch, var(--card), var(--color-brass-900) 10%) 100%
+  );
+}
+
+/* Brass accent border effect */
+.brass-accent {
+  position: relative;
+}
+
+.brass-accent::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-brass-400),
+    var(--color-brass-600)
+  );
+  border-radius: 2px;
+}
+
+/* Typography refinements for prose */
+.prose-library {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--color-brass-500);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--color-forest-500);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: var(--color-parchment-200);
+  --tw-prose-pre-bg: var(--color-walnut-800);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
+/* Subtle paper texture effect via shadow */
+.paper-texture {
+  box-shadow:
+    inset 0 0 60px -30px var(--color-parchment-400),
+    0 1px 3px 0 rgb(0 0 0 / 0.05);
+}
+
+.dark .paper-texture {
+  box-shadow:
+    inset 0 0 60px -30px var(--color-walnut-950),
+    0 1px 3px 0 rgb(0 0 0 / 0.2);
+}
+
+/* Focus states with brass ring */
+.focus-brass:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+}
+
+/* Link styles */
+a:not([class]) {
+  @apply text-primary underline-offset-2 hover:underline transition-colors;
+}
+
+/* Heading styles with display font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  @apply font-semibold tracking-tight;
+}

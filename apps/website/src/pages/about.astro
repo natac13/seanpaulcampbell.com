@@ -1,123 +1,150 @@
 ---
 import { Image } from 'astro:assets'
-import { fade } from 'astro:transitions'
 import avatarImage from '../assets/images/avatar.jpg'
 import { ICON_MAP, SOCIAL_LINKS } from '../constants'
 import Layout from '../layouts/Layout.astro'
 
 export const prerender = true
-
-// Function to get color class based on label
-function getSocialLinkClass(label: string): string {
-  switch (label.toLowerCase()) {
-    case 'github':
-      return 'bg-neutral-800 hover:bg-neutral-700 text-white'
-    case 'x':
-    case 'twitter':
-      return 'bg-black hover:bg-neutral-800 text-white' // Simple black for X
-    // Add other cases if needed
-    case 'linkedin':
-      return 'bg-blue-600 hover:bg-blue-700 text-white'
-    default:
-      return 'bg-secondary hover:bg-secondary/80 text-secondary-foreground'
-  }
-}
 ---
 
 <Layout title="About">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h1 class="text-4xl font-bold mb-8 text-center sm:text-left">About Me</h1>
-
-    <div
-      class="flex flex-col md:flex-row gap-8 md:gap-12 mb-12 items-center md:items-start"
-    >
-      <div class="flex-shrink-0 text-center">
-        <Image
-          src={avatarImage}
-          alt="Profile Avatar"
-          class="rounded-full w-40 h-40 md:w-48 md:h-48 border-4 border-border shadow-lg mx-auto"
-          width={192}
-          height={192}
-        />
+  <div class="max-w-3xl mx-auto">
+    <!-- Hero section -->
+    <header class="text-center mb-16">
+      <!-- Avatar with decorative frame -->
+      <div class="relative inline-block mb-8 group">
+        <div class="absolute -inset-4 bg-gradient-to-br from-forest-200 via-transparent to-brass-200 dark:from-forest-800 dark:to-brass-800 rounded-full opacity-60 blur-sm group-hover:opacity-80 transition-opacity"></div>
+        <div class="relative">
+          <Image
+            src={avatarImage}
+            alt="Sean Campbell"
+            class="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-parchment-50 dark:border-walnut-700 shadow-xl object-cover"
+            width={176}
+            height={176}
+          />
+        </div>
       </div>
 
-      <div class="text-center md:text-left">
-        <h2 class="text-2xl font-semibold mb-4">Hi, I'm Sean</h2>
-        <p class="text-muted-foreground mb-4">
-          Welcome to my corner of the internet! I'm a coding enthusiast
-          documenting my journey through the world of programming and web
-          development. This blog is where I share what I'm learning, the
-          projects I'm working on, and my thoughts on technology.
-        </p>
-        <p class="text-muted-foreground">
-          When I'm not coding, you will find me reading, running, or thinking
-          about more code.
-        </p>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">About Me</h1>
+      <p class="text-xl text-muted-foreground">Developer, reader, perpetual learner</p>
+    </header>
+
+    <!-- Bio section -->
+    <section class="prose prose-lg prose-library dark:prose-invert mx-auto mb-16">
+      <p class="lead text-xl text-muted-foreground leading-relaxed">
+        Welcome to my corner of the internet. I'm Sean, a software developer who finds joy in building
+        well-crafted solutions and sharing what I learn along the way.
+      </p>
+
+      <p>
+        This blog is my digital workshop—a place where I document my journey through the ever-evolving
+        landscape of web development. Here you'll find tutorials, technical explorations, and thoughts
+        on the tools and technologies that excite me.
+      </p>
+
+      <p>
+        When I'm not writing code, I'm usually reading about it, running to clear my head,
+        or thinking about the next thing to build. There's something deeply satisfying about
+        transforming ideas into working software, and I hope to share some of that satisfaction
+        through my writing here.
+      </p>
+    </section>
+
+    <!-- Connect section -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-6 text-center">Connect</h2>
+      <div class="flex flex-wrap justify-center gap-3">
+        {
+          SOCIAL_LINKS.map((link) => {
+            const Icon = ICON_MAP[link.label];
+            return (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-card border border-border text-foreground hover:bg-muted hover:border-primary/30 transition-all"
+                aria-label={`Follow on ${link.label}`}
+              >
+                {Icon && <Icon className="size-4" />}
+                <span class="text-sm font-medium">{link.label}</span>
+              </a>
+            );
+          })
+        }
       </div>
-    </div>
+    </section>
 
-    <div class="space-y-12">
-      <section>
-        <h2 class="text-2xl font-semibold mb-4">Connect With Me</h2>
-        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-          {
-            SOCIAL_LINKS.map((link) => {
-              const Icon = ICON_MAP[link.label];
-              return (
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class={`flex items-center gap-2 px-4 py-2 rounded-lg transition-opacity ${getSocialLinkClass(link.label)}`}
-                  aria-label={`Follow on ${link.label}`}
-                >
-                  <span class="sr-only">{link.label}</span>
-                  <Icon className="size-4" />
-                </a>
-              );
-            })
-          }
+    <!-- Skills section -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-semibold mb-6 text-center">What I Work With</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="library-card p-6 rounded-xl border border-border">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <h3 class="font-semibold text-foreground">Frontend</h3>
+          </div>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            React, React Router, Astro, TailwindCSS, TypeScript
+          </p>
         </div>
-      </section>
 
-      <section>
-        <h2 class="text-2xl font-semibold mb-4">Skills & Interests</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div
-            class="bg-card text-card-foreground p-4 rounded-lg shadow-sm border border-border"
-          >
-            <h3 class="font-medium mb-2">Frontend</h3>
-            <p class="text-muted-foreground text-sm">
-              React, React Router (Remix), Astro, TailwindCSS, Typescript
-            </p>
+        <div class="library-card p-6 rounded-xl border border-border">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
+              </svg>
+            </div>
+            <h3 class="font-semibold text-foreground">Backend</h3>
           </div>
-          <div
-            class="bg-card text-card-foreground p-4 rounded-lg shadow-sm border border-border"
-          >
-            <h3 class="font-medium mb-2">Backend</h3>
-            <p class="text-muted-foreground text-sm">
-              Node.js, Golang, AWS Serverless (DynamoDB, Lambda, EventBridge,
-              S3, etc.)
-            </p>
-          </div>
-          <div
-            class="bg-card text-card-foreground p-4 rounded-lg shadow-sm border border-border"
-          >
-            <h3 class="font-medium mb-2">Infrastructure</h3>
-            <p class="text-muted-foreground text-sm">AWS, SST</p>
-          </div>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            Node.js, Golang, AWS Serverless (Lambda, DynamoDB, EventBridge)
+          </p>
         </div>
-      </section>
 
-      <section>
-        <h2 class="text-2xl font-semibold mb-4">Goals</h2>
-        <ul class="list-disc list-inside space-y-2 text-muted-foreground">
-          <li>Share useful content about software development.</li>
-          <li>Build interesting side projects.</li>
-          <li>Contribute meaningfully to open-source.</li>
-          <li>Continuously learn and improve my skills.</li>
+        <div class="library-card p-6 rounded-xl border border-border">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-brass-500/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-brass-600 dark:text-brass-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+            </div>
+            <h3 class="font-semibold text-foreground">Infrastructure</h3>
+          </div>
+          <p class="text-sm text-muted-foreground leading-relaxed">
+            AWS, SST (Infrastructure as Code)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Goals section -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-semibold mb-6 text-center">What Drives Me</h2>
+      <div class="library-card p-8 rounded-xl border border-border">
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+            <span class="text-muted-foreground">Sharing useful, practical content about software development</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+            <span class="text-muted-foreground">Building interesting side projects that solve real problems</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+            <span class="text-muted-foreground">Contributing meaningfully to open-source projects</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
+            <span class="text-muted-foreground">Continuously learning and improving my craft</span>
+          </li>
         </ul>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </Layout>
