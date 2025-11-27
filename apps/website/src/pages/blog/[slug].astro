@@ -11,7 +11,6 @@ import { formatDate } from '../../lib/utils'
 
 export const prerender = true
 
-// Generate static paths for all blog posts
 export async function getStaticPaths() {
   const allPosts = await getAllPosts()
   return allPosts.map((post) => ({
@@ -20,23 +19,18 @@ export async function getStaticPaths() {
   }))
 }
 
-// Get the post from the props
 const { post } = Astro.props
-// Render the content
 const { Content, headings } = await render(post)
 
-// Calculate reading time
 const rawContent = (await post.body) || ''
 const readingTime = calculateReadingTime(rawContent)
 const readingTimeText = formatReadingTime(readingTime)
 
-// Current page URL for sharing
 const currentUrl = Astro.url.toString()
 const encodedUrl = encodeURIComponent(currentUrl)
 const encodedTitle = encodeURIComponent(post.data.title)
 const encodedSummary = encodeURIComponent(post.data.description)
 
-// Social sharing URLs
 const twitterUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`
 const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
 const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedSummary}`
@@ -44,114 +38,114 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
 
 <Layout title={post.data.title}>
   <PostHead post={post} slot="head" />
-  <div
-    class="container mx-auto px-4 relative grid grid-cols-1 xl:grid-cols-6 gap-2"
-  >
-    <!-- ToC for desktop -->
-    <div class="hidden xl:block">
-      <TableOfContents headings={headings} />
-    </div>
-    <!-- Main centered content -->
-    <div
-      class="col-span-full overflow-x-hidden xl:col-span-4 xl:col-start-2 w-full max-w-3xl mx-auto"
-    >
-      <div class="mb-8">
-        <a
-          href="/blog"
-          class="text-primary hover:underline flex items-center gap-1 mb-4"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Back to all posts
-        </a>
 
+  <div class="container mx-auto px-4 relative grid grid-cols-1 xl:grid-cols-12 gap-8">
+    <!-- Table of Contents - Desktop sidebar -->
+    <aside class="hidden xl:block xl:col-span-3">
+      <div class="sticky top-24">
+        <TableOfContents headings={headings} />
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="col-span-full xl:col-span-6 w-full max-w-none">
+      <!-- Back link -->
+      <a
+        href="/blog"
+        class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group"
+      >
+        <ArrowLeftIcon className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+        Back to writings
+      </a>
+
+      <!-- Article header -->
+      <header class="mb-10">
         <h1
-          class="text-3xl sm:text-4xl font-bold mb-4 break-words"
+          class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
           transition:name={`blog-title-${post.id}`}
         >
           {post.data.title}
         </h1>
+
         <p
-          class="text-lg sm:text-xl text-muted-foreground mb-4"
+          class="text-lg sm:text-xl text-muted-foreground mb-6 leading-relaxed"
           transition:name={`blog-description-${post.id}`}
         >
           {post.data.description}
         </p>
 
-        <div class="flex flex-wrap items-center gap-4 mb-6">
-          <div
-            class="flex flex-wrap gap-2"
-            transition:name={`blog-tags-${post.id}`}
-          >
-            {
-              post.data.tags.map((tag) => (
-                <a
-                  href={`/blog?tag=${tag}`}
-                  class="text-sm bg-muted text-muted-foreground px-3 py-1 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  {tag}
-                </a>
-              ))
-            }
-          </div>
-          <span class="text-muted-foreground">•</span>
-          <span
-            class="text-muted-foreground"
+        <!-- Meta info -->
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground font-sans">
+          <time
+            datetime={post.data.publishDate.toISOString()}
             transition:name={`blog-publish-date-${post.id}`}
           >
             {formatDate(post.data.publishDate)}
-          </span>
-          <span class="text-muted-foreground">•</span>
-          <span class="text-muted-foreground">
-            {readingTimeText}
-          </span>
+          </time>
+          <span class="text-border">•</span>
+          <span>{readingTimeText}</span>
         </div>
 
-        {
-          post.data.image && (
-            <div class="rounded-xl overflow-hidden mb-8 border border-border">
-              <Image
-                src={post.data.image.src}
-                alt={post.data.image.alt}
-                width={1200}
-                height={630}
-                class="w-full h-auto"
-              />
-            </div>
-          )
-        }
-      </div>
-      <!-- ToC for mobile (top of content) -->
-      <div class="mb-8 xl:hidden">
+        <!-- Tags -->
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div
+            class="flex flex-wrap gap-2 mt-4"
+            transition:name={`blog-tags-${post.id}`}
+          >
+            {post.data.tags.map((tag) => (
+              <a
+                href={`/tags/${tag}`}
+                class="text-xs font-sans px-2.5 py-1 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
+
+        <!-- Featured image -->
+        {post.data.image && (
+          <div class="mt-8 rounded-xl overflow-hidden border border-border">
+            <Image
+              src={post.data.image.src}
+              alt={post.data.image.alt}
+              width={1200}
+              height={630}
+              class="w-full h-auto"
+            />
+          </div>
+        )}
+      </header>
+
+      <!-- Mobile ToC -->
+      <div class="mb-10 xl:hidden">
         <TableOfContents headings={headings} />
       </div>
 
-      <article
-        class="prose sm:prose-lg max-w-none dark:prose-invert [&_h2_a]:no-underline [&_h3_a]:no-underline [&_h4_a]:no-underline [&_h5_a]:no-underline [&_h6_a]:no-underline [&_h2_a]:hover:underline [&_h3_a]:hover:text-primary [&_h4_a]:hover:text-primary [&_h5_a]:hover:text-primary [&_h6_a]:hover:text-primary blog-content [&_h2_a]:hover:text-primary"
-      >
+      <!-- Article content -->
+      <article class="prose prose-lg max-w-none dark:prose-invert prose-library blog-content prose-headings:scroll-mt-24 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-primary prose-blockquote:not-italic prose-blockquote:font-normal">
         <Content />
       </article>
 
-      <div class="mt-16
-        pt-8
-        border-t
-        border-border">
-        <h2 class="text-2xl font-bold mb-4">Share this post</h2>
-        <div class="flex flex-wrap gap-4">
+      <!-- Share section -->
+      <footer class="mt-16 pt-8 border-t border-border">
+        <h2 class="text-lg font-semibold mb-4">Share this article</h2>
+        <div class="flex flex-wrap gap-3">
           <a
             href={twitterUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="bg-[#000000] text-white px-4 py-2 rounded-lg hover:bg-neutral-800 transition-colors flex items-center gap-2"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium hover:bg-muted transition-colors"
             aria-label="Share on Twitter/X"
           >
             <TwitterIcon className="size-4" />
-            Twitter/X
+            Twitter
           </a>
           <a
             href={facebookUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="bg-[#1877F2] text-white px-4 py-2 rounded-lg hover:bg-[#0d6efd] transition-colors flex items-center gap-2"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium hover:bg-muted transition-colors"
             aria-label="Share on Facebook"
           >
             <FacebookIcon className="size-4" />
@@ -161,50 +155,56 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
             href={linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="bg-[#0077B5] text-white px-4 py-2 rounded-lg hover:bg-[#0069a1] transition-colors flex items-center gap-2"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium hover:bg-muted transition-colors"
             aria-label="Share on LinkedIn"
           >
             <LinkedinIcon className="size-4" />
             LinkedIn
           </a>
         </div>
-      </div>
-    </div>
+      </footer>
+    </main>
 
-    <!-- Scroll to top button should only be visible when the user scrolls down -->
-    <script>
-      const scrollToTopButton = document.getElementById("scroll-to-top");
-      window.addEventListener("scroll", () => {
-        if (!scrollToTopButton) return;
-        if (window.scrollY > 100) {
-          scrollToTopButton.classList.remove("hidden");
-        } else {
-          scrollToTopButton.classList.add("hidden");
-        }
-      });
-    </script>
-
-    <button
-      id="scroll-to-top"
-      class="fixed hidden bottom-4 right-4 bg-primary/50 text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/70 transition-colors"
-      onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
-    >
-      <ArrowUpIcon className="size-4" />
-    </button>
+    <!-- Right sidebar spacer for balance -->
+    <aside class="hidden xl:block xl:col-span-3"></aside>
   </div>
+
+  <!-- Scroll to top button -->
+  <button
+    id="scroll-to-top"
+    class="fixed hidden bottom-6 right-6 w-10 h-10 rounded-full bg-card border border-border shadow-lg text-foreground hover:bg-muted transition-all duration-300 flex items-center justify-center"
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
+    aria-label="Scroll to top"
+  >
+    <ArrowUpIcon className="size-4" />
+  </button>
+
+  <script>
+    const scrollToTopButton = document.getElementById("scroll-to-top");
+    window.addEventListener("scroll", () => {
+      if (!scrollToTopButton) return;
+      if (window.scrollY > 300) {
+        scrollToTopButton.classList.remove("hidden");
+        scrollToTopButton.classList.add("flex");
+      } else {
+        scrollToTopButton.classList.add("hidden");
+        scrollToTopButton.classList.remove("flex");
+      }
+    });
+  </script>
 </Layout>
 
 <style is:global>
   .blog-content pre {
     margin-left: 0 !important;
     margin-right: 0 !important;
+    border-radius: 0.5rem;
   }
 
   .blog-content pre code {
     overflow-x: auto;
   }
 
-  /* Make headings responsive */
   .blog-content h1,
   .blog-content h2,
   .blog-content h3,
@@ -213,6 +213,14 @@ const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encod
   .blog-content h6 {
     word-break: break-word;
     overflow-wrap: break-word;
-    scroll-margin-top: 100px;
+  }
+
+  /* Heading anchor links */
+  .blog-content :is(h2, h3, h4, h5, h6) a {
+    text-decoration: none;
+  }
+
+  .blog-content :is(h2, h3, h4, h5, h6) a:hover {
+    text-decoration: underline;
   }
 </style>

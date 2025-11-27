@@ -1,60 +1,71 @@
 ---
 import { ICON_MAP, NAV_LINKS, SITE, SOCIAL_LINKS } from '../constants'
-// import SitemapIcon from "./icons/SitemapIcon.astro"; // Assuming you might create/use a sitemap icon
 ---
 
-<footer
-  class="py-8 text-sm text-gray-500 border-t border-gray-200 dark:text-gray-400 dark:border-gray-800"
->
-  <div class="max-w-4xl mx-auto px-4">
-    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+<footer class="mt-auto pt-16 pb-8 border-t border-border">
+  <div class="container mx-auto px-4 md:px-6 lg:px-8 max-w-5xl">
+    <!-- Main footer content -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8 mb-8">
+      <!-- Brand and description -->
+      <div class="text-center md:text-left">
+        <p class="font-semibold text-foreground mb-1">{SITE.title}</p>
+        <p class="text-sm text-muted-foreground max-w-xs">
+          Exploring the craft of software development
+        </p>
+      </div>
+
       <!-- Social Links -->
-      <div class="flex justify-center md:justify-start gap-4">
+      <div class="flex items-center gap-3">
         {
           SOCIAL_LINKS.map((link) => {
             const Icon = ICON_MAP[link.label];
             return (
               <a
                 href={link.href}
-                class="text-gray-400 hover:text-primary dark:text-gray-500 dark:hover:text-primary-foreground transition-colors"
+                class="flex items-center justify-center w-9 h-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 aria-label={link.label}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <span class="sr-only">{link.label}</span>
-                {Icon && <Icon class="size-5" />}
+                {Icon && <Icon className="size-4" />}
               </a>
             );
           })
         }
       </div>
+    </div>
+
+    <!-- Decorative divider -->
+    <div class="h-px bg-gradient-to-r from-transparent via-border to-transparent mb-8"></div>
+
+    <!-- Bottom row -->
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+      <!-- Copyright -->
+      <p>
+        &copy; {new Date().getFullYear()} {SITE.author}. All rights reserved.
+      </p>
 
       <!-- Internal Nav Links -->
       <nav
-        class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm"
+        class="flex flex-wrap justify-center gap-x-6 gap-y-2"
         aria-label="Footer navigation"
       >
         {
           NAV_LINKS.map((link) => (
-            <a href={link.href} class="hover:text-primary  transition-colors">
+            <a href={link.href} class="hover:text-foreground transition-colors">
               {link.label}
             </a>
           ))
         }
         <a
           href="/sitemap.xml"
-          class="hover:text-primary transition-colors"
+          class="hover:text-foreground transition-colors"
           aria-label="Sitemap"
         >
           Sitemap
         </a>
       </nav>
     </div>
-
-    <!-- Copyright -->
-    <p class="mt-8 text-center text-xs">
-      © {new Date().getFullYear()}
-      {SITE.title}. All rights reserved.
-    </p>
   </div>
 </footer>
