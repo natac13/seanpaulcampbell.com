@@ -14,65 +14,65 @@
 /* Custom color definitions for the library palette */
 @theme {
   /* Light mode: Warm parchment and forest */
-  --color-parchment-50: #FDFCF9;
-  --color-parchment-100: #FAF7F2;
-  --color-parchment-200: #F3EDE2;
-  --color-parchment-300: #E8DFD0;
-  --color-parchment-400: #D4C5B0;
-  --color-parchment-500: #B8A78E;
-  --color-parchment-600: #9A8A70;
-  --color-parchment-700: #7A6E5A;
-  --color-parchment-800: #5C5345;
-  --color-parchment-900: #3E382E;
+  --color-parchment-50: #fdfcf9;
+  --color-parchment-100: #faf7f2;
+  --color-parchment-200: #f3ede2;
+  --color-parchment-300: #e8dfd0;
+  --color-parchment-400: #d4c5b0;
+  --color-parchment-500: #b8a78e;
+  --color-parchment-600: #9a8a70;
+  --color-parchment-700: #7a6e5a;
+  --color-parchment-800: #5c5345;
+  --color-parchment-900: #3e382e;
 
   /* Dark wood tones */
-  --color-walnut-50: #F5F3F0;
-  --color-walnut-100: #E8E3DC;
-  --color-walnut-200: #D0C7B8;
-  --color-walnut-300: #B5A891;
-  --color-walnut-400: #8A7A62;
-  --color-walnut-500: #5E5040;
+  --color-walnut-50: #f5f3f0;
+  --color-walnut-100: #e8e3dc;
+  --color-walnut-200: #d0c7b8;
+  --color-walnut-300: #b5a891;
+  --color-walnut-400: #8a7a62;
+  --color-walnut-500: #5e5040;
   --color-walnut-600: #443928;
-  --color-walnut-700: #332B1F;
+  --color-walnut-700: #332b1f;
   --color-walnut-800: #252017;
-  --color-walnut-900: #1A1612;
-  --color-walnut-950: #100E0A;
+  --color-walnut-900: #1a1612;
+  --color-walnut-950: #100e0a;
 
   /* Hunter green - the forest */
-  --color-forest-50: #F0F7F2;
-  --color-forest-100: #DCEBE1;
-  --color-forest-200: #BBD9C6;
-  --color-forest-300: #8DC0A0;
-  --color-forest-400: #5A9E74;
-  --color-forest-500: #3D7A52;
-  --color-forest-600: #2D5A3D;
-  --color-forest-700: #264A33;
-  --color-forest-800: #1F3B29;
-  --color-forest-900: #1A3022;
+  --color-forest-50: #f0f7f2;
+  --color-forest-100: #dcebe1;
+  --color-forest-200: #bbd9c6;
+  --color-forest-300: #8dc0a0;
+  --color-forest-400: #5a9e74;
+  --color-forest-500: #3d7a52;
+  --color-forest-600: #2d5a3d;
+  --color-forest-700: #264a33;
+  --color-forest-800: #1f3b29;
+  --color-forest-900: #1a3022;
 
   /* Brass/gold accents */
-  --color-brass-50: #FDF9EE;
-  --color-brass-100: #F9F0D4;
-  --color-brass-200: #F2DFA8;
-  --color-brass-300: #E9C872;
-  --color-brass-400: #D4A84B;
-  --color-brass-500: #C19A4B;
-  --color-brass-600: #A67C32;
-  --color-brass-700: #8A622A;
-  --color-brass-800: #724F28;
+  --color-brass-50: #fdf9ee;
+  --color-brass-100: #f9f0d4;
+  --color-brass-200: #f2dfa8;
+  --color-brass-300: #e9c872;
+  --color-brass-400: #d4a84b;
+  --color-brass-500: #c19a4b;
+  --color-brass-600: #a67c32;
+  --color-brass-700: #8a622a;
+  --color-brass-800: #724f28;
   --color-brass-900: #614326;
 
   /* Deep burgundy/oxblood */
-  --color-burgundy-50: #FDF5F6;
-  --color-burgundy-100: #FCE8EB;
-  --color-burgundy-200: #FAD4DB;
-  --color-burgundy-300: #F4ACB9;
-  --color-burgundy-400: #EB7A91;
-  --color-burgundy-500: #DC4B67;
-  --color-burgundy-600: #B83350;
-  --color-burgundy-700: #9E4B5A;
-  --color-burgundy-800: #722F37;
-  --color-burgundy-900: #5C262D;
+  --color-burgundy-50: #fdf5f6;
+  --color-burgundy-100: #fce8eb;
+  --color-burgundy-200: #fad4db;
+  --color-burgundy-300: #f4acb9;
+  --color-burgundy-400: #eb7a91;
+  --color-burgundy-500: #dc4b67;
+  --color-burgundy-600: #b83350;
+  --color-burgundy-700: #9e4b5a;
+  --color-burgundy-800: #722f37;
+  --color-burgundy-900: #5c262d;
 }
 
 :root {
@@ -279,7 +279,8 @@ html {
 }
 
 @keyframes gentleGlow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px -10px var(--color-brass-400);
   }
   50% {
@@ -300,11 +301,21 @@ html {
 }
 
 /* Animation delays for staggered effects */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
+.delay-100 {
+  animation-delay: 100ms;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+.delay-400 {
+  animation-delay: 400ms;
+}
+.delay-500 {
+  animation-delay: 500ms;
+}
 
 /* Decorative elements */
 .decorative-line {
@@ -339,17 +350,13 @@ html {
 }
 
 .brass-accent::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(
-    to bottom,
-    var(--color-brass-400),
-    var(--color-brass-600)
-  );
+  background: linear-gradient(to bottom, var(--color-brass-400), var(--color-brass-600));
   border-radius: 2px;
 }
 
@@ -375,15 +382,11 @@ html {
 
 /* Subtle paper texture effect via shadow */
 .paper-texture {
-  box-shadow:
-    inset 0 0 60px -30px var(--color-parchment-400),
-    0 1px 3px 0 rgb(0 0 0 / 0.05);
+  box-shadow: inset 0 0 60px -30px var(--color-parchment-400), 0 1px 3px 0 rgb(0 0 0 / 0.05);
 }
 
 .dark .paper-texture {
-  box-shadow:
-    inset 0 0 60px -30px var(--color-walnut-950),
-    0 1px 3px 0 rgb(0 0 0 / 0.2);
+  box-shadow: inset 0 0 60px -30px var(--color-walnut-950), 0 1px 3px 0 rgb(0 0 0 / 0.2);
 }
 
 /* Focus states with brass ring */
@@ -398,7 +401,12 @@ a:not([class]) {
 }
 
 /* Heading styles with display font */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   @apply font-semibold tracking-tight;
 }
