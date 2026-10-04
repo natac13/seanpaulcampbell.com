@@ -54,7 +54,6 @@
   "devDependencies": {
     "@expressive-code/plugin-collapsible-sections": "^0.41.7",
     "@tailwindcss/typography": "^0.5.20",
-    "@types/markdown-it": "^14.2.0",
     "@types/sanitize-html": "^2.16.2"
   }
 }

@@ -3,7 +3,7 @@
   "exclude": ["packages/", "apps/"],
   "compilerOptions": {
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "checkJs": true,
     "noEmit": true,
     "skipLibCheck": true
