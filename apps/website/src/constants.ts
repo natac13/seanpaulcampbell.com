@@ -1,4 +1,5 @@
-import { GithubIcon, LinkedinIcon, MailIcon, RssIcon, TwitterIcon } from 'lucide-react'
+import { MailIcon, RssIcon } from 'lucide-react'
+import { GithubIcon, LinkedinIcon, TwitterIcon } from './components/brand-icons'
 import type { Site, SocialLink } from './types'
 
 export const SITE: Site = {
