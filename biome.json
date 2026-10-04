@@ -1,32 +1,38 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "files": {
-    "ignore": [
-      "**/node_modules/**",
-      "**/.sst/**",
-      "**/sst-env.d.ts",
-      ".turbo/**",
-      "**/.cache/**",
-      "**/build/**",
-      "**/dist/**",
-      "**/public/build/**",
-      "**/playwright-report/**",
-      "**/server-build/**",
-      "**/.react-email/**",
-      "**/.react-router/**",
-      "*/.react-router/**",
-      ".vscode/**",
-      ".cursor/**",
-      "**/.astro/**"
+    "includes": [
+      "**",
+      "!!**/node_modules",
+      "!!**/.sst",
+      "!**/sst-env.d.ts",
+      "!!**/.turbo",
+      "!!**/.cache",
+      "!!**/build",
+      "!!**/dist",
+      "!!**/public/build",
+      "!!**/playwright-report",
+      "!!**/server-build",
+      "!!**/.react-email",
+      "!!**/.react-router",
+      "!!**/*/.react-router",
+      "!!**/.vscode",
+      "!!**/.cursor",
+      "!!**/.astro",
+      "!!**/convex/_generated"
     ]
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "a11y": {
         "noSvgWithoutTitle": "off"
       },
@@ -72,7 +78,7 @@
   },
   "overrides": [
     {
-      "include": ["**/*.test.ts"],
+      "includes": ["**/*.test.ts"],
       "linter": {
         "rules": {
           "style": {
@@ -88,7 +94,7 @@
       }
     },
     {
-      "include": ["*.astro"],
+      "includes": ["**/*.astro"],
       "linter": {
         "rules": {
           "style": {
@@ -102,9 +108,9 @@
       }
     },
     {
-      "include": [
-        "./packages/tsconfig/base.json",
-        "./packages/tsconfig/internal-package.json",
+      "includes": [
+        "packages/tsconfig/base.json",
+        "packages/tsconfig/internal-package.json",
         "**/.vscode/**/*.json",
         "**/tsconfig*.json"
       ],
@@ -116,21 +122,21 @@
       }
     },
     {
-      "include": ["./packages/email/**/*", "./packages/functions/**/*", "./packages/core/**/*"],
+      "includes": ["packages/email/**/*", "packages/functions/**/*", "packages/core/**/*"],
       "javascript": {
         "jsxRuntime": "reactClassic"
       }
     },
     {
-      "include": ["./examples/**/*"],
+      "includes": ["examples/**/*"],
       "linter": {
         "rules": {
           "security": {
-            "noDangerouslySetInnerHtml": "info"
+            "noDangerouslySetInnerHtml": "info",
+            "noBlankTarget": "info"
           },
           "a11y": {
             "useButtonType": "info",
-            "noBlankTarget": "info",
             "noAutofocus": "info"
           },
           "correctness": {
@@ -140,7 +146,8 @@
           },
           "suspicious": {
             "noShorthandPropertyOverrides": "info",
-            "noExplicitAny": "info"
+            "noExplicitAny": "info",
+            "noDuplicateProperties": "info"
           },
           "style": {
             "noNonNullAssertion": "info"
@@ -148,5 +155,15 @@
         }
       }
     }
-  ]
+  ],
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
 }

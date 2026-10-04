@@ -230,7 +230,11 @@ export async function handleSignup({
   email,
   name,
   tokens,
-}: { email: string; name: string; tokens: Tokens }) {
+}: {
+  email: string
+  name: string
+  tokens: Tokens
+}) {
   const user = await UserService.signup({ email, name })
   const headers = await sessionController.setSessionData({
     tokens,
