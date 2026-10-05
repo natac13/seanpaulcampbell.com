@@ -33,22 +33,22 @@ const { tags, activeTag } = Astro.props
     align-items: baseline;
     gap: 8px;
     padding: 6px 14px;
-    border: 2px solid var(--lake);
+    border: 2px solid var(--heavy);
     border-radius: 999px;
     text-decoration: none;
     font: 600 1.1rem / 1.2 var(--font-cond);
   }
   .pills a:hover,
   .pills a[aria-current] {
-    background: var(--lake);
-    color: var(--snow);
+    background: var(--heavy);
+    color: var(--on-heavy);
   }
   .count {
     font-size: 0.9rem;
-    color: var(--slate);
+    color: var(--muted);
   }
   .pills a:hover .count,
   .pills a[aria-current] .count {
-    color: var(--ice);
+    color: var(--on-heavy-muted);
   }
 </style>

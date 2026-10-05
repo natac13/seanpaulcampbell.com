@@ -93,13 +93,13 @@ const minutes = calculateReadingTime(post.body ?? '')
     left: 0;
     right: 0;
     height: 4px;
-    background: repeating-linear-gradient(90deg, rgba(15, 44, 63, 0.28) 0 10px, transparent 10px 16px);
+    background: repeating-linear-gradient(90deg, var(--progress-track) 0 10px, transparent 10px 16px);
     z-index: 50;
   }
   .fill {
     display: block;
     height: 100%;
-    background: var(--marker);
+    background: var(--progress-fill);
     transform-origin: 0 50%;
     transform: scaleX(0);
     transition: transform 0.12s linear;
@@ -121,7 +121,7 @@ const minutes = calculateReadingTime(post.body ?? '')
   }
   .back {
     font: 600 1.05rem / 1 var(--font-cond);
-    color: var(--slate);
+    color: var(--muted);
   }
   .post-head h1 {
     margin: 20px 0 14px;
@@ -129,7 +129,7 @@ const minutes = calculateReadingTime(post.body ?? '')
   }
   .lede {
     font-size: 1.2rem;
-    color: var(--ink-soft);
+    color: var(--text-2);
     margin: 0 0 26px;
   }
   .stats {
@@ -138,12 +138,12 @@ const minutes = calculateReadingTime(post.body ?? '')
     gap: 14px 40px;
     margin: 0 0 40px;
     padding: 16px 0;
-    border-top: 3px solid var(--lake);
-    border-bottom: 1px solid var(--ice);
+    border-top: 3px solid var(--heavy);
+    border-bottom: 1px solid var(--rule);
   }
   .stats dt {
     font-size: 0.85rem;
-    color: var(--slate);
+    color: var(--muted);
   }
   .stats dd {
     margin: 0;
@@ -209,7 +209,7 @@ const minutes = calculateReadingTime(post.body ?? '')
     color: var(--marker);
   }
   .prose :global(a) {
-    color: var(--lake-2);
+    color: var(--link);
     text-decoration-color: var(--marker);
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
@@ -219,7 +219,7 @@ const minutes = calculateReadingTime(post.body ?? '')
   }
   .prose :global(:not(pre) > code) {
     font-size: 0.88em;
-    background: var(--ice);
+    background: var(--code-bg);
     padding: 0.12em 0.38em;
     border-radius: 4px;
     overflow-wrap: anywhere;
@@ -232,13 +232,13 @@ const minutes = calculateReadingTime(post.body ?? '')
   .prose :global(blockquote) {
     margin: 1.4em 0;
     padding: 0.2em 0 0.2em 18px;
-    border-left: 3px solid var(--slate);
-    color: var(--ink-soft);
+    border-left: 3px solid var(--muted);
+    color: var(--text-2);
   }
   .prose :global(hr) {
     margin: 2.4em 0;
     border: 0;
-    border-top: 1px solid var(--ice);
+    border-top: 1px solid var(--rule);
   }
   .prose :global(.expressive-code) {
     margin: 1.6em 0;

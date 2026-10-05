@@ -25,7 +25,7 @@ Local SST commands use the `natac` AWS profile; log in with `bun run aws:sso`. R
 
 ## UI components
 
-No component library. Components are `.astro` files styled with scoped `<style>` blocks; colour and font tokens are defined once in `src/styles/global.css`, which still imports Tailwind. Fonts are self-hosted via `@fontsource`. The site is light only, with no dark mode. `src/lib/topo.ts` generates the contour hero, and `src/lib/route.ts` builds the post route list, including its handwritten notes.
+No component library. Components are `.astro` files styled with scoped `<style>` blocks; colour and font tokens are defined once in `src/styles/global.css`, which still imports Tailwind. Components read role tokens (`--bg`, `--text`, `--heavy`, ...), never raw colours; dark mode redefines them under `:root[data-theme="dark"]`. The theme preference (system, light, dark) lives in `src/lib/theme.ts`; an inline script in `Head.astro` mirrors it to set `data-theme` before first paint. Fonts are self-hosted via `@fontsource`. `src/lib/topo.ts` generates the contour hero, and `src/lib/route.ts` builds the post route list, including its handwritten notes.
 
 Blog posts in `src/content/blog` contain code samples importing `components/ui/*`; those are prose, not real imports.
 

@@ -1,6 +1,7 @@
 ---
 import { NAV_LINKS } from '../constants'
 import { contourLines, SUMMIT } from '../lib/topo'
+import ThemeToggle from './ThemeToggle.astro'
 
 interface Props {
   /** `full` is the home page hero (slot holds its copy); `banner` is the short strip on every other page. */
@@ -35,6 +36,7 @@ const isCurrent = (href: string): boolean => path === href || path.startsWith(`$
           </a>
         ))
       }
+      <ThemeToggle />
     </div>
   </nav>
   <slot />
@@ -43,8 +45,8 @@ const isCurrent = (href: string): boolean => path === href || path.startsWith(`$
 <style>
   .hero {
     position: relative;
-    background: var(--lake);
-    color: var(--snow);
+    background: var(--hero);
+    color: var(--hero-text);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -67,16 +69,17 @@ const isCurrent = (href: string): boolean => path === href || path.startsWith(`$
   .topo path {
     fill: none;
     stroke: var(--contour);
-    stroke-opacity: 0.38;
+    stroke-opacity: var(--contour-opacity);
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
   }
   .topo path.idx {
-    stroke-opacity: 0.7;
+    stroke-opacity: var(--contour-index-opacity);
     stroke-width: 1.8;
   }
   .topo .trail {
     stroke: var(--blaze);
+    filter: var(--trail-glow);
     stroke-opacity: 1;
     stroke-width: 2.5;
     stroke-dasharray: 2 7;
@@ -85,6 +88,7 @@ const isCurrent = (href: string): boolean => path === href || path.startsWith(`$
   .topo .summit {
     fill: var(--blaze);
     stroke: none;
+    filter: var(--trail-glow);
   }
   .top {
     position: relative;
@@ -103,6 +107,7 @@ const isCurrent = (href: string): boolean => path === href || path.startsWith(`$
   }
   .links {
     display: flex;
+    align-items: center;
     gap: 22px;
     font: 600 1.05rem / 1 var(--font-cond);
   }

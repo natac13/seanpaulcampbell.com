@@ -1,22 +1,94 @@
 @import "tailwindcss";
 
-/* Trail notebook: lake-blue contour maps, snow-white map paper, trail-blaze yellow. */
+/* Trail notebook: lake-blue contour maps, snow-white map paper, trail-blaze yellow.
+   Components read the role tokens below; dark mode only redefines them. */
 :root {
-  --lake: #0f2c3f;
-  --lake-2: #1b4057;
-  --slate: #4d6475;
-  --snow: #f4f7f9;
-  --ice: #dbe5ec;
-  --ink: #13222d;
-  --ink-soft: #33495a;
+  color-scheme: light;
   --blaze: #f5c518;
   --marker: #d93a2b;
-  --pencil: #2c5d84;
+  --on-blaze: #13222d;
+
+  --bg: #f4f7f9;
+  --grid: rgba(27, 64, 87, 0.05);
+  --text: #13222d;
+  --text-2: #33495a;
+  --muted: #4d6475;
+  --rule: #dbe5ec;
+  --heavy: #0f2c3f;
+  --on-heavy: #f4f7f9;
+  --on-heavy-muted: #dbe5ec;
+  --link: #1b4057;
+  --code-bg: #dbe5ec;
+
+  --hero: #0f2c3f;
+  --hero-text: #f4f7f9;
+  --hero-sub: #dbe5ec;
   --contour: #6f93ab;
+  --contour-opacity: 0.38;
+  --contour-index-opacity: 0.7;
+  --trail-glow: none;
+
+  --note: #2c5d84;
+  --note-glow: none;
+  --route: #1b4057;
+  --pin: var(--marker);
+  --pin-trailhead: var(--muted);
+  --pin-fill: #f4f7f9;
+  --pin-lead-ring: #0f2c3f;
+  --pin-lead-glow: none;
+  --chip-bg: #0f2c3f;
+  --chip-text: #f4f7f9;
+  --progress-track: rgba(15, 44, 63, 0.28);
+  --progress-fill: var(--marker);
+  --photo-paper: #fff;
+  --photo-shadow: 0 1px 2px rgba(15, 44, 63, 0.2), 0 10px 20px -12px rgba(15, 44, 63, 0.45);
 
   --font-body: "Barlow", system-ui, sans-serif;
   --font-cond: "Barlow Condensed", "Arial Narrow", sans-serif;
   --font-hand: "Caveat Variable", cursive;
+}
+
+/* Headlamp: neutral charcoal where blaze yellow is the only light source. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #16191c;
+  --grid: rgba(236, 231, 220, 0.03);
+  --text: #e6e1d6;
+  --text-2: #b7b2a7;
+  --muted: #8f8b83;
+  --rule: #272b2f;
+  --heavy: #3a3f44;
+  --on-heavy: #e6e1d6;
+  --on-heavy-muted: #b7b2a7;
+  --link: var(--blaze);
+  --code-bg: #24282c;
+  --code-frame: #1d2024;
+  --code-bar: #191c1f;
+  --code-border: #2c3035;
+
+  --hero: #0f1113;
+  --hero-text: #ece7dc;
+  --hero-sub: #bdb7aa;
+  --contour: #7b8288;
+  --contour-opacity: 0.22;
+  --contour-index-opacity: 0.42;
+  --trail-glow: drop-shadow(0 0 3px rgba(245, 197, 24, 0.85))
+    drop-shadow(0 0 10px rgba(245, 197, 24, 0.45));
+
+  --note: #f2c94c;
+  --note-glow: 0 0 8px rgba(245, 197, 24, 0.22);
+  --route: rgba(245, 197, 24, 0.42);
+  --pin: var(--blaze);
+  --pin-trailhead: var(--blaze);
+  --pin-fill: #16191c;
+  --pin-lead-ring: #3a3220;
+  --pin-lead-glow: 0 0 10px rgba(245, 197, 24, 0.55);
+  --chip-bg: #2a2512;
+  --chip-text: var(--blaze);
+  --progress-track: rgba(255, 255, 255, 0.16);
+  --progress-fill: var(--blaze);
+  --photo-paper: #ddd7c8;
+  --photo-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 12px 24px -10px rgba(0, 0, 0, 0.8);
 }
 
 html {
@@ -28,10 +100,10 @@ body {
   min-height: 100vh;
   /* Faint map-paper grid on the snow sections; heroes paint over it. */
   background:
-    linear-gradient(rgba(27, 64, 87, 0.05) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(90deg, rgba(27, 64, 87, 0.05) 1px, transparent 1px) 0 0 / 28px 28px,
-    var(--snow);
-  color: var(--ink);
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 28px,
+    var(--bg);
+  color: var(--text);
   font: 400 1.0625rem / 1.65 var(--font-body);
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
@@ -50,7 +122,7 @@ a {
 
 ::selection {
   background: var(--blaze);
-  color: var(--ink);
+  color: var(--on-blaze);
 }
 
 .wrap {
@@ -62,7 +134,8 @@ a {
 .note {
   margin: 0;
   font: 500 1.6rem / 1.1 var(--font-hand);
-  color: var(--pencil);
+  color: var(--note);
+  text-shadow: var(--note-glow);
 }
 
 .page-title {

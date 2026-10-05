@@ -1,11 +1,23 @@
 ---
 import { ClientRouter } from 'astro:transitions'
 import { SITE } from '../constants'
+import { DARK_QUERY, THEME_PREFERENCES, THEME_STORAGE_KEY } from '../lib/theme'
 import Favicons from './Favicons.astro'
 ---
 
 <head>
   <meta charset="utf-8" />
+  {/* Sets data-theme before first paint so dark readers never see a light flash. Mirrors lib/theme.ts. */}
+  <script is:inline define:vars={{ key: THEME_STORAGE_KEY, prefs: THEME_PREFERENCES, query: DARK_QUERY }}>
+    let pref = 'system'
+    try {
+      const stored = localStorage.getItem(key)
+      if (prefs.includes(stored)) pref = stored
+    } catch {}
+    const root = document.documentElement
+    root.dataset.themePreference = pref
+    root.dataset.theme = pref === 'system' ? (matchMedia(query).matches ? 'dark' : 'light') : pref
+  </script>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta
     name="viewport"
@@ -23,7 +35,8 @@ import Favicons from './Favicons.astro'
     content="telephone=no,date=no,address=no,email=no,url=no"
   />
 
-  <meta name="theme-color" content="#0f2c3f" />
+  <meta name="theme-color" content="#0f2c3f" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0f1113" media="(prefers-color-scheme: dark)" />
 
   <link rel="sitemap" href="/sitemap-index.xml" />
   <link rel="manifest" href="/site.webmanifest" />
