@@ -382,17 +382,23 @@ html {
 
 /* Subtle paper texture effect via shadow */
 .paper-texture {
-  box-shadow: inset 0 0 60px -30px var(--color-parchment-400), 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  box-shadow:
+    inset 0 0 60px -30px var(--color-parchment-400),
+    0 1px 3px 0 rgb(0 0 0 / 0.05);
 }
 
 .dark .paper-texture {
-  box-shadow: inset 0 0 60px -30px var(--color-walnut-950), 0 1px 3px 0 rgb(0 0 0 / 0.2);
+  box-shadow:
+    inset 0 0 60px -30px var(--color-walnut-950),
+    0 1px 3px 0 rgb(0 0 0 / 0.2);
 }
 
 /* Focus states with brass ring */
 .focus-brass:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--ring);
 }
 
 /* Link styles */

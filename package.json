@@ -13,18 +13,21 @@
     "typecheck": "tsc",
     "typecheck:ws": "bun --filter='*' typecheck"
   },
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "dependencies": {
-    "sst": "3.13.14"
+    "sst": "4.17.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@tsconfig/node20": "^20.1.5",
-    "@types/aws-lambda": "8.10.149",
-    "@types/bun": "latest",
-    "typescript": "^5.8.3"
+    "@biomejs/biome": "^2.5.15",
+    "@tsconfig/node20": "^20.1.10",
+    "@types/aws-lambda": "8.10.164",
+    "@types/bun": "^1.4.2",
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^6.0.0"
   }
 }

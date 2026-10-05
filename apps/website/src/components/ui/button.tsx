@@ -1,4 +1,4 @@
-import { Slot } from '@radix-ui/react-slot'
+import { Button as ButtonPrimitive } from '@base-ui/react/button'
 import { type VariantProps, cva } from 'class-variance-authority'
 import { cn } from '../../lib/utils'
 
@@ -30,17 +30,15 @@ const buttonVariants = cva(
   },
 )
 
-export interface ButtonProps extends React.ComponentProps<'button'> {
+export interface ButtonProps extends ButtonPrimitive.Props {
   variant?: VariantProps<typeof buttonVariants>['variant']
   size?: VariantProps<typeof buttonVariants>['size']
-  asChild?: boolean
 }
 
-function Button({ className, variant, size, asChild = false, ...props }: ButtonProps) {
-  const Comp = asChild ? Slot : 'button'
-
+// Pass `render={<a href="..." />}` to style another element as a button.
+function Button({ className, variant, size, ...props }: ButtonProps) {
   return (
-    <Comp
+    <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
