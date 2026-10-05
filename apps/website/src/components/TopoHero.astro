@@ -51,6 +51,12 @@ const isCurrent = (href: string): boolean => path === href || path.startsWith(`$
     flex-direction: column;
     overflow: hidden;
   }
+  /* Headlamp: a faint warm pool of light around the summit. */
+  :global(:root[data-theme='dark']) .hero {
+    background:
+      radial-gradient(ellipse 38% 55% at 75% 28%, rgba(245, 197, 24, 0.08), transparent 70%),
+      var(--hero);
+  }
   .full {
     min-height: min(86vh, 760px);
   }
@@ -120,6 +126,11 @@ const isCurrent = (href: string): boolean => path === href || path.startsWith(`$
     border-color: var(--blaze);
   }
   @media (max-width: 640px) {
+    :global(:root[data-theme='dark']) .hero {
+      background:
+        radial-gradient(ellipse 60% 22% at 52% 22%, rgba(245, 197, 24, 0.08), transparent 70%),
+        var(--hero);
+    }
     .full {
       min-height: 660px;
     }
