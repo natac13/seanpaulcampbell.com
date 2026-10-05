@@ -1,11 +1,19 @@
-import { type CollectionEntry, getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
 import { SITE } from '../constants'
+import type { RouteCheckpoint } from './route'
+import { toCheckpoints } from './route'
 
 export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog')
   return posts
     .filter((post) => !post.data.draft)
     .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
+}
+
+/** Every published post as a route checkpoint, newest first. Notes are chosen across all posts. */
+export async function getRouteCheckpoints(): Promise<RouteCheckpoint[]> {
+  return toCheckpoints(await getAllPosts())
 }
 
 export async function getRecentPosts(limit = 5): Promise<CollectionEntry<'blog'>[]> {

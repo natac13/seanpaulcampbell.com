@@ -5,12 +5,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDate(date: Date) {
-  return Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
+/** Short date like "Mar 4, 2025". UTC, because frontmatter dates parse as UTC midnight. */
+export function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-CA', {
+    month: 'short',
     day: 'numeric',
-  }).format(date)
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
 }
 
 export function readingTime(html: string) {

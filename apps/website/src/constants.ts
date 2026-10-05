@@ -12,10 +12,13 @@ export const SITE: Site = {
   postsPerPage: 10,
 }
 
+/** Post the home page route marks "new here? start with this one". */
+export const START_HERE_POST_ID = 'aws-bedrock-knowledge-base-sst'
+
 export const NAV_LINKS: SocialLink[] = [
   {
     href: '/blog',
-    label: 'Blog',
+    label: 'Writing',
   },
   {
     href: '/about',

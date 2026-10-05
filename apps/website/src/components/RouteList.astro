@@ -1,0 +1,222 @@
+---
+import type { RouteCheckpoint } from '../lib/route'
+import { formatDate } from '../lib/utils'
+
+interface Props {
+  readonly checkpoints: readonly RouteCheckpoint[]
+  /** Ends the route with the trailhead marker; only true when the list reaches the oldest post. */
+  readonly trailhead: boolean
+}
+
+const { checkpoints, trailhead } = Astro.props
+---
+
+<ol class="route">
+  {
+    checkpoints.map(({ post, minutes, note }) => (
+      <li class="cp">
+        <time datetime={post.data.publishDate.toISOString()}>{formatDate(post.data.publishDate)}</time>
+        <span class="pin" aria-hidden="true" />
+        <div class="cp-body">
+          {note && (
+            <p class="note cp-note">
+              <svg class="arrow" viewBox="0 0 60 30" aria-hidden="true">
+                <path d="M56 22 C 40 26, 20 22, 6 8 M6 8 l2 11 M6 8 l11 1" />
+              </svg>
+              {note}
+            </p>
+          )}
+          <h3>
+            <a href={`/blog/${post.id}`}>{post.data.title}</a>
+          </h3>
+          <p>{post.data.description}</p>
+          <div class="split">
+            <span class="split-time">{minutes} min</span>
+            <span class="tags">
+              {post.data.tags.map((tag, i) => (
+                <>{i > 0 && ', '}<a href={`/tags/${tag}`}>{tag}</a></>
+              ))}
+            </span>
+          </div>
+        </div>
+      </li>
+    ))
+  }
+  {
+    trailhead && (
+      <li class="cp start">
+        <span class="pin" aria-hidden="true" />
+        <div class="cp-body">
+          <p>Trailhead. More coming as I figure things out.</p>
+        </div>
+      </li>
+    )
+  }
+</ol>
+
+<style>
+  .route {
+    --datecol: 130px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  .route::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--datecol) + 7px);
+    top: 10px;
+    bottom: 12px;
+    width: 3px;
+    background: repeating-linear-gradient(var(--lake-2) 0 10px, transparent 10px 16px);
+  }
+  .cp {
+    display: grid;
+    grid-template-columns: var(--datecol) 17px minmax(0, 1fr);
+    column-gap: 28px;
+    padding-bottom: 52px;
+    position: relative;
+  }
+  .cp time {
+    text-align: right;
+    font: 600 1.05rem / 1.3 var(--font-cond);
+    color: var(--slate);
+    padding-top: 3px;
+  }
+  .pin {
+    grid-column: 2;
+    width: 17px;
+    height: 17px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: var(--snow);
+    border: 4px solid var(--marker);
+    position: relative;
+    z-index: 1;
+  }
+  .cp:first-child .pin {
+    background: var(--blaze);
+    border-color: var(--lake);
+  }
+  .cp-body {
+    grid-column: 3;
+    max-width: 62ch;
+    position: relative;
+  }
+  .cp-note {
+    position: absolute;
+    left: calc(100% + 28px);
+    top: -4px;
+    width: 190px;
+    transform: rotate(-3deg);
+  }
+  .arrow {
+    display: block;
+    width: 42px;
+    height: 22px;
+    margin-bottom: 2px;
+  }
+  .arrow path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .cp h3 {
+    margin: 0;
+    font: 600 clamp(1.6rem, 3vw, 2.05rem) / 1.1 var(--font-cond);
+  }
+  .cp h3 a {
+    text-decoration: none;
+    background: linear-gradient(var(--blaze), var(--blaze)) 0 100% / 0 0.3em no-repeat;
+    transition: background-size 0.25s;
+  }
+  .cp h3 a:hover {
+    background-size: 100% 0.3em;
+  }
+  .cp-body > p {
+    margin: 8px 0 12px;
+    color: var(--ink-soft);
+  }
+  .split {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--slate);
+  }
+  .split-time {
+    font: 700 1rem / 1 var(--font-cond);
+    color: var(--snow);
+    background: var(--lake);
+    padding: 5px 9px 4px;
+    border-radius: 3px;
+    font-variant-numeric: tabular-nums;
+  }
+  .tags a {
+    text-decoration: none;
+  }
+  .tags a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--marker);
+  }
+  .cp.start {
+    padding-bottom: 0;
+  }
+  .cp.start .pin {
+    border-color: var(--slate);
+    border-radius: 2px;
+  }
+  .cp.start p {
+    margin: 2px 0 0;
+    color: var(--slate);
+    font-style: italic;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cp h3 a {
+      transition: none;
+    }
+  }
+  @media (max-width: 1180px) {
+    .cp-note {
+      position: static;
+      width: auto;
+      margin: 0 0 4px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .arrow {
+      display: none;
+    }
+  }
+  @media (max-width: 640px) {
+    .route {
+      --datecol: 0px;
+    }
+    .route::before {
+      left: 7px;
+    }
+    .cp {
+      grid-template-columns: 17px minmax(0, 1fr);
+      column-gap: 18px;
+    }
+    .cp time {
+      grid-column: 2;
+      grid-row: 1;
+      text-align: left;
+      padding: 0;
+    }
+    .pin {
+      grid-column: 1;
+      grid-row: 1;
+      margin-top: 2px;
+    }
+    .cp-body {
+      grid-column: 2;
+    }
+  }
+</style>
