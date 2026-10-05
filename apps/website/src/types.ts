@@ -4,7 +4,6 @@ export interface Site {
   href: string
   author: string
   locale: string
-  recentPostCount: number
   postsPerPage: number
 }
 

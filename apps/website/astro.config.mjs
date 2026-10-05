@@ -22,9 +22,7 @@ export default defineConfig({
     react(),
     sitemap(),
     expressiveCode({
-      themes: ['github-light', 'github-dark'],
-      useDarkModeMediaQuery: false,
-      themeCssSelector: (theme) => `.${theme.name.split('-')[1]}`,
+      themes: ['github-light'],
       defaultProps: {
         wrap: false,
       },

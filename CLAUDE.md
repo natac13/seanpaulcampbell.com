@@ -25,7 +25,7 @@ Local SST commands use the `natac` AWS profile; log in with `bun run aws:sso`. R
 
 ## UI components
 
-shadcn with Base UI (`components.json` style `base-vega`); add components with `bun run ui-add <name>` from `apps/website`. Only `button`, `pagination`, and `scroll-area` exist; keep the site's own classes when regenerating them. lucide-react 1.x has no brand icons, so GitHub/LinkedIn/Twitter/Facebook come from `src/components/brand-icons.ts`.
+No component library. Components are `.astro` files styled with scoped `<style>` blocks; colour and font tokens are defined once in `src/styles/global.css`, which still imports Tailwind. Fonts are self-hosted via `@fontsource`. The site is light only, with no dark mode. `src/lib/topo.ts` generates the contour hero, and `src/lib/route.ts` builds the post route list, including its handwritten notes.
 
 Blog posts in `src/content/blog` contain code samples importing `components/ui/*`; those are prose, not real imports.
 

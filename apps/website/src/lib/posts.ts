@@ -16,11 +16,6 @@ export async function getRouteCheckpoints(): Promise<RouteCheckpoint[]> {
   return toCheckpoints(await getAllPosts())
 }
 
-export async function getRecentPosts(limit = 5): Promise<CollectionEntry<'blog'>[]> {
-  const posts = await getAllPosts()
-  return posts.slice(0, limit)
-}
-
 export async function getPostBySlug(slug: string): Promise<CollectionEntry<'blog'> | null> {
   const posts = await getAllPosts()
   return posts.find((post) => post.id === slug) || null
