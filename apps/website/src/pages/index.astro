@@ -1,175 +1,123 @@
 ---
-import { Image } from 'astro:assets'
-import avatarImage from '../assets/images/avatar.jpg'
-import { buttonVariants } from '../components/ui/button'
-import { SITE } from '../constants'
+import avatar from '../assets/images/avatar.jpg'
+import RouteList from '../components/RouteList.astro'
+import TapedPhoto from '../components/TapedPhoto.astro'
+import TopoHero from '../components/TopoHero.astro'
 import Layout from '../layouts/Layout.astro'
-import { getRecentPosts } from '../lib/posts'
-import { formatDate } from '../lib/utils'
+import { getRouteCheckpoints } from '../lib/posts'
 
 export const prerender = true
 
-const recentPosts = await getRecentPosts(SITE.recentPostCount)
+const checkpoints = await getRouteCheckpoints()
+const totalMinutes = checkpoints.reduce((sum, c) => sum + c.minutes, 0)
 ---
 
 <Layout>
-  <div class="space-y-20 max-w-5xl mx-auto">
-    <!-- Hero section - The Welcome -->
-    <header class="py-16 md:py-24">
-      <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-        <!-- Avatar with decorative frame -->
-        <div class="relative flex-shrink-0 group">
-          <div class="absolute -inset-3 bg-gradient-to-br from-forest-200 via-transparent to-brass-200 dark:from-forest-800 dark:to-brass-800 rounded-full opacity-60 blur-sm group-hover:opacity-80 transition-opacity"></div>
-          <div class="relative">
-            <Image
-              src={avatarImage}
-              alt="Sean Campbell"
-              class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-parchment-50 dark:border-walnut-700 shadow-xl object-cover"
-              width={160}
-              height={160}
-            />
-          </div>
-        </div>
+  <TopoHero slot="hero" size="full">
+    <div class="hero-copy">
+      <h1>Sean<br />Campbell</h1>
+      <p>
+        I build web apps and the AWS plumbing behind them, then write up what worked so you can skip
+        the parts that didn't. Most of these ideas got sorted out on a run.
+      </p>
+    </div>
+    <aside class="hero-photo" aria-hidden="true">
+      <TapedPhoto src={avatar} alt="" size={132} tilt={3} />
+      <p class="note">
+        <svg class="arrow" viewBox="0 0 90 60"><path d="M8 54 C 30 56, 62 46, 82 12 M82 12 l-13 5 M82 12 l1 14" /></svg>
+        close enough, that's me
+      </p>
+    </aside>
+  </TopoHero>
 
-        <!-- Welcome text -->
-        <div class="text-center md:text-left">
-          <p class="text-sm uppercase tracking-widest text-muted-foreground mb-2 font-sans">
-            Welcome to
-          </p>
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground">
-            Sean Campbell's<br class="hidden sm:block" />
-            <span class="text-primary">Corner</span>
-          </h1>
-          <p class="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-            A quiet space for thoughts on software craftsmanship, technical explorations, and the joy of building things that work.
-          </p>
-        </div>
-      </div>
-
-      <!-- Decorative divider -->
-      <div class="flex items-center gap-4 mt-12 md:mt-16">
-        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-        <div class="flex items-center gap-2 text-muted-foreground">
-          <svg class="w-4 h-4 text-brass-500" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-          </svg>
-        </div>
-        <div class="flex-1 h-px bg-gradient-to-l from-transparent via-border to-transparent"></div>
-      </div>
-    </header>
-
-    <!-- Recent writings section -->
-    <section>
-      <div class="flex items-baseline justify-between mb-10">
-        <div>
-          <h2 class="text-2xl md:text-3xl font-bold text-foreground">Recent Writings</h2>
-          <p class="text-muted-foreground mt-1">Thoughts, tutorials, and technical deep-dives</p>
-        </div>
-        <a
-          href="/blog"
-          class="hidden sm:flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium group"
-        >
-          View archive
-          <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-          </svg>
-        </a>
-      </div>
-
-      <!-- Blog posts grid -->
-      <div class="grid gap-6 md:gap-8">
-        {
-          recentPosts.map((post, index) => (
-            <article
-              class="group relative library-card border border-border rounded-xl p-6 md:p-8 transition-all duration-300 hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5"
-              style={`animation-delay: ${index * 100}ms`}
-            >
-              <div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
-                <!-- Date column -->
-                <div class="md:w-32 flex-shrink-0">
-                  <time
-                    class="text-sm text-muted-foreground font-sans tabular-nums"
-                    datetime={post.data.publishDate.toISOString()}
-                    transition:name={`blog-publish-date-${post.id}`}
-                  >
-                    {formatDate(post.data.publishDate)}
-                  </time>
-                </div>
-
-                <!-- Content -->
-                <div class="flex-1 min-w-0">
-                  <h3
-                    class="text-xl md:text-2xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors"
-                    transition:name={`blog-title-${post.id}`}
-                  >
-                    {post.data.title}
-                  </h3>
-                  <a href={`/blog/${post.id}`} class="absolute inset-0 z-10">
-                    <span class="sr-only">Read {post.data.title}</span>
-                  </a>
-                  <p
-                    class="text-muted-foreground mb-4 line-clamp-2"
-                    transition:name={`blog-description-${post.id}`}
-                  >
-                    {post.data.description}
-                  </p>
-
-                  <!-- Tags -->
-                  {post.data.tags && post.data.tags.length > 0 && (
-                    <div
-                      class="flex flex-wrap gap-2"
-                      transition:name={`blog-tags-${post.id}`}
-                    >
-                      {post.data.tags.slice(0, 3).map((tag) => (
-                        <span class="text-xs font-sans px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <!-- Arrow indicator -->
-                <div class="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-muted/50 text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 flex-shrink-0 self-center">
-                  <svg class="w-5 h-5 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </div>
-              </div>
-            </article>
-          ))
-        }
-      </div>
-
-      <!-- Mobile view all link -->
-      <div class="mt-8 text-center sm:hidden">
-        <a
-          href="/blog"
-          class={buttonVariants({ variant: "outline" })}
-        >
-          View all posts
-        </a>
-      </div>
-    </section>
-
-    <!-- About teaser -->
-    <section class="relative">
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-muted/30 to-transparent rounded-3xl -z-10"></div>
-      <div class="text-center py-12 md:py-16 px-6">
-        <h2 class="text-xl md:text-2xl font-semibold mb-4 text-foreground">
-          Building software, one commit at a time
-        </h2>
-        <p class="text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
-          I'm a developer passionate about crafting elegant solutions with React, TypeScript, AWS, and modern tooling.
-          When I'm not coding, I'm probably reading or thinking about code.
-        </p>
-        <a
-          href="/about"
-          class={buttonVariants({ variant: "default" })}
-        >
-          More about me
-        </a>
-      </div>
-    </section>
-  </div>
+  <main class="wrap home">
+    <div class="route-head">
+      <h2>The log</h2>
+      <p>{checkpoints.length} posts, about {totalMinutes} minutes of reading end to end.</p>
+    </div>
+    <RouteList checkpoints={checkpoints} trailhead={true} />
+  </main>
 </Layout>
+
+<style>
+  .hero-copy {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    width: min(100% - 32px, 1240px);
+    margin-inline: auto;
+    padding-bottom: clamp(48px, 9vh, 96px);
+  }
+  .hero-copy h1 {
+    margin: 0;
+    font: 700 clamp(4.2rem, 15vw, 12.5rem) / 0.82 var(--font-cond);
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  .hero-copy p {
+    max-width: 34ch;
+    margin: 28px 0 0;
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+    line-height: 1.5;
+    color: var(--hero-sub);
+  }
+  .hero-photo {
+    position: absolute;
+    z-index: 1;
+    right: max(32px, calc((100% - 1240px) / 2 + 24px));
+    bottom: clamp(56px, 11vh, 110px);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .hero-photo .note {
+    order: -1;
+    color: var(--blaze);
+    margin-top: 40px;
+    width: 130px;
+    text-align: right;
+    transform: rotate(-5deg);
+  }
+  .arrow {
+    display: block;
+    width: 52px;
+    height: 34px;
+    margin: 0 0 4px auto;
+  }
+  .arrow path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .home {
+    padding: 72px 0 96px;
+  }
+  .route-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px 24px;
+    margin-bottom: 40px;
+  }
+  .route-head h2 {
+    margin: 0;
+    font: 700 2.6rem / 1 var(--font-cond);
+  }
+  .route-head p {
+    margin: 0;
+    color: var(--muted);
+  }
+  @media (max-width: 1100px) {
+    .hero-photo {
+      display: none;
+    }
+  }
+  @media (max-width: 640px) {
+    .hero-copy h1 {
+      font-size: 22vw;
+    }
+  }
+</style>

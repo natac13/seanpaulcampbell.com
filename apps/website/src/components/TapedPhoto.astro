@@ -1,0 +1,58 @@
+---
+import type { ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
+
+interface Props {
+  readonly src: ImageMetadata
+  readonly alt: string
+  /** Width in px; the photo is square. A parent can override it with `--photo-size`. */
+  readonly size: number
+  /** Rotation in degrees, so each print sits a little crooked. */
+  readonly tilt: number
+}
+
+const { src, alt, size, tilt } = Astro.props
+---
+
+<figure class="taped" style={`--tilt: ${tilt}deg; --size: ${size}px`}>
+  <span class="tape tape-a" aria-hidden="true"></span>
+  <span class="tape tape-b" aria-hidden="true"></span>
+  <Image src={src} alt={alt} width={size * 2} height={size * 2} />
+</figure>
+
+<style>
+  .taped {
+    position: relative;
+    width: var(--photo-size, var(--size));
+    margin: 0;
+    padding: 7px 7px 22px;
+    background: var(--photo-paper);
+    box-shadow: var(--photo-shadow);
+    transform: rotate(var(--tilt));
+  }
+  .taped img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  .tape {
+    position: absolute;
+    width: 64px;
+    height: 20px;
+    background: rgba(245, 214, 120, 0.62);
+    border-left: 1px dashed rgba(140, 110, 30, 0.25);
+    border-right: 1px dashed rgba(140, 110, 30, 0.25);
+  }
+  .tape-a {
+    top: -9px;
+    left: -16px;
+    transform: rotate(-32deg);
+  }
+  .tape-b {
+    top: -7px;
+    right: -18px;
+    transform: rotate(28deg);
+  }
+</style>

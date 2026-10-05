@@ -1,0 +1,54 @@
+---
+interface Props {
+  readonly tags: readonly { readonly tag: string; readonly count: number }[]
+  readonly activeTag?: string | undefined
+}
+
+const { tags, activeTag } = Astro.props
+---
+
+<ul class="pills">
+  {
+    tags.map(({ tag, count }) => (
+      <li>
+        <a href={`/tags/${tag}`} aria-current={tag === activeTag ? 'page' : undefined}>
+          {tag} <span class="count">{count}</span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .pills {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pills a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 2px solid var(--heavy);
+    border-radius: 999px;
+    text-decoration: none;
+    font: 600 1.1rem / 1.2 var(--font-cond);
+  }
+  .pills a:hover,
+  .pills a[aria-current] {
+    background: var(--heavy);
+    color: var(--on-heavy);
+  }
+  .count {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .pills a:hover .count,
+  .pills a[aria-current] .count {
+    color: var(--on-heavy-muted);
+  }
+</style>

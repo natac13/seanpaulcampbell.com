@@ -23,8 +23,9 @@ export default defineConfig({
     sitemap(),
     expressiveCode({
       themes: ['github-light', 'github-dark'],
+      // Head.astro always resolves data-theme, so the attribute alone picks the theme.
+      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
       useDarkModeMediaQuery: false,
-      themeCssSelector: (theme) => `.${theme.name.split('-')[1]}`,
       defaultProps: {
         wrap: false,
       },

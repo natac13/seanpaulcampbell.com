@@ -1,150 +1,147 @@
 ---
-import { Image } from 'astro:assets'
-import avatarImage from '../assets/images/avatar.jpg'
-import { ICON_MAP, SOCIAL_LINKS } from '../constants'
+import avatar from '../assets/images/avatar.jpg'
+import TapedPhoto from '../components/TapedPhoto.astro'
+import { SOCIAL_LINKS } from '../constants'
 import Layout from '../layouts/Layout.astro'
 
 export const prerender = true
+
+const STACK = [
+  { area: 'Front end', items: 'React, React Router, Astro, Tailwind' },
+  { area: 'Back end', items: 'TypeScript on Node, and Go when it fits' },
+  { area: 'Cloud', items: 'AWS serverless: Lambda, DynamoDB, EventBridge, all wired up with SST' },
+] as const
 ---
 
 <Layout title="About">
-  <div class="max-w-3xl mx-auto">
-    <!-- Hero section -->
-    <header class="text-center mb-16">
-      <!-- Avatar with decorative frame -->
-      <div class="relative inline-block mb-8 group">
-        <div class="absolute -inset-4 bg-gradient-to-br from-forest-200 via-transparent to-brass-200 dark:from-forest-800 dark:to-brass-800 rounded-full opacity-60 blur-sm group-hover:opacity-80 transition-opacity"></div>
-        <div class="relative">
-          <Image
-            src={avatarImage}
-            alt="Sean Campbell"
-            class="w-36 h-36 md:w-44 md:h-44 rounded-full border-4 border-parchment-50 dark:border-walnut-700 shadow-xl object-cover"
-            width={176}
-            height={176}
-          />
-        </div>
+  <main class="wrap about">
+    <div class="about-grid">
+      <div class="about-photo">
+        <TapedPhoto src={avatar} alt="Sean Campbell" size={200} tilt={-2.5} />
+        <p class="note" aria-hidden="true">usually found on a trail somewhere</p>
       </div>
-
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">About Me</h1>
-      <p class="text-xl text-muted-foreground">Developer, reader, perpetual learner</p>
-    </header>
-
-    <!-- Bio section -->
-    <section class="prose prose-lg prose-library dark:prose-invert mx-auto mb-16">
-      <p class="lead text-xl text-muted-foreground leading-relaxed">
-        Welcome to my corner of the internet. I'm Sean, a software developer who finds joy in building
-        well-crafted solutions and sharing what I learn along the way.
-      </p>
-
-      <p>
-        This blog is my digital workshop—a place where I document my journey through the ever-evolving
-        landscape of web development. Here you'll find tutorials, technical explorations, and thoughts
-        on the tools and technologies that excite me.
-      </p>
-
-      <p>
-        When I'm not writing code, I'm usually reading about it, running to clear my head,
-        or thinking about the next thing to build. There's something deeply satisfying about
-        transforming ideas into working software, and I hope to share some of that satisfaction
-        through my writing here.
-      </p>
-    </section>
-
-    <!-- Connect section -->
-    <section class="mb-16">
-      <h2 class="text-2xl font-semibold mb-6 text-center">Connect</h2>
-      <div class="flex flex-wrap justify-center gap-3">
-        {
-          SOCIAL_LINKS.map((link) => {
-            const Icon = ICON_MAP[link.label];
-            return (
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-card border border-border text-foreground hover:bg-muted hover:border-primary/30 transition-all"
-                aria-label={`Follow on ${link.label}`}
-              >
-                {Icon && <Icon className="size-4" />}
-                <span class="text-sm font-medium">{link.label}</span>
-              </a>
-            );
-          })
-        }
-      </div>
-    </section>
-
-    <!-- Skills section -->
-    <section class="mb-16">
-      <h2 class="text-2xl font-semibold mb-6 text-center">What I Work With</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="library-card p-6 rounded-xl border border-border">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-              </svg>
-            </div>
-            <h3 class="font-semibold text-foreground">Frontend</h3>
-          </div>
-          <p class="text-sm text-muted-foreground leading-relaxed">
-            React, React Router, Astro, TailwindCSS, TypeScript
-          </p>
-        </div>
-
-        <div class="library-card p-6 rounded-xl border border-border">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
-              <svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
-              </svg>
-            </div>
-            <h3 class="font-semibold text-foreground">Backend</h3>
-          </div>
-          <p class="text-sm text-muted-foreground leading-relaxed">
-            Node.js, Golang, AWS Serverless (Lambda, DynamoDB, EventBridge)
-          </p>
-        </div>
-
-        <div class="library-card p-6 rounded-xl border border-border">
-          <div class="flex items-center gap-3 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-brass-500/10 flex items-center justify-center">
-              <svg class="w-4 h-4 text-brass-600 dark:text-brass-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-              </svg>
-            </div>
-            <h3 class="font-semibold text-foreground">Infrastructure</h3>
-          </div>
-          <p class="text-sm text-muted-foreground leading-relaxed">
-            AWS, SST (Infrastructure as Code)
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Goals section -->
-    <section class="mb-8">
-      <h2 class="text-2xl font-semibold mb-6 text-center">What Drives Me</h2>
-      <div class="library-card p-8 rounded-xl border border-border">
-        <ul class="space-y-4">
-          <li class="flex items-start gap-3">
-            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
-            <span class="text-muted-foreground">Sharing useful, practical content about software development</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
-            <span class="text-muted-foreground">Building interesting side projects that solve real problems</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
-            <span class="text-muted-foreground">Contributing meaningfully to open-source projects</span>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></span>
-            <span class="text-muted-foreground">Continuously learning and improving my craft</span>
-          </li>
+      <div class="about-copy">
+        <h1>Hi, I'm Sean.</h1>
+        <p>
+          I'm a software developer. Most days that means React on the front and TypeScript on AWS behind
+          it. I write here when I've solved something fiddly, like auth across a few services or
+          self-hosting a backend on my own account, and the docs didn't get me all the way there.
+        </p>
+        <p>
+          When a problem won't budge I go for a run. More than one of these posts started as a better
+          idea somewhere around the halfway mark.
+        </p>
+        <h2>What I work with</h2>
+        <dl class="stack">
+          {
+            STACK.map((s) => (
+              <div>
+                <dt>{s.area}</dt>
+                <dd>{s.items}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <h2>Find me</h2>
+        <ul class="social">
+          {
+            SOCIAL_LINKS.map((s) => (
+              <li>
+                <a href={s.href} rel="me noopener" target="_blank">
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
         </ul>
       </div>
-    </section>
-  </div>
+    </div>
+  </main>
 </Layout>
+
+<style>
+  .about {
+    padding: 64px 0 96px;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 48px;
+    max-width: 900px;
+  }
+  .about-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding-top: 8px;
+  }
+  .about-photo .note {
+    text-align: center;
+    transform: rotate(-3deg);
+  }
+  .about-copy {
+    max-width: 62ch;
+  }
+  .about-copy h1 {
+    margin: 0 0 18px;
+    font: 700 clamp(2.8rem, 7vw, 4.4rem) / 0.95 var(--font-cond);
+  }
+  .about-copy p {
+    margin: 0 0 1em;
+  }
+  .about-copy h2 {
+    margin: 44px 0 14px;
+    font: 700 1.8rem / 1 var(--font-cond);
+  }
+  .stack {
+    margin: 0;
+    border-left: 3px solid var(--heavy);
+  }
+  .stack div {
+    padding: 10px 0 10px 20px;
+  }
+  .stack dt {
+    font: 600 1.2rem / 1.2 var(--font-cond);
+  }
+  .stack dd {
+    margin: 2px 0 0;
+    color: var(--text-2);
+  }
+  .social {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .social a {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 2px solid var(--heavy);
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .social a:hover {
+    background: var(--heavy);
+    color: var(--on-heavy);
+  }
+  @media (max-width: 640px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .about-photo {
+      --photo-size: 140px;
+      flex-direction: row;
+      align-items: center;
+      gap: 22px;
+      padding-left: 12px;
+    }
+    .about-photo .note {
+      text-align: left;
+    }
+  }
+</style>

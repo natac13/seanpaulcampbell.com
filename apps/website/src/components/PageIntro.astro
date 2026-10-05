@@ -1,0 +1,35 @@
+---
+interface Props {
+  readonly title: string
+  /** Small line above the title, e.g. a back link's context. */
+  readonly kicker?: string | undefined
+}
+
+const { title, kicker } = Astro.props
+---
+
+<header class="intro">
+  {kicker && <p class="kicker">{kicker}</p>}
+  <h1 class="page-title">{title}</h1>
+  <div class="lede"><slot /></div>
+</header>
+
+<style>
+  .intro {
+    margin-bottom: 40px;
+  }
+  .kicker {
+    margin: 0 0 10px;
+    font: 600 1.05rem / 1 var(--font-cond);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .lede {
+    margin-top: 14px;
+    color: var(--muted);
+  }
+  .lede :global(p) {
+    margin: 0;
+  }
+</style>

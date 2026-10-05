@@ -17,12 +17,3 @@ export function calculateReadingTime(content: string, wordsPerMinute = 200): num
   // Return at least 1 minute
   return Math.max(1, readingTime)
 }
-
-/**
- * Format reading time with proper pluralization
- * @param minutes Reading time in minutes
- * @returns Formatted reading time string
- */
-export function formatReadingTime(minutes: number): string {
-  return `${minutes} min${minutes === 1 ? '' : 's'} read`
-}

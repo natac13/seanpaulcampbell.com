@@ -1,0 +1,95 @@
+---
+// Cycles the colour theme: system, light, dark. The icon follows <html data-theme-preference>,
+// which Head.astro's inline script sets before paint, so the right icon shows without waiting for JS.
+---
+
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Theme: system" title="Theme: system">
+  <svg class="icon icon-system" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="8" />
+    <path class="solid" d="M12 4a8 8 0 0 1 0 16Z" />
+  </svg>
+  <svg class="icon icon-light" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" />
+  </svg>
+  <svg class="icon icon-dark" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+  </svg>
+</button>
+
+<script>
+  import { applyTheme, DARK_QUERY, isThemePreference, nextPreference, readPreference, storePreference } from '../lib/theme'
+  import type { ThemePreference } from '../lib/theme'
+
+  const root = document.documentElement
+
+  function currentPreference(): ThemePreference {
+    const value = root.dataset.themePreference
+    return isThemePreference(value) ? value : 'system'
+  }
+
+  function labelToggle(): void {
+    const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]')
+    if (!button) return
+    const preference = currentPreference()
+    const label = `Theme: ${preference}. Switch to ${nextPreference(preference)}.`
+    button.setAttribute('aria-label', label)
+    button.title = label
+  }
+
+  // Delegated so it survives ClientRouter swapping the nav.
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element) || !event.target.closest('[data-theme-toggle]')) return
+    const next = nextPreference(currentPreference())
+    storePreference(next)
+    applyTheme(next)
+    labelToggle()
+  })
+
+  // ClientRouter replaces <html>'s attributes on navigation; restore the theme before the new page paints.
+  document.addEventListener('astro:after-swap', () => applyTheme(readPreference()))
+  document.addEventListener('astro:page-load', labelToggle)
+
+  window.matchMedia(DARK_QUERY).addEventListener('change', () => {
+    if (currentPreference() === 'system') applyTheme('system')
+  })
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin: -8px -6px -8px 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .theme-toggle:hover {
+    color: var(--blaze);
+  }
+  .icon {
+    display: none;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .icon .solid {
+    fill: currentColor;
+    stroke: none;
+  }
+  :global(:root:not([data-theme-preference])) .icon-system,
+  :global(:root[data-theme-preference='system']) .icon-system,
+  :global(:root[data-theme-preference='light']) .icon-light,
+  :global(:root[data-theme-preference='dark']) .icon-dark {
+    display: block;
+  }
+</style>

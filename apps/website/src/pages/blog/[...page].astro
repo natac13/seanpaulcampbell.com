@@ -1,141 +1,83 @@
 ---
-import type { CollectionEntry } from 'astro:content'
 import type { GetStaticPathsOptions, Page } from 'astro'
-import PostListItem from '../../components/PostListItem.astro'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '../../components/ui/pagination'
+import PageIntro from '../../components/PageIntro.astro'
+import RouteList from '../../components/RouteList.astro'
+import TagPills from '../../components/TagPills.astro'
 import { SITE } from '../../constants'
 import Layout from '../../layouts/Layout.astro'
-import { getAllPosts, getAllTags } from '../../lib/posts'
-import { cn } from '../../lib/utils'
-
-export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const allPosts = await getAllPosts()
-  return paginate(allPosts, { pageSize: SITE.postsPerPage })
-}
-
-const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> }
-const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1)
-
-function getPageUrl(page: number): string {
-  return page === 1 ? '/blog' : `/blog/${page}`
-}
-
-const currentPage = page.currentPage
-const totalPages = page.lastPage
-const allTags = await getAllTags()
+import { getAllTags, getRouteCheckpoints } from '../../lib/posts'
+import type { RouteCheckpoint } from '../../lib/route'
 
 export const prerender = true
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  return paginate(await getRouteCheckpoints(), { pageSize: SITE.postsPerPage })
+}
+
+const { page } = Astro.props as { page: Page<RouteCheckpoint> }
+const allTags = await getAllTags()
+const pageUrl = (n: number): string => (n === 1 ? '/blog' : `/blog/${n}`)
+const pages = Array.from({ length: page.lastPage }, (_, i) => i + 1)
 ---
 
-<Layout title={`Blog${page.currentPage > 1 ? ` - Page ${page.currentPage}` : ''}`}>
-  <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <header class="mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">Writings</h1>
-      <p class="text-lg text-muted-foreground">
-        Technical tutorials, thoughts on development, and things I've learned along the way.
-      </p>
-    </header>
-
-    <!-- Tag filters -->
-    <div class="mb-10">
-      <h2 class="text-sm font-sans font-medium text-muted-foreground uppercase tracking-wider mb-3">
-        Browse by Topic
-      </h2>
-      <div class="flex flex-wrap gap-2">
-        <a
-          href="/blog"
-          class={cn(
-            "text-sm font-sans px-3 py-1.5 rounded-full transition-colors",
-            !Astro.url.pathname.includes('/tags/')
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground"
-          )}
-          aria-current={!Astro.url.pathname.includes('/tags/') ? "page" : undefined}
-        >
-          All Posts
-        </a>
-        {
-          allTags.map((tagItem) => (
-            <a
-              href={`/tags/${tagItem.tag}`}
-              class="text-sm font-sans px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
-            >
-              {tagItem.tag}
-              <span class="ml-1 opacity-60">({tagItem.count})</span>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-
-    <!-- Blog posts -->
-    <div class="space-y-6">
-      {
-        page.data.length > 0 ? (
-          page.data.map((post) => (
-            <PostListItem post={post} />
-          ))
-        ) : (
-          <div class="text-center py-16">
-            <p class="text-lg text-muted-foreground">No posts found.</p>
-          </div>
-        )
-      }
-    </div>
-
-    <!-- Pagination -->
+<Layout title={`Writing${page.currentPage > 1 ? ` - Page ${page.currentPage}` : ''}`}>
+  <main class="wrap archive">
+    <PageIntro title="Writing">
+      <p>{page.total} posts on building web apps and the AWS plumbing behind them.</p>
+    </PageIntro>
+    <section class="topics" aria-label="Topics">
+      <TagPills tags={allTags} />
+    </section>
+    <RouteList checkpoints={page.data} trailhead={page.currentPage === page.lastPage} />
     {
       page.lastPage > 1 && (
-        <div class="mt-12">
-          <Pagination>
-            <PaginationContent className="flex-wrap">
-              <PaginationItem>
-                <PaginationPrevious
-                  href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
-                  aria-disabled={currentPage === 1}
-                />
-              </PaginationItem>
-
-              {pages.map((pageNum) => (
-                <PaginationItem key={pageNum}>
-                  <PaginationLink
-                    href={getPageUrl(pageNum)}
-                    isActive={pageNum === currentPage}
-                  >
-                    {pageNum}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-
-              {totalPages > 5 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
-
-              <PaginationItem>
-                <PaginationNext
-                  href={
-                    currentPage < totalPages
-                      ? getPageUrl(currentPage + 1)
-                      : undefined
-                  }
-                  aria-disabled={currentPage === totalPages}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <nav class="pager" aria-label="Pagination">
+          {page.url.prev ? <a href={page.url.prev}>Newer</a> : <span />}
+          <ol>
+            {pages.map((n) => (
+              <li>
+                <a href={pageUrl(n)} aria-current={n === page.currentPage ? 'page' : undefined}>
+                  {n}
+                </a>
+              </li>
+            ))}
+          </ol>
+          {page.url.next ? <a href={page.url.next}>Older</a> : <span />}
+        </nav>
       )
     }
-  </div>
+  </main>
 </Layout>
+
+<style>
+  .archive {
+    padding: 64px 0 96px;
+  }
+  .topics {
+    margin-bottom: 56px;
+  }
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: 56px;
+    font: 600 1.15rem / 1 var(--font-cond);
+  }
+  .pager ol {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pager a {
+    text-decoration: none;
+    padding: 6px 10px;
+    border-bottom: 2px solid transparent;
+  }
+  .pager a:hover,
+  .pager a[aria-current] {
+    border-color: var(--blaze);
+  }
+</style>
