@@ -1,13 +1,10 @@
 ---
 import { Image } from 'astro:assets'
 import { render } from 'astro:content'
-import { ArrowLeftIcon, ArrowUpIcon } from 'lucide-react'
-import { FacebookIcon, LinkedinIcon, TwitterIcon } from '../../components/brand-icons'
 import PostHead from '../../components/PostHead.astro'
-import TableOfContents from '../../components/TableOfContents.astro'
 import Layout from '../../layouts/Layout.astro'
 import { getAllPosts } from '../../lib/posts'
-import { calculateReadingTime, formatReadingTime } from '../../lib/readingTime'
+import { calculateReadingTime } from '../../lib/readingTime'
 import { formatDate } from '../../lib/utils'
 
 export const prerender = true
@@ -21,207 +18,238 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props
-const { Content, headings } = await render(post)
-
-const rawContent = (await post.body) || ''
-const readingTime = calculateReadingTime(rawContent)
-const readingTimeText = formatReadingTime(readingTime)
-
-const currentUrl = Astro.url.toString()
-const encodedUrl = encodeURIComponent(currentUrl)
-const encodedTitle = encodeURIComponent(post.data.title)
-const encodedSummary = encodeURIComponent(post.data.description)
-
-const twitterUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`
-const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
-const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedSummary}`
+const { Content } = await render(post)
+const minutes = calculateReadingTime(post.body ?? '')
 ---
 
 <Layout title={post.data.title}>
   <PostHead post={post} slot="head" />
 
-  <div class="container mx-auto px-4 relative grid grid-cols-1 xl:grid-cols-12 gap-8">
-    <!-- Table of Contents - Desktop sidebar -->
-    <aside class="hidden xl:block xl:col-span-3">
-      <div class="sticky top-24">
-        <TableOfContents headings={headings} />
-      </div>
-    </aside>
-
-    <!-- Main content -->
-    <main class="col-span-full xl:col-span-6 w-full max-w-none">
-      <!-- Back link -->
-      <a
-        href="/blog"
-        class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group"
-      >
-        <ArrowLeftIcon className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-        Back to writings
-      </a>
-
-      <!-- Article header -->
-      <header class="mb-10">
-        <h1
-          class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
-          transition:name={`blog-title-${post.id}`}
-        >
-          {post.data.title}
-        </h1>
-
-        <p
-          class="text-lg sm:text-xl text-muted-foreground mb-6 leading-relaxed"
-          transition:name={`blog-description-${post.id}`}
-        >
-          {post.data.description}
-        </p>
-
-        <!-- Meta info -->
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground font-sans">
-          <time
-            datetime={post.data.publishDate.toISOString()}
-            transition:name={`blog-publish-date-${post.id}`}
-          >
-            {formatDate(post.data.publishDate)}
-          </time>
-          <span class="text-border">•</span>
-          <span>{readingTimeText}</span>
-        </div>
-
-        <!-- Tags -->
-        {post.data.tags && post.data.tags.length > 0 && (
-          <div
-            class="flex flex-wrap gap-2 mt-4"
-            transition:name={`blog-tags-${post.id}`}
-          >
-            {post.data.tags.map((tag) => (
-              <a
-                href={`/tags/${tag}`}
-                class="text-xs font-sans px-2.5 py-1 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                {tag}
-              </a>
-            ))}
+  <div class="progress" aria-hidden="true"><span class="fill"></span></div>
+  <main class="wrap post">
+    <article>
+      <header class="post-head">
+        <a class="back" href="/blog">Back to the log</a>
+        <h1 transition:name={`blog-title-${post.id}`}>{post.data.title}</h1>
+        <p class="lede">{post.data.description}</p>
+        <dl class="stats">
+          <div>
+            <dt>Posted</dt>
+            <dd><time datetime={post.data.publishDate.toISOString()}>{formatDate(post.data.publishDate)}</time></dd>
           </div>
-        )}
-
-        <!-- Featured image -->
-        {post.data.image && (
-          <div class="mt-8 rounded-xl overflow-hidden border border-border">
-            <Image
-              src={post.data.image.src}
-              alt={post.data.image.alt}
-              width={1200}
-              height={630}
-              class="w-full h-auto"
-            />
+          <div>
+            <dt>Reading</dt>
+            <dd>{minutes} min</dd>
           </div>
-        )}
+          {
+            post.data.tags.length > 0 && (
+              <div>
+                <dt>Tags</dt>
+                <dd>
+                  {post.data.tags.map((tag, i) => (
+                    <>{i > 0 && ', '}<a href={`/tags/${tag}`}>{tag}</a></>
+                  ))}
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+        {
+          post.data.image && (
+            <Image class="cover" src={post.data.image.src} alt={post.data.image.alt} width={1200} height={630} />
+          )
+        }
       </header>
-
-      <!-- Mobile ToC -->
-      <div class="mb-10 xl:hidden">
-        <TableOfContents headings={headings} />
-      </div>
-
-      <!-- Article content -->
-      <article class="prose prose-lg max-w-none dark:prose-invert prose-library blog-content prose-headings:scroll-mt-24 prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-blockquote:border-l-primary prose-blockquote:not-italic prose-blockquote:font-normal">
+      <div class="prose">
         <Content />
-      </article>
-
-      <!-- Share section -->
-      <footer class="mt-16 pt-8 border-t border-border">
-        <h2 class="text-lg font-semibold mb-4">Share this article</h2>
-        <div class="flex flex-wrap gap-3">
-          <a
-            href={twitterUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium hover:bg-muted transition-colors"
-            aria-label="Share on Twitter/X"
-          >
-            <TwitterIcon className="size-4" />
-            Twitter
-          </a>
-          <a
-            href={facebookUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium hover:bg-muted transition-colors"
-            aria-label="Share on Facebook"
-          >
-            <FacebookIcon className="size-4" />
-            Facebook
-          </a>
-          <a
-            href={linkedinUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-card border border-border text-sm font-medium hover:bg-muted transition-colors"
-            aria-label="Share on LinkedIn"
-          >
-            <LinkedinIcon className="size-4" />
-            LinkedIn
-          </a>
-        </div>
-      </footer>
-    </main>
-
-    <!-- Right sidebar spacer for balance -->
-    <aside class="hidden xl:block xl:col-span-3"></aside>
-  </div>
-
-  <!-- Scroll to top button -->
-  <button
-    id="scroll-to-top"
-    class="fixed hidden bottom-6 right-6 w-10 h-10 rounded-full bg-card border border-border shadow-lg text-foreground hover:bg-muted transition-all duration-300 flex items-center justify-center"
-    onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
-    aria-label="Scroll to top"
-  >
-    <ArrowUpIcon className="size-4" />
-  </button>
-
-  <script>
-    const scrollToTopButton = document.getElementById("scroll-to-top");
-    window.addEventListener("scroll", () => {
-      if (!scrollToTopButton) return;
-      if (window.scrollY > 300) {
-        scrollToTopButton.classList.remove("hidden");
-        scrollToTopButton.classList.add("flex");
-      } else {
-        scrollToTopButton.classList.add("hidden");
-        scrollToTopButton.classList.remove("flex");
-      }
-    });
-  </script>
+      </div>
+    </article>
+  </main>
 </Layout>
 
-<style is:global>
-  .blog-content pre {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    border-radius: 0.5rem;
-  }
+<script>
+  // The red route fills as you read. astro:page-load also fires after ClientRouter navigations.
+  let onScroll: (() => void) | undefined
+  document.addEventListener('astro:page-load', () => {
+    if (onScroll) window.removeEventListener('scroll', onScroll)
+    onScroll = undefined
+    const fill = document.querySelector<HTMLElement>('.progress .fill')
+    if (!fill) return
+    const update = (): void => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0
+      fill.style.transform = `scaleX(${p})`
+    }
+    onScroll = () => requestAnimationFrame(update)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    update()
+  })
+</script>
 
-  .blog-content pre code {
-    overflow-x: auto;
+<style>
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, rgba(15, 44, 63, 0.28) 0 10px, transparent 10px 16px);
+    z-index: 50;
   }
-
-  .blog-content h1,
-  .blog-content h2,
-  .blog-content h3,
-  .blog-content h4,
-  .blog-content h5,
-  .blog-content h6 {
-    word-break: break-word;
-    overflow-wrap: break-word;
+  .fill {
+    display: block;
+    height: 100%;
+    background: var(--marker);
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    transition: transform 0.12s linear;
   }
-
-  /* Heading anchor links */
-  .blog-content :is(h2, h3, h4, h5, h6) a {
+  @media (prefers-reduced-motion: reduce) {
+    .fill {
+      transition: none;
+    }
+  }
+  .post {
+    padding: 0 0 96px;
+  }
+  .post article {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+  .post-head {
+    padding: 44px 0 0;
+  }
+  .back {
+    font: 600 1.05rem / 1 var(--font-cond);
+    color: var(--slate);
+  }
+  .post-head h1 {
+    margin: 20px 0 14px;
+    font: 700 clamp(2.4rem, 6vw, 3.9rem) / 0.98 var(--font-cond);
+  }
+  .lede {
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+    margin: 0 0 26px;
+  }
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 40px;
+    margin: 0 0 40px;
+    padding: 16px 0;
+    border-top: 3px solid var(--lake);
+    border-bottom: 1px solid var(--ice);
+  }
+  .stats dt {
+    font-size: 0.85rem;
+    color: var(--slate);
+  }
+  .stats dd {
+    margin: 0;
+    font: 600 1.25rem / 1.2 var(--font-cond);
+  }
+  .stats dd a {
     text-decoration: none;
   }
-
-  .blog-content :is(h2, h3, h4, h5, h6) a:hover {
+  .stats dd a:hover {
     text-decoration: underline;
+    text-decoration-color: var(--marker);
+  }
+  .cover {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin: 0 0 40px;
+  }
+
+  .prose {
+    font-size: 1.1rem;
+    line-height: 1.72;
+    overflow-wrap: break-word;
+  }
+  .prose :global(h2) {
+    font: 700 2rem / 1.1 var(--font-cond);
+    margin: 2.4em 0 0.5em;
+    padding-left: 16px;
+    border-left: 5px solid var(--blaze);
+  }
+  .prose :global(:is(h2, h3, h4) a) {
+    color: inherit;
+    text-decoration: none;
+  }
+  .prose :global(h3) {
+    font: 600 1.5rem / 1.2 var(--font-cond);
+    margin: 1.8em 0 0.4em;
+  }
+  .prose :global(h4) {
+    font-weight: 600;
+    margin: 1.5em 0 0.4em;
+  }
+  .prose :global(:is(h2, h3, h4)) {
+    scroll-margin-top: 24px;
+  }
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin: 0 0 1.1em;
+  }
+  .prose :global(ul) {
+    list-style: disc;
+    padding-left: 1.5em;
+  }
+  .prose :global(ol) {
+    list-style: decimal;
+    padding-left: 1.5em;
+  }
+  .prose :global(li) {
+    margin: 0.3em 0;
+  }
+  .prose :global(li::marker) {
+    color: var(--marker);
+  }
+  .prose :global(a) {
+    color: var(--lake-2);
+    text-decoration-color: var(--marker);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .prose :global(strong) {
+    font-weight: 600;
+  }
+  .prose :global(:not(pre) > code) {
+    font-size: 0.88em;
+    background: var(--ice);
+    padding: 0.12em 0.38em;
+    border-radius: 4px;
+    overflow-wrap: anywhere;
+  }
+  .prose :global(img) {
+    border-radius: 6px;
+    margin: 1.6em 0;
+    height: auto;
+  }
+  .prose :global(blockquote) {
+    margin: 1.4em 0;
+    padding: 0.2em 0 0.2em 18px;
+    border-left: 3px solid var(--slate);
+    color: var(--ink-soft);
+  }
+  .prose :global(hr) {
+    margin: 2.4em 0;
+    border: 0;
+    border-top: 1px solid var(--ice);
+  }
+  .prose :global(.expressive-code) {
+    margin: 1.6em 0;
+    max-width: 100%;
+  }
+  .prose :global(.expressive-code pre) {
+    max-width: 100%;
+  }
+  @media (max-width: 640px) {
+    .post-head {
+      padding-top: 28px;
+    }
   }
 </style>

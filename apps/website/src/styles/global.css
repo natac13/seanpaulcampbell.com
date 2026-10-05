@@ -37,8 +37,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Preflight strips link underlines; the design relies on the browser default. */
 a {
   color: inherit;
+  text-decoration: underline;
 }
 
 :focus-visible {
