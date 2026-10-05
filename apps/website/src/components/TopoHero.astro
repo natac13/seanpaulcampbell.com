@@ -1,0 +1,128 @@
+---
+import { NAV_LINKS } from '../constants'
+import { contourLines, SUMMIT } from '../lib/topo'
+
+interface Props {
+  /** `full` is the home page hero (slot holds its copy); `banner` is the short strip on every other page. */
+  readonly size: 'full' | 'banner'
+}
+
+const { size } = Astro.props
+const contours = contourLines()
+const path = Astro.url.pathname
+const isCurrent = (href: string): boolean => path === href || path.startsWith(`${href}/`)
+---
+
+<header class:list={['hero', size]}>
+  <svg class="topo topo-wide" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    {contours.map((c) => <path d={c.d} class:list={{ idx: c.isIndex }} />)}
+    <path class="trail" d="M700,760 C730,690 690,620 760,560 S900,520 940,440 S1000,300 1080,210" />
+    <path class="summit" transform={`translate(${SUMMIT.x} ${SUMMIT.y})`} d="M-9,7 L0,-9 L9,7 Z" />
+  </svg>
+  {/* Phone framing: crop to the summit and keep the trail above the intro text. */}
+  <svg class="topo topo-narrow" viewBox="860 20 420 720" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+    {contours.map((c) => <path d={c.d} class:list={{ idx: c.isIndex }} />)}
+    <path class="trail" d="M1290,330 C1240,320 1236,276 1196,282 S1110,262 1080,210" />
+    <path class="summit" transform={`translate(${SUMMIT.x} ${SUMMIT.y})`} d="M-9,7 L0,-9 L9,7 Z" />
+  </svg>
+  <nav class="top" aria-label="Main">
+    <a class="mark" href="/">Sean Campbell</a>
+    <div class="links">
+      {
+        NAV_LINKS.map((link) => (
+          <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+  <slot />
+</header>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--lake);
+    color: var(--snow);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .full {
+    min-height: min(86vh, 760px);
+  }
+  .banner {
+    height: 150px;
+  }
+  .topo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .topo-narrow {
+    display: none;
+  }
+  .topo path {
+    fill: none;
+    stroke: var(--contour);
+    stroke-opacity: 0.38;
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .topo path.idx {
+    stroke-opacity: 0.7;
+    stroke-width: 1.8;
+  }
+  .topo .trail {
+    stroke: var(--blaze);
+    stroke-opacity: 1;
+    stroke-width: 2.5;
+    stroke-dasharray: 2 7;
+    stroke-linecap: round;
+  }
+  .topo .summit {
+    fill: var(--blaze);
+    stroke: none;
+  }
+  .top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: min(100% - 32px, 1240px);
+    margin: 0 auto;
+    padding: 22px 0;
+  }
+  .mark {
+    font: 700 1.35rem / 1 var(--font-cond);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .links {
+    display: flex;
+    gap: 22px;
+    font: 600 1.05rem / 1 var(--font-cond);
+  }
+  .links a {
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+  }
+  .links a[aria-current] {
+    border-color: var(--blaze);
+  }
+  @media (max-width: 640px) {
+    .full {
+      min-height: 660px;
+    }
+    .topo-wide {
+      display: none;
+    }
+    .topo-narrow {
+      display: block;
+    }
+  }
+</style>
