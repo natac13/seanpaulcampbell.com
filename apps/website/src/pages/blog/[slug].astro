@@ -244,6 +244,17 @@ const minutes = calculateReadingTime(post.body ?? '')
     margin: 1.6em 0;
     max-width: 100%;
   }
+  /* github-dark frames retinted to the charcoal ground; outranks EC's own theme selector. */
+  :global(:root[data-theme='dark']) .prose :global(.expressive-code) {
+    --ec-codeBg: var(--code-frame);
+    --ec-frm-edBg: var(--code-frame);
+    --ec-frm-edActTabBg: var(--code-frame);
+    --ec-frm-trmBg: var(--code-frame);
+    --ec-frm-trmTtbBg: var(--code-bar);
+    --ec-frm-edTabBarBg: var(--code-bar);
+    --ec-brdCol: var(--code-border);
+    --ec-frm-trmTtbBrdBtmCol: var(--code-border);
+  }
   .prose :global(.expressive-code pre) {
     max-width: 100%;
   }
